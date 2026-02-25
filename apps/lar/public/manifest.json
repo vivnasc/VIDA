@@ -1,0 +1,28 @@
+{
+  "name": "VIDA.LAR - Gestão de Casa",
+  "short_name": "VIDA.LAR",
+  "description": "Tua casa gerida por IA - Inventário, compras, refeições e manutenção",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#EFF6FF",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "utilities"],
+  "lang": "pt",
+  "dir": "ltr"
+}

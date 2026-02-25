@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ─── VIDA.SAÚDE Brand Colors ─── */
+    --vida-rose: #F43F5E;
+    --vida-rose-light: #FB7185;
+    --vida-rose-dark: #BE123C;
+    --vida-rose-50: #FFF1F2;
+    --vida-rose-100: #FFE4E6;
+    --vida-rose-200: #FECDD3;
+    --vida-rose-300: #FDA4AF;
+    --vida-rose-400: #FB7185;
+    --vida-rose-500: #F43F5E;
+    --vida-rose-600: #E11D48;
+    --vida-rose-700: #BE123C;
+    --vida-rose-800: #9F1239;
+    --vida-rose-900: #881337;
+
+    /* ─── Semantic Colors ─── */
+    --color-primary: var(--vida-rose);
+    --color-primary-light: var(--vida-rose-light);
+    --color-primary-dark: var(--vida-rose-dark);
+    --color-background: #FFF8F8;
+    --color-surface: #FFFFFF;
+    --color-surface-elevated: #FFFFFF;
+    --color-on-surface: #1A1114;
+    --color-muted: #F5F0F0;
+    --color-muted-foreground: #78716C;
+    --color-border: #E7DDE0;
+
+    /* ─── Success / Warning / Error ─── */
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+
+    /* ─── Typography ─── */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+    /* ─── Layout ─── */
+    --header-height: 3.5rem;
+    --bottom-nav-height: 4rem;
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-left: env(safe-area-inset-left);
+    --safe-area-inset-right: env(safe-area-inset-right);
+  }
+
+  .dark {
+    --color-background: #1A1114;
+    --color-surface: #231B1E;
+    --color-surface-elevated: #2D2326;
+    --color-on-surface: #FFF8F8;
+    --color-muted: #3D3034;
+    --color-muted-foreground: #A8A29E;
+    --color-border: #4A3A3F;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Safe area support for PWA */
+  @supports (padding: env(safe-area-inset-top)) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-lg border border-white/20 rounded-2xl;
+  }
+
+  .gradient-rose {
+    @apply bg-gradient-to-br from-primary-400 via-primary-500 to-primary-600;
+  }
+
+  .text-gradient-rose {
+    @apply bg-gradient-to-r from-primary-500 to-primary-600 bg-clip-text text-transparent;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-primary-600 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-primary-50 px-4 py-2.5 text-sm font-semibold text-primary-600 transition-all hover:bg-primary-100 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 p-4;
+  }
+
+  .fab {
+    @apply fixed bottom-24 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary-500 text-white shadow-lg shadow-primary-500/30 transition-all hover:bg-primary-600 hover:shadow-xl active:scale-95;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

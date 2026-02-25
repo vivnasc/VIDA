@@ -1,0 +1,42 @@
+{
+  "name": "@vida/auth",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared authentication utilities for the VIDA ecosystem",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./client": "./src/client.ts",
+    "./server": "./src/server.ts",
+    "./middleware": "./src/middleware.ts",
+    "./hooks": "./src/hooks.ts"
+  },
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.47.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "next": "^15.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@vida/config": "*",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "typescript": "^5.7.0"
+  }
+}

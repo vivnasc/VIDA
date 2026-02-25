@@ -1,0 +1,25 @@
+{
+  "name": "VIDA.SAÚDE",
+  "short_name": "Saúde",
+  "description": "Tua saúde e da tua família, organizada - Gestão de saúde familiar inteligente",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFF1F2",
+  "theme_color": "#F43F5E",
+  "orientation": "portrait-primary",
+  "categories": ["health", "medical", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

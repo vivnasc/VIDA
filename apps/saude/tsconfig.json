@@ -1,0 +1,23 @@
+{
+  "extends": "../../packages/config/tsconfig.nextjs.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@vida/ui": ["../../packages/ui/src"],
+      "@vida/ui/*": ["../../packages/ui/src/*"],
+      "@vida/auth": ["../../packages/auth/src"],
+      "@vida/auth/*": ["../../packages/auth/src/*"],
+      "@vida/database": ["../../packages/database/src"],
+      "@vida/database/*": ["../../packages/database/src/*"],
+      "@vida/utils": ["../../packages/utils/src"],
+      "@vida/utils/*": ["../../packages/utils/src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next", "dist", "build"]
+}
