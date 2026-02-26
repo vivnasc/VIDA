@@ -10,6 +10,11 @@ import {
   Heart,
   MessageSquare,
   ChevronDown,
+  Share2,
+  Tag,
+  Clock,
+  Sparkles,
+  Star,
 } from "lucide-react";
 
 /* ─── Types ─── */
@@ -32,6 +37,15 @@ interface Photo {
   likes: number;
   comments: number;
   isFavorite: boolean;
+  taggedPersons?: string[];
+}
+
+interface MemoryCard {
+  id: string;
+  title: string;
+  date: string;
+  color: string;
+  album: string;
 }
 
 /* ─── Mock Data ─── */
@@ -39,58 +53,56 @@ interface Photo {
 const albums: Album[] = [
   {
     id: "1",
-    name: "Fim de semana",
+    name: "Ferias 2025",
     coverColor: "from-familia-400 to-familia-600",
-    photoCount: 24,
-    lastUpdated: "Hoje",
-  },
-  {
-    id: "2",
-    name: "Aniversario do Avo",
-    coverColor: "from-purple-400 to-purple-600",
-    photoCount: 48,
-    lastUpdated: "Ha 3 dias",
-  },
-  {
-    id: "3",
-    name: "Escola - Ana",
-    coverColor: "from-blue-400 to-blue-600",
-    photoCount: 12,
-    lastUpdated: "Ha 1 semana",
-  },
-  {
-    id: "4",
-    name: "Passeio ao parque",
-    coverColor: "from-emerald-400 to-emerald-600",
-    photoCount: 36,
+    photoCount: 72,
     lastUpdated: "Ha 2 semanas",
   },
   {
-    id: "5",
-    name: "Casa nova",
-    coverColor: "from-amber-400 to-amber-600",
-    photoCount: 18,
+    id: "2",
+    name: "Aniversario Sofia",
+    coverColor: "from-purple-400 to-purple-600",
+    photoCount: 48,
     lastUpdated: "Ha 1 mes",
   },
   {
-    id: "6",
-    name: "Ferias",
+    id: "3",
+    name: "Dia a Dia",
+    coverColor: "from-amber-400 to-amber-600",
+    photoCount: 156,
+    lastUpdated: "Hoje",
+  },
+  {
+    id: "4",
+    name: "Escola",
+    coverColor: "from-blue-400 to-blue-600",
+    photoCount: 34,
+    lastUpdated: "Ha 3 dias",
+  },
+  {
+    id: "5",
+    name: "Familia Alargada",
     coverColor: "from-rose-400 to-rose-600",
-    photoCount: 72,
-    lastUpdated: "Ha 2 meses",
+    photoCount: 89,
+    lastUpdated: "Ha 1 semana",
   },
 ];
 
 const recentPhotos: Photo[] = [
-  { id: "p1", color: "bg-familia-200", album: "Fim de semana", date: "Hoje", likes: 3, comments: 1, isFavorite: true },
-  { id: "p2", color: "bg-blue-200", album: "Fim de semana", date: "Hoje", likes: 5, comments: 2, isFavorite: false },
-  { id: "p3", color: "bg-emerald-200", album: "Fim de semana", date: "Hoje", likes: 2, comments: 0, isFavorite: true },
-  { id: "p4", color: "bg-purple-200", album: "Fim de semana", date: "Ontem", likes: 7, comments: 3, isFavorite: false },
-  { id: "p5", color: "bg-amber-200", album: "Fim de semana", date: "Ontem", likes: 1, comments: 0, isFavorite: false },
-  { id: "p6", color: "bg-rose-200", album: "Aniversario do Avo", date: "Ha 3 dias", likes: 12, comments: 5, isFavorite: true },
-  { id: "p7", color: "bg-indigo-200", album: "Aniversario do Avo", date: "Ha 3 dias", likes: 8, comments: 2, isFavorite: false },
-  { id: "p8", color: "bg-teal-200", album: "Aniversario do Avo", date: "Ha 3 dias", likes: 4, comments: 1, isFavorite: true },
-  { id: "p9", color: "bg-pink-200", album: "Escola - Ana", date: "Ha 1 semana", likes: 6, comments: 0, isFavorite: false },
+  { id: "p1", color: "bg-familia-200", album: "Dia a Dia", date: "Hoje", likes: 3, comments: 1, isFavorite: true, taggedPersons: ["Carlos", "Maria"] },
+  { id: "p2", color: "bg-blue-200", album: "Dia a Dia", date: "Hoje", likes: 5, comments: 2, isFavorite: false, taggedPersons: ["Sofia"] },
+  { id: "p3", color: "bg-emerald-200", album: "Dia a Dia", date: "Hoje", likes: 2, comments: 0, isFavorite: true, taggedPersons: ["Tomas", "Breno"] },
+  { id: "p4", color: "bg-purple-200", album: "Escola", date: "Ontem", likes: 7, comments: 3, isFavorite: false, taggedPersons: ["Sofia"] },
+  { id: "p5", color: "bg-amber-200", album: "Escola", date: "Ontem", likes: 1, comments: 0, isFavorite: false },
+  { id: "p6", color: "bg-rose-200", album: "Aniversario Sofia", date: "Ha 3 dias", likes: 12, comments: 5, isFavorite: true, taggedPersons: ["Sofia", "Maria", "Carlos"] },
+  { id: "p7", color: "bg-indigo-200", album: "Aniversario Sofia", date: "Ha 3 dias", likes: 8, comments: 2, isFavorite: false, taggedPersons: ["Avo Rosa"] },
+  { id: "p8", color: "bg-teal-200", album: "Familia Alargada", date: "Ha 1 semana", likes: 4, comments: 1, isFavorite: true, taggedPersons: ["Familia"] },
+  { id: "p9", color: "bg-pink-200", album: "Ferias 2025", date: "Ha 2 semanas", likes: 15, comments: 4, isFavorite: true, taggedPersons: ["Carlos", "Maria", "Tomas"] },
+];
+
+const memoryCards: MemoryCard[] = [
+  { id: "mem1", title: "Primeiro dia de escola da Sofia", date: "Ha 1 ano atras", color: "bg-purple-200", album: "Escola" },
+  { id: "mem2", title: "Piquenique na praia", date: "Ha 1 ano atras", color: "bg-blue-200", album: "Ferias 2024" },
 ];
 
 const filterLabels: Record<PhotoFilter, string> = {
@@ -107,13 +119,71 @@ export default function FotosPage() {
       ? recentPhotos.filter((p) => p.isFavorite)
       : recentPhotos;
 
+  const totalPhotos = albums.reduce((sum, a) => sum + a.photoCount, 0);
+
   return (
     <div className="space-y-6">
-      {/* ─── Upload Button ─── */}
-      <button className="btn-primary w-full">
-        <Upload className="h-4 w-4" />
-        Carregar fotos
-      </button>
+      {/* ─── Stats Bar ─── */}
+      <div className="flex gap-3">
+        <div className="flex-1 rounded-xl bg-familia-50 p-3 dark:bg-familia-500/10">
+          <p className="text-xs text-muted-foreground">Total de fotos</p>
+          <p className="text-lg font-bold text-familia-600 dark:text-familia-400">{totalPhotos}</p>
+        </div>
+        <div className="flex-1 rounded-xl bg-purple-50 p-3 dark:bg-purple-500/10">
+          <p className="text-xs text-muted-foreground">Albuns</p>
+          <p className="text-lg font-bold text-purple-600 dark:text-purple-400">{albums.length}</p>
+        </div>
+        <div className="flex-1 rounded-xl bg-rose-50 p-3 dark:bg-rose-500/10">
+          <p className="text-xs text-muted-foreground">Favoritas</p>
+          <p className="text-lg font-bold text-rose-600 dark:text-rose-400">
+            {recentPhotos.filter((p) => p.isFavorite).length}
+          </p>
+        </div>
+      </div>
+
+      {/* ─── Upload & Share Buttons ─── */}
+      <div className="flex gap-2">
+        <button className="btn-primary flex-1">
+          <Upload className="h-4 w-4" />
+          Carregar fotos
+        </button>
+        <button className="btn-secondary flex-none px-4">
+          <Share2 className="h-4 w-4" />
+        </button>
+      </div>
+
+      {/* ─── Memory Cards "Ha 1 ano atras..." ─── */}
+      {memoryCards.length > 0 && (
+        <section>
+          <div className="mb-3 flex items-center gap-2">
+            <Sparkles className="h-4 w-4 text-amber-500" />
+            <h3 className="text-sm font-semibold text-on-surface dark:text-on-surface-dark">
+              Ha 1 ano atras...
+            </h3>
+          </div>
+          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+            {memoryCards.map((memory) => (
+              <div
+                key={memory.id}
+                className="shrink-0 w-48 rounded-2xl border border-amber-200 bg-amber-50/50 overflow-hidden dark:border-amber-500/20 dark:bg-amber-500/5"
+              >
+                <div className={`h-24 ${memory.color} flex items-center justify-center`}>
+                  <ImageIcon className="h-8 w-8 text-white/60" />
+                </div>
+                <div className="p-3">
+                  <p className="text-xs font-semibold text-on-surface dark:text-on-surface-dark line-clamp-2">
+                    {memory.title}
+                  </p>
+                  <p className="mt-1 flex items-center gap-1 text-[10px] text-muted-foreground">
+                    <Clock className="h-3 w-3" />
+                    {memory.date}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ─── Filter Tabs ─── */}
       <div className="flex items-center gap-2">
@@ -133,7 +203,6 @@ export default function FotosPage() {
 
         <div className="flex-1" />
 
-        {/* Filter by date/album dropdown */}
         <button className="flex items-center gap-1 rounded-full border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted dark:border-border-dark dark:hover:bg-muted-dark">
           <Calendar className="h-3 w-3" />
           Data
@@ -155,9 +224,13 @@ export default function FotosPage() {
               >
                 {/* Cover thumbnail placeholder */}
                 <div
-                  className={`flex h-28 items-center justify-center bg-gradient-to-br ${album.coverColor}`}
+                  className={`flex h-28 items-center justify-center bg-gradient-to-br ${album.coverColor} relative`}
                 >
                   <FolderOpen className="h-8 w-8 text-white/70 transition-transform group-hover:scale-110" />
+                  {/* Share button overlay */}
+                  <button className="absolute top-2 right-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/30 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    <Share2 className="h-3.5 w-3.5" />
+                  </button>
                 </div>
                 <div className="p-3">
                   <p className="truncate text-sm font-semibold text-on-surface dark:text-on-surface-dark">
@@ -166,7 +239,7 @@ export default function FotosPage() {
                   <div className="mt-1 flex items-center justify-between text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <ImageIcon className="h-3 w-3" />
-                      {album.photoCount}
+                      {album.photoCount} fotos
                     </span>
                     <span>{album.lastUpdated}</span>
                   </div>
@@ -204,6 +277,16 @@ export default function FotosPage() {
                     <ImageIcon className="h-6 w-6 text-white/50" />
                   </div>
 
+                  {/* Person tagging badges */}
+                  {photo.taggedPersons && photo.taggedPersons.length > 0 && (
+                    <div className="absolute top-1 left-1 flex items-center gap-0.5">
+                      <span className="flex items-center gap-0.5 rounded-full bg-black/40 px-1.5 py-0.5 text-[9px] font-medium text-white">
+                        <Tag className="h-2.5 w-2.5" />
+                        {photo.taggedPersons.length}
+                      </span>
+                    </div>
+                  )}
+
                   {/* Hover overlay */}
                   <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/50 to-transparent opacity-0 transition-opacity group-hover:opacity-100">
                     <div className="flex w-full items-center justify-between p-2">
@@ -221,7 +304,7 @@ export default function FotosPage() {
                   {/* Favorite indicator */}
                   {photo.isFavorite && (
                     <div className="absolute right-1 top-1">
-                      <Heart className="h-3.5 w-3.5 fill-white text-white drop-shadow" />
+                      <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400 drop-shadow" />
                     </div>
                   )}
                 </button>

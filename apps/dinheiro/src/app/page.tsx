@@ -15,6 +15,12 @@ import {
   Car,
   Zap,
   MoreHorizontal,
+  Lightbulb,
+  Users,
+  Heart,
+  Activity,
+  Star,
+  ChevronRight,
 } from "lucide-react";
 import { BalanceCard } from "@/components/balance-card";
 import { TransactionItem } from "@/components/transaction-item";
@@ -128,6 +134,33 @@ const MOCK_BUDGETS = [
   },
 ];
 
+const DAILY_TIPS = [
+  {
+    tip: "Antes de gastar, pergunta-te: preciso ou quero? Essa simples questão pode poupar milhares por mês.",
+    category: "Poupança",
+  },
+  {
+    tip: "Configura uma transferência automática de 10% do salário para a poupança logo quando recebes.",
+    category: "Automação",
+  },
+  {
+    tip: "Revisa as tuas subscrições mensais. Cancela o que não usas há mais de 30 dias.",
+    category: "Despesas",
+  },
+];
+
+function getHealthScore(budgets: typeof MOCK_BUDGETS): number {
+  const totalBudgeted = budgets.reduce((sum, b) => sum + b.budgeted, 0);
+  const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);
+  const overBudgetCount = budgets.filter((b) => b.spent > b.budgeted).length;
+  const ratio = totalSpent / totalBudgeted;
+
+  let score = 100;
+  score -= ratio * 60;
+  score -= overBudgetCount * 8;
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
 export default function DashboardPage() {
   const [currentMonth] = useState("Fevereiro 2026");
 
@@ -135,6 +168,35 @@ export default function DashboardPage() {
   const totalIncome = 65000;
   const totalExpenses = 11600;
   const incomePercent = (totalIncome / (totalIncome + totalExpenses)) * 100;
+
+  const healthScore = getHealthScore(MOCK_BUDGETS);
+  const healthColor =
+    healthScore >= 70
+      ? "text-emerald-600"
+      : healthScore >= 40
+        ? "text-amber-600"
+        : "text-red-500";
+  const healthBg =
+    healthScore >= 70
+      ? "bg-emerald-500"
+      : healthScore >= 40
+        ? "bg-amber-500"
+        : "bg-red-500";
+  const healthLabel =
+    healthScore >= 70
+      ? "Saudável"
+      : healthScore >= 40
+        ? "Atenção"
+        : "Crítico";
+
+  const dailyTip = DAILY_TIPS[0]!;
+
+  // Mock xitique & debt data for dashboard summary
+  const activeXitiqueGroups = 3;
+  const nextXitiquePayment = "1 Março";
+  const myTurnXitique = true;
+  const totalDebtOwed = 63000;
+  const totalDebtReceivable = 27500;
 
   return (
     <div className="min-h-screen pb-4">
@@ -176,10 +238,79 @@ export default function DashboardPage() {
                   {account.name}
                 </p>
                 <p className="text-sm font-bold">
-                  {account.balance.toLocaleString("pt-MZ")} <span className="text-xs font-normal text-[var(--color-text-muted)]">{account.currency}</span>
+                  {account.balance.toLocaleString("pt-MZ")}{" "}
+                  <span className="text-xs font-normal text-[var(--color-text-muted)]">
+                    {account.currency}
+                  </span>
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Financial Health Score */}
+        <section className="card p-4">
+          <div className="flex items-center gap-4">
+            <div className="relative w-16 h-16 flex-shrink-0">
+              <svg className="w-16 h-16 -rotate-90" viewBox="0 0 100 100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke="#E5E7EB"
+                  strokeWidth="8"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="40"
+                  fill="none"
+                  stroke={healthScore >= 70 ? "#10B981" : healthScore >= 40 ? "#F59E0B" : "#EF4444"}
+                  strokeWidth="8"
+                  strokeDasharray={`${healthScore * 2.51} ${251 - healthScore * 2.51}`}
+                  strokeLinecap="round"
+                  className="transition-all duration-700"
+                />
+              </svg>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className={`text-sm font-bold ${healthColor}`}>
+                  {healthScore}
+                </span>
+              </div>
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <Activity className="w-4 h-4 text-[var(--color-text-secondary)]" />
+                <h3 className="text-sm font-semibold">Saúde Financeira</h3>
+              </div>
+              <p className={`text-xs font-bold ${healthColor}`}>
+                {healthLabel}
+              </p>
+              <p className="text-2xs text-[var(--color-text-muted)] mt-0.5">
+                Baseado no teu orçamento e padrão de gastos
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Dica do Dia */}
+        <section className="card p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-100">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
+              <Lightbulb className="w-5 h-5 text-amber-600" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <p className="text-xs font-bold text-amber-800">Dica do Dia</p>
+                <span className="text-2xs bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-md font-medium">
+                  {dailyTip.category}
+                </span>
+              </div>
+              <p className="text-sm text-amber-700 leading-relaxed">
+                {dailyTip.tip}
+              </p>
+            </div>
           </div>
         </section>
 
@@ -230,13 +361,84 @@ export default function DashboardPage() {
           </div>
         </section>
 
+        {/* Xitique Summary */}
+        <section className="card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 text-primary-500" />
+              <h2 className="font-semibold text-sm">Xitique</h2>
+            </div>
+            <a
+              href="/xitique"
+              className="flex items-center gap-1 text-xs text-primary-600 font-medium"
+            >
+              Ver tudo
+              <ChevronRight className="w-3 h-3" />
+            </a>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex-1 space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[var(--color-text-muted)]">Grupos activos</span>
+                <span className="font-semibold">{activeXitiqueGroups}</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <span className="text-[var(--color-text-muted)]">Próximo pagamento</span>
+                <span className="font-semibold">{nextXitiquePayment}</span>
+              </div>
+            </div>
+            {myTurnXitique && (
+              <div className="flex-shrink-0 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-center">
+                <Star className="w-4 h-4 text-amber-500 mx-auto mb-0.5" />
+                <p className="text-2xs font-bold text-amber-700">Minha vez!</p>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Debt Summary */}
+        <section className="card p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Heart className="w-4 h-4 text-red-400" />
+              <h2 className="font-semibold text-sm">Dívidas</h2>
+            </div>
+            <a
+              href="/dividas"
+              className="flex items-center gap-1 text-xs text-primary-600 font-medium"
+            >
+              Ver tudo
+              <ChevronRight className="w-3 h-3" />
+            </a>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="bg-red-50 rounded-xl p-3 text-center">
+              <p className="text-2xs text-red-600">Devo</p>
+              <p className="text-sm font-bold text-red-600">
+                {totalDebtOwed.toLocaleString("pt-MZ")}
+              </p>
+              <p className="text-2xs text-red-400">MZN</p>
+            </div>
+            <div className="bg-emerald-50 rounded-xl p-3 text-center">
+              <p className="text-2xs text-emerald-600">Devem-me</p>
+              <p className="text-sm font-bold text-emerald-600">
+                {totalDebtReceivable.toLocaleString("pt-MZ")}
+              </p>
+              <p className="text-2xs text-emerald-400">MZN</p>
+            </div>
+          </div>
+        </section>
+
         {/* Budget Progress */}
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold">Orçamento</h2>
-            <button className="text-xs text-primary-600 font-medium">
+            <a
+              href="/orcamento"
+              className="text-xs text-primary-600 font-medium"
+            >
               Ver tudo
-            </button>
+            </a>
           </div>
           <div className="space-y-3">
             {MOCK_BUDGETS.map((budget) => (
@@ -255,9 +457,12 @@ export default function DashboardPage() {
         <section>
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold">Transacções Recentes</h2>
-            <button className="text-xs text-primary-600 font-medium">
+            <a
+              href="/transacoes"
+              className="text-xs text-primary-600 font-medium"
+            >
               Ver todas
-            </button>
+            </a>
           </div>
           <div className="card divide-y divide-[var(--color-border)]">
             {MOCK_TRANSACTIONS.map((tx) => (

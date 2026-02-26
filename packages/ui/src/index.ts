@@ -44,3 +44,9 @@ export type { StatCardProps } from "./components/stat-card";
 
 export { EmptyState } from "./components/empty-state";
 export type { EmptyStateProps } from "./components/empty-state";
+
+export { AppSwitcher } from "./components/app-switcher";
+export type { AppSwitcherProps, AppSwitcherApp } from "./components/app-switcher";
+
+export { AuthForm } from "./components/auth-form";
+export type { AuthFormProps } from "./components/auth-form";

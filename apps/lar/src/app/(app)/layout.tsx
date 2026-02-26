@@ -7,7 +7,11 @@ const routeToTab: Record<string, string> = {
   "/inventario": "inventario",
   "/compras": "compras",
   "/refeicoes": "refeicoes",
-  "/manutencao": "mais",
+  "/manutencao": "manutencao",
+  "/empregados": "empregados",
+  "/zonas": "zonas",
+  "/servicos": "servicos",
+  "/documentos": "documentos",
 };
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
@@ -16,7 +20,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const activeTab =
     Object.entries(routeToTab).find(([route]) =>
       pathname.startsWith(route)
-    )?.[1] ?? "mais";
+    )?.[1] ?? "inicio";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white pb-24">

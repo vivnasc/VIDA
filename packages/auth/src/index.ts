@@ -13,11 +13,11 @@
  * import { createServerClient } from "@vida/auth/server";
  *
  * // Middleware
- * import { updateSession } from "@vida/auth/middleware";
+ * import { updateSession, createMiddleware } from "@vida/auth/middleware";
  */
 
 export { createBrowserClient } from "./client";
 export { createServerClient } from "./server";
-export { updateSession } from "./middleware";
+export { updateSession, createMiddleware } from "./middleware";
 export { useUser, useSession, useAuth } from "./hooks";
 export type { AuthMethods } from "./hooks";

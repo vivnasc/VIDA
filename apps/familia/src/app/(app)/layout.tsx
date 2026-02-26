@@ -9,6 +9,11 @@ const pageTitles: Record<string, string> = {
   "/calendario": "Calendario",
   "/tarefas": "Tarefas",
   "/fotos": "Fotos",
+  "/chat": "Chat Familiar",
+  "/metas": "Metas & Sonhos",
+  "/membros": "Membros",
+  "/marcos": "Marcos & Memorias",
+  "/definicoes": "Definicoes",
   "/mais": "Mais",
 };
 
