@@ -1,0 +1,25 @@
+{
+  "name": "VIDA.DINHEIRO",
+  "short_name": "Dinheiro",
+  "description": "Teu dinheiro, tuas regras - Gestão financeira pessoal inteligente",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ECFDF5",
+  "theme_color": "#10B981",
+  "orientation": "portrait-primary",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

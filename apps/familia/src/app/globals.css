@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ─── VIDA.FAMILIA Brand Colors ─── */
+    --vida-orange: #FF6B35;
+    --vida-orange-light: #FF9E77;
+    --vida-orange-dark: #C44A22;
+    --vida-orange-50: #FFF3ED;
+    --vida-orange-100: #FFE4D6;
+    --vida-orange-200: #FFC5AC;
+    --vida-orange-300: #FF9E77;
+    --vida-orange-400: #FF7D4D;
+    --vida-orange-500: #FF6B35;
+    --vida-orange-600: #E85A2A;
+    --vida-orange-700: #C44A22;
+    --vida-orange-800: #9C3B1B;
+    --vida-orange-900: #7D3118;
+
+    /* ─── Semantic Colors ─── */
+    --color-primary: var(--vida-orange);
+    --color-primary-light: var(--vida-orange-light);
+    --color-primary-dark: var(--vida-orange-dark);
+    --color-background: #FFF8F0;
+    --color-surface: #FFFFFF;
+    --color-surface-elevated: #FFFFFF;
+    --color-on-surface: #1A1412;
+    --color-muted: #F5F0EB;
+    --color-muted-foreground: #78716C;
+    --color-border: #E7E0DA;
+
+    /* ─── Success / Warning / Error ─── */
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-error: #EF4444;
+
+    /* ─── Typography ─── */
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+    /* ─── Layout ─── */
+    --header-height: 3.5rem;
+    --bottom-nav-height: 4rem;
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-left: env(safe-area-inset-left);
+    --safe-area-inset-right: env(safe-area-inset-right);
+  }
+
+  .dark {
+    --color-background: #1A1412;
+    --color-surface: #231E1B;
+    --color-surface-elevated: #2D2623;
+    --color-on-surface: #FFF8F0;
+    --color-muted: #3D3430;
+    --color-muted-foreground: #A8A29E;
+    --color-border: #4A403A;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-background);
+    color: var(--color-on-surface);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Safe area support for PWA */
+  @supports (padding: env(safe-area-inset-top)) {
+    body {
+      padding-top: env(safe-area-inset-top);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+    }
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/80 dark:bg-surface-dark/80 backdrop-blur-lg border border-white/20 dark:border-white/10 rounded-2xl;
+  }
+
+  .gradient-orange {
+    @apply bg-gradient-to-br from-familia-400 via-familia-500 to-familia-600;
+  }
+
+  .text-gradient-orange {
+    @apply bg-gradient-to-r from-familia-500 to-familia-600 bg-clip-text text-transparent;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-familia-500 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-familia-600 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl bg-familia-50 px-4 py-2.5 text-sm font-semibold text-familia-600 transition-all hover:bg-familia-100 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .card {
+    @apply bg-white dark:bg-surface-dark rounded-2xl shadow-soft border border-border dark:border-border-dark p-4;
+  }
+
+  .fab {
+    @apply fixed bottom-24 right-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-familia-500 text-white shadow-lg shadow-familia-500/30 transition-all hover:bg-familia-600 hover:shadow-xl active:scale-95;
+  }
+}
+
+@layer utilities {
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

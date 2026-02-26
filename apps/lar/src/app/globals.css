@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* VIDA.LAR Blue Theme */
+    --color-app: #3B82F6;
+    --color-app-light: #93C5FD;
+    --color-app-dark: #1D4ED8;
+    --color-app-50: #EFF6FF;
+    --color-app-100: #DBEAFE;
+    --color-app-200: #BFDBFE;
+    --color-app-300: #93C5FD;
+    --color-app-400: #60A5FA;
+    --color-app-500: #3B82F6;
+    --color-app-600: #2563EB;
+    --color-app-700: #1D4ED8;
+    --color-app-800: #1E40AF;
+    --color-app-900: #1E3A8A;
+
+    /* Background */
+    --color-background: #F8FAFF;
+    --color-surface: #FFFFFF;
+    --color-surface-elevated: #FFFFFF;
+
+    /* Text */
+    --color-text-primary: #111827;
+    --color-text-secondary: #6B7280;
+    --color-text-muted: #9CA3AF;
+
+    /* Border */
+    --color-border: #E5E7EB;
+
+    /* Status colors */
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-danger: #EF4444;
+    --color-info: #3B82F6;
+
+    /* Safe areas */
+    --safe-area-top: env(safe-area-inset-top);
+    --safe-area-bottom: env(safe-area-inset-bottom);
+    --safe-area-left: env(safe-area-inset-left);
+    --safe-area-right: env(safe-area-inset-right);
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-background);
+    overscroll-behavior-y: contain;
+  }
+
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .app-card {
+    @apply bg-white rounded-2xl p-4 shadow-soft border border-gray-100;
+  }
+
+  .app-button {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2.5
+           bg-blue-500 text-white font-medium text-sm
+           hover:bg-blue-600 active:bg-blue-700
+           transition-colors duration-150;
+  }
+
+  .app-button-outline {
+    @apply inline-flex items-center justify-center rounded-xl px-4 py-2.5
+           border-2 border-blue-500 text-blue-600 font-medium text-sm
+           hover:bg-blue-50 active:bg-blue-100
+           transition-colors duration-150;
+  }
+
+  .app-badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .app-input {
+    @apply w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm
+           placeholder:text-gray-400 focus:border-blue-400 focus:ring-2
+           focus:ring-blue-100 focus:outline-none transition-all duration-150;
+  }
+
+  .bottom-nav-safe {
+    padding-bottom: max(0.75rem, var(--safe-area-bottom));
+  }
+}
+
+@layer utilities {
+  .text-app {
+    color: var(--color-app);
+  }
+
+  .bg-app {
+    background-color: var(--color-app);
+  }
+
+  .border-app {
+    border-color: var(--color-app);
+  }
+}
