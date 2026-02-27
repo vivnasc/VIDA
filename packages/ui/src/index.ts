@@ -50,3 +50,5 @@ export type { AppSwitcherProps, AppSwitcherApp } from "./components/app-switcher
 
 export { AuthForm } from "./components/auth-form";
 export type { AuthFormProps } from "./components/auth-form";
+
+export { ServiceWorkerRegister } from "./components/service-worker-register";
