@@ -144,9 +144,9 @@ export function createMiddleware() {
       pathname.startsWith("/auth") ||
       pathname.startsWith("/api/auth");
 
-    // If user is authenticated and on the login page, redirect to home
+    // If user is authenticated and on the login page, redirect to dashboard
     if (user && pathname.startsWith("/login")) {
-      const redirectTo = request.nextUrl.searchParams.get("redirect") || "/";
+      const redirectTo = request.nextUrl.searchParams.get("redirect") || "/painel";
       const url = request.nextUrl.clone();
       url.pathname = redirectTo;
       url.searchParams.delete("redirect");

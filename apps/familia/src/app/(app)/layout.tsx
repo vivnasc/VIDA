@@ -29,7 +29,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         <div className="mx-auto flex h-14 max-w-lg items-center justify-between px-4">
           <div className="flex items-center gap-3">
             <Link
-              href="/"
+              href="/painel"
               className="flex h-9 w-9 items-center justify-center rounded-xl transition-colors hover:bg-muted dark:hover:bg-muted-dark"
             >
               <ArrowLeft className="h-5 w-5 text-on-surface dark:text-on-surface-dark" />
