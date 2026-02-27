@@ -18,8 +18,11 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { getTemplate, type ServiceDefinition } from "@/lib/templates";
+
 interface AddSaleModalProps {
   onClose: () => void;
+  templateId?: string;
 }
 
 type PaymentMethod = "cash" | "mpesa" | "emola" | "transfer" | "card" | "fiado";
@@ -27,7 +30,6 @@ type PaymentMethod = "cash" | "mpesa" | "emola" | "transfer" | "card" | "fiado";
 interface QuickProduct {
   name: string;
   price: number;
-  icon: LucideIcon;
 }
 
 const PAYMENT_METHODS: { key: PaymentMethod; label: string; icon: LucideIcon; color: string }[] = [
@@ -36,15 +38,6 @@ const PAYMENT_METHODS: { key: PaymentMethod; label: string; icon: LucideIcon; co
   { key: "transfer", label: "Transferência", icon: Landmark, color: "bg-blue-500" },
   { key: "card", label: "Cartão", icon: CreditCard, color: "bg-purple-500" },
   { key: "fiado", label: "Fiado", icon: BookOpen, color: "bg-violet-500" },
-];
-
-const MOCK_PRODUCTS: QuickProduct[] = [
-  { name: "Corte cabelo", price: 500, icon: User },
-  { name: "Tranças", price: 1500, icon: User },
-  { name: "Unhas gel", price: 600, icon: User },
-  { name: "Alisamento", price: 2500, icon: User },
-  { name: "Makeup", price: 1200, icon: User },
-  { name: "Sobrancelhas", price: 300, icon: User },
 ];
 
 const MOCK_CUSTOMERS = [
@@ -61,7 +54,13 @@ interface CartItem {
   quantity: number;
 }
 
-export function AddSaleModal({ onClose }: AddSaleModalProps) {
+export function AddSaleModal({ onClose, templateId = "salao" }: AddSaleModalProps) {
+  const template = getTemplate(templateId);
+  const templateProducts: QuickProduct[] = template.services.map((s) => ({
+    name: s.name,
+    price: s.defaultPrice,
+  }));
+
   const [cart, setCart] = useState<CartItem[]>([]);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("cash");
   const [selectedCustomer, setSelectedCustomer] = useState<string | null>(null);
@@ -107,7 +106,7 @@ export function AddSaleModal({ onClose }: AddSaleModalProps) {
     setTimeout(onClose, 200);
   };
 
-  const filteredProducts = MOCK_PRODUCTS.filter((p) =>
+  const filteredProducts = templateProducts.filter((p) =>
     p.name.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
