@@ -26,7 +26,7 @@ export type Currency = "MZN" | "USD" | "EUR" | "ZAR" | "GBP";
 
 export type AppTier = "FREE" | "PRO" | "VIP";
 
-export type AppSlug = "familia" | "dinheiro" | "lar" | "saude";
+export type AppSlug = "familia" | "dinheiro" | "lar" | "saude" | "biz";
 
 // ─── User & Profile ─────────────────────────────────────────────────────────
 

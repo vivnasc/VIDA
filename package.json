@@ -18,6 +18,8 @@
     "build:dinheiro": "turbo build --filter=@vida/dinheiro",
     "build:lar": "turbo build --filter=@vida/lar",
     "build:saude": "turbo build --filter=@vida/saude",
+    "dev:biz": "turbo dev --filter=@vida/biz",
+    "build:biz": "turbo build --filter=@vida/biz",
     "db:migrate": "supabase db push",
     "db:seed": "supabase db seed",
     "db:reset": "supabase db reset"
