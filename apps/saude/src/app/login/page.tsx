@@ -33,6 +33,7 @@ export default function LoginPage() {
             full_name: fullName,
             phone,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       if (error) throw new Error(error.message);
