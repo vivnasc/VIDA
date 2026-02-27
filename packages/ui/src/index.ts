@@ -55,3 +55,6 @@ export { ServiceWorkerRegister } from "./components/service-worker-register";
 
 export { FeedbackButton } from "./components/feedback-button";
 export type { FeedbackButtonProps } from "./components/feedback-button";
+
+export { Analytics } from "./components/analytics";
+export type { AnalyticsProps } from "./components/analytics";
