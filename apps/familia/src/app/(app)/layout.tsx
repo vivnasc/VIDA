@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Heart, ArrowLeft, Bell } from "lucide-react";
+import { FeedbackButton } from "@vida/ui";
 import { BottomNav } from "@/components/bottom-nav";
 
 const pageTitles: Record<string, string> = {
@@ -51,6 +52,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
       {/* ─── Page Content ─── */}
       <main className="mx-auto max-w-lg px-4 pt-6">{children}</main>
+
+      {/* ─── Feedback ─── */}
+      <FeedbackButton appName="VIDA.FAMILIA" appColor="#FF6B35" />
 
       {/* ─── Bottom Navigation ─── */}
       <BottomNav />

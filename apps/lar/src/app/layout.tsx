@@ -3,7 +3,7 @@ import { ServiceWorkerRegister } from "@vida/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VIDA.LAR - Tua casa gerida por IA",
+  title: "VIDA.LAR - Tua casa, sem stress",
   description:
     "Gestão inteligente da tua casa: inventário, compras, refeições e manutenção. Tudo num só lugar.",
   manifest: "/manifest.json",
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: "VIDA.LAR",
   },
   openGraph: {
-    title: "VIDA.LAR - Tua casa gerida por IA",
+    title: "VIDA.LAR - Tua casa, sem stress",
     description:
       "Gestão inteligente da tua casa: inventário, compras, refeições e manutenção.",
     type: "website",

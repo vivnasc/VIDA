@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     default: "VIDA.SAÚDE",
     template: "%s | VIDA.SAÚDE",
   },
-  description: "Tua saúde e da tua família, organizada",
+  description: "Tua família, sempre saudável",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
