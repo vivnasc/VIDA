@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Search,
   Plus,
@@ -13,6 +13,9 @@ import {
   Clock,
   ChevronRight,
 } from "lucide-react";
+import { useBusiness } from "@/hooks/use-business";
+import { createBrowserClient } from "@vida/auth/client";
+import { getProducts } from "@/lib/supabase";
 
 interface Product {
   id: string;
@@ -42,20 +45,48 @@ const MOCK_PRODUCTS: Product[] = [
 type FilterType = "all" | "low" | "ok" | "high_margin";
 
 export default function StockPage() {
+  const { business } = useBusiness();
+  const [products, setProducts] = useState<Product[]>(MOCK_PRODUCTS);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterType>("all");
 
-  const filteredProducts = MOCK_PRODUCTS.filter((p) => {
+  useEffect(() => {
+    if (!business?.id) return;
+    const supabase = createBrowserClient();
+    getProducts(supabase, business.id)
+      .then((data) => {
+        const mapped: Product[] = data.map((p: any) => ({
+          id: p.id,
+          name: p.name ?? "",
+          category: p.category ?? "",
+          costPrice: Number(p.cost_price) || 0,
+          sellPrice: Number(p.sell_price) || 0,
+          quantity: Number(p.quantity) || 0,
+          minStock: Number(p.min_stock) || 0,
+          unit: p.unit ?? "un",
+          margin:
+            Number(p.sell_price) > 0
+              ? Math.round(((Number(p.sell_price) - Number(p.cost_price)) / Number(p.sell_price)) * 100)
+              : 0,
+        }));
+        if (mapped.length > 0) setProducts(mapped);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [business?.id]);
+
+  const filteredProducts = products.filter((p) => {
     if (searchQuery && !p.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (filter === "low" && p.quantity >= p.minStock) return false;
     if (filter === "high_margin" && p.margin < 80) return false;
     return true;
   });
 
-  const totalValue = MOCK_PRODUCTS.reduce((s, p) => s + p.sellPrice * p.quantity, 0);
-  const totalCost = MOCK_PRODUCTS.reduce((s, p) => s + p.costPrice * p.quantity, 0);
-  const lowStockCount = MOCK_PRODUCTS.filter((p) => p.quantity < p.minStock).length;
-  const totalItems = MOCK_PRODUCTS.reduce((s, p) => s + p.quantity, 0);
+  const totalValue = products.reduce((s, p) => s + p.sellPrice * p.quantity, 0);
+  const totalCost = products.reduce((s, p) => s + p.costPrice * p.quantity, 0);
+  const lowStockCount = products.filter((p) => p.quantity < p.minStock).length;
+  const totalItems = products.reduce((s, p) => s + p.quantity, 0);
 
   return (
     <div className="min-h-screen pb-4">

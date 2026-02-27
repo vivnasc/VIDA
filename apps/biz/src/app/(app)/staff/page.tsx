@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   UserCheck,
   Star,
@@ -13,6 +13,9 @@ import {
   Clock,
   Briefcase,
 } from "lucide-react";
+import { useBusiness } from "@/hooks/use-business";
+import { createBrowserClient } from "@vida/auth/client";
+import { getStaff } from "@/lib/supabase";
 
 interface StaffMember {
   id: string;
@@ -58,13 +61,43 @@ const MOCK_STAFF: StaffMember[] = [
 ];
 
 export default function StaffPage() {
-  const totalStaffCost = MOCK_STAFF.reduce(
+  const { business } = useBusiness();
+  const [staff, setStaff] = useState<StaffMember[]>(MOCK_STAFF);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!business?.id) return;
+    const supabase = createBrowserClient();
+    getStaff(supabase, business.id)
+      .then((data) => {
+        const mapped: StaffMember[] = data.map((s: any) => ({
+          id: s.id,
+          name: s.name ?? "",
+          role: s.role ?? "",
+          phone: s.phone ?? "",
+          salaryBase: Number(s.salary_base) || 0,
+          commissionRate: Number(s.commission_rate) || 0,
+          specialties: [],
+          monthAttendances: 0,
+          monthRevenue: 0,
+          monthCommission: 0,
+          rating: 0,
+          absences: 0,
+          startDate: s.created_at ?? "",
+        }));
+        if (mapped.length > 0) setStaff(mapped);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [business?.id]);
+
+  const totalStaffCost = staff.reduce(
     (s, m) => s + m.salaryBase + m.monthCommission,
     0,
   );
-  const totalRevenue = MOCK_STAFF.reduce((s, m) => s + m.monthRevenue, 0);
-  const staffRatio = Math.round((totalStaffCost / totalRevenue) * 100);
-  const topPerformer = MOCK_STAFF.reduce((top, m) =>
+  const totalRevenue = staff.reduce((s, m) => s + m.monthRevenue, 0);
+  const staffRatio = totalRevenue > 0 ? Math.round((totalStaffCost / totalRevenue) * 100) : 0;
+  const topPerformer = staff.reduce((top, m) =>
     m.monthRevenue > top.monthRevenue ? m : top,
   );
 
@@ -85,7 +118,7 @@ export default function StaffPage() {
           <div className="card p-3 text-center">
             <UserCheck className="w-5 h-5 text-teal-500 mx-auto mb-1" />
             <p className="text-xs text-[var(--color-text-muted)]">Equipa</p>
-            <p className="text-sm font-bold">{MOCK_STAFF.length}</p>
+            <p className="text-sm font-bold">{staff.length}</p>
           </div>
           <div className="card p-3 text-center">
             <p className="text-xs text-[var(--color-text-muted)]">Custo Mensal</p>
@@ -129,7 +162,7 @@ export default function StaffPage() {
         <section>
           <h3 className="text-sm font-semibold mb-2">Membros da Equipa</h3>
           <div className="space-y-3">
-            {MOCK_STAFF.map((member) => {
+            {staff.map((member) => {
               const totalPay = member.salaryBase + member.monthCommission;
 
               return (

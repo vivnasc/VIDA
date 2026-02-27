@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Search,
   Plus,
@@ -13,6 +13,9 @@ import {
   ChevronRight,
   Filter,
 } from "lucide-react";
+import { useBusiness } from "@/hooks/use-business";
+import { createBrowserClient } from "@vida/auth/client";
+import { getCustomers } from "@/lib/supabase";
 
 interface Customer {
   id: string;
@@ -47,18 +50,44 @@ const CATEGORY_CONFIG = {
 };
 
 export default function ClientesPage() {
+  const { business } = useBusiness();
+  const [customers, setCustomers] = useState<Customer[]>(MOCK_CUSTOMERS);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterCategory>("all");
 
-  const filtered = MOCK_CUSTOMERS.filter((c) => {
+  useEffect(() => {
+    if (!business?.id) return;
+    const supabase = createBrowserClient();
+    getCustomers(supabase, business.id)
+      .then((data) => {
+        const mapped: Customer[] = data.map((c: any) => ({
+          id: c.id,
+          name: c.name ?? "",
+          phone: c.phone ?? "",
+          category: c.category ?? "regular",
+          totalSpent: Number(c.total_spent) || 0,
+          visits: Number(c.visit_count) || 0,
+          lastVisit: c.last_visit ?? c.updated_at ?? "",
+          favoriteService: undefined,
+          loyaltyPoints: 0,
+          debt: Number(c.current_debt) || 0,
+        }));
+        if (mapped.length > 0) setCustomers(mapped);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [business?.id]);
+
+  const filtered = customers.filter((c) => {
     if (searchQuery && !c.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (filter !== "all" && c.category !== filter) return false;
     return true;
   });
 
-  const totalCustomers = MOCK_CUSTOMERS.length;
-  const vipCount = MOCK_CUSTOMERS.filter((c) => c.category === "vip").length;
-  const totalRevenue = MOCK_CUSTOMERS.reduce((s, c) => s + c.totalSpent, 0);
+  const totalCustomers = customers.length;
+  const vipCount = customers.filter((c) => c.category === "vip").length;
+  const totalRevenue = customers.reduce((s, c) => s + c.totalSpent, 0);
 
   return (
     <div className="min-h-screen pb-4">

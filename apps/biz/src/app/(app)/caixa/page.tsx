@@ -1,69 +1,86 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Plus,
   Banknote,
   Smartphone,
   Landmark,
-  CreditCard,
   BookOpen,
   Lock,
   Unlock,
   ArrowDownRight,
   Scissors,
   ShoppingBag,
-  Zap,
-  Coffee,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
 import { SaleItem } from "@/components/sale-item";
 import { AddSaleModal } from "@/components/add-sale-modal";
+import { useBusiness } from "@/hooks/use-business";
+import { useQuery } from "@/hooks/use-query";
+import {
+  getTodaySales,
+  getTodayExpenses,
+  getTodayCashRegister,
+  type SaleWithRelations,
+} from "@/lib/supabase";
+import type { BusinessExpense, CashRegister } from "@vida/database/types/business";
 
 type FilterPayment = "all" | "cash" | "mpesa" | "transfer" | "card" | "fiado";
 
-const MOCK_SALES = [
-  { id: "1", description: "Tranças", customer: "Maria João", amount: 1500, paymentMethod: "mpesa", date: "2026-02-27", staff: "Fátima", icon: Scissors },
-  { id: "2", description: "Unhas gel", customer: "Ana Silva", amount: 600, paymentMethod: "cash", date: "2026-02-27", staff: "Manicure", icon: Scissors },
-  { id: "3", description: "Corte + escova", customer: "Sofia Manuel", amount: 800, paymentMethod: "cash", date: "2026-02-27", staff: "Cab. B", icon: Scissors },
-  { id: "4", description: "Alisamento", customer: "Beatriz Costa", amount: 2500, paymentMethod: "transfer", date: "2026-02-27", staff: "Fátima", icon: Scissors },
-  { id: "5", description: "Makeup", customer: "Carla Tembe", amount: 1200, paymentMethod: "cash", date: "2026-02-27", staff: "Dona", icon: Scissors },
-];
-
-const MOCK_EXPENSES = [
-  { id: "e1", description: "Produtos usados", amount: 380, icon: ShoppingBag },
-  { id: "e2", description: "Electricidade", amount: 200, icon: Zap },
-  { id: "e3", description: "Lanche staff", amount: 150, icon: Coffee },
-];
-
 export default function CaixaPage() {
+  const { business } = useBusiness();
   const [filter, setFilter] = useState<FilterPayment>("all");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [caixaOpen] = useState(true);
-  const [currentDate] = useState("27 Fevereiro 2026");
 
-  const openingAmount = 1000;
-  const totalCash = 2600;
-  const totalMpesa = 1500;
-  const totalTransfer = 2500;
-  const totalCard = 0;
-  const totalFiado = 0;
-  const totalSales = totalCash + totalMpesa + totalTransfer + totalCard + totalFiado;
-  const totalExpenses = MOCK_EXPENSES.reduce((s, e) => s + e.amount, 0);
+  const { data: sales, loading: salesLoading, reload: reloadSales } = useQuery<SaleWithRelations[]>(
+    (supabase) => getTodaySales(supabase, business!.id),
+    [business?.id],
+  );
+  const { data: expenses } = useQuery<BusinessExpense[]>(
+    (supabase) => getTodayExpenses(supabase, business!.id),
+    [business?.id],
+  );
+  const { data: cashRegister } = useQuery<CashRegister | null>(
+    (supabase) => getTodayCashRegister(supabase, business!.id),
+    [business?.id],
+  );
+
+  const loading = salesLoading;
+
+  const currentDate = useMemo(() =>
+    new Date().toLocaleDateString("pt-MZ", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
+  []);
+
+  const salesList = sales ?? [];
+  const expensesList = expenses ?? [];
+
+  const sumByMethod = (method: string) =>
+    salesList
+      .filter((s) => s.payment_method === method)
+      .reduce((sum, s) => sum + Number(s.total_amount), 0);
+
+  const totalCash = sumByMethod("cash");
+  const totalMpesa = sumByMethod("mpesa");
+  const totalTransfer = sumByMethod("transfer");
+  const totalFiado = sumByMethod("fiado");
+  const totalSales = salesList.reduce((sum, s) => sum + Number(s.total_amount), 0);
+  const totalExpenses = expensesList.reduce((sum, e) => sum + Number(e.amount), 0);
   const profit = totalSales - totalExpenses;
 
+  const openingAmount = Number(cashRegister?.opening_amount ?? 0);
+  const caixaOpen = cashRegister?.status === "open" || !cashRegister;
   const expectedClosing = openingAmount + totalCash;
-  const actualClosing = 3580;
-  const difference = actualClosing - expectedClosing;
 
   const filteredSales = filter === "all"
-    ? MOCK_SALES
-    : MOCK_SALES.filter((s) => s.paymentMethod === filter);
+    ? salesList
+    : salesList.filter((s) => s.payment_method === filter);
 
   return (
     <div className="min-h-screen pb-4">
-      {/* Header */}
       <header className="bg-[var(--color-surface)] border-b border-[var(--color-border)] px-4 pt-12 pb-4 sticky top-0 z-30">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold">Caixa Diário</h1>
@@ -82,20 +99,12 @@ export default function CaixaPage() {
           </div>
         </div>
 
-        {/* Date Selector */}
         <div className="flex items-center justify-center gap-4 mb-4">
-          <button className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-            <ChevronLeft className="w-4 h-4" />
-          </button>
           <span className="text-sm font-semibold min-w-[160px] text-center">
             {currentDate}
           </span>
-          <button className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-            <ChevronRight className="w-4 h-4" />
-          </button>
         </div>
 
-        {/* Payment Filter */}
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
           {[
             { key: "all" as FilterPayment, label: "Tudo" },
@@ -121,7 +130,6 @@ export default function CaixaPage() {
       </header>
 
       <main className="px-4 pt-4 space-y-4">
-        {/* Revenue Breakdown */}
         <div className="grid grid-cols-2 gap-3">
           <div className="card p-3">
             <div className="flex items-center gap-2 mb-2">
@@ -161,7 +169,6 @@ export default function CaixaPage() {
           </div>
         </div>
 
-        {/* Summary Cards */}
         <div className="flex gap-3">
           <div className="flex-1 card p-3 text-center">
             <p className="text-xs text-[var(--color-text-muted)]">Total Vendas</p>
@@ -183,47 +190,54 @@ export default function CaixaPage() {
           </div>
         </div>
 
-        {/* Expenses */}
-        <section>
-          <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-            <ArrowDownRight className="w-4 h-4 text-red-500" />
-            Despesas do Dia
-          </h3>
-          <div className="card divide-y divide-[var(--color-border)]">
-            {MOCK_EXPENSES.map((exp) => (
-              <div key={exp.id} className="flex items-center gap-3 p-3">
-                <div className="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center">
-                  <exp.icon className="w-4 h-4 text-red-500" />
+        {expensesList.length > 0 && (
+          <section>
+            <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
+              <ArrowDownRight className="w-4 h-4 text-red-500" />
+              Despesas do Dia
+            </h3>
+            <div className="card divide-y divide-[var(--color-border)]">
+              {expensesList.map((exp) => (
+                <div key={exp.id} className="flex items-center gap-3 p-3">
+                  <div className="w-9 h-9 bg-red-50 rounded-xl flex items-center justify-center">
+                    <ShoppingBag className="w-4 h-4 text-red-500" />
+                  </div>
+                  <span className="flex-1 text-sm">{exp.description || exp.category}</span>
+                  <span className="text-sm font-semibold text-red-500">
+                    -{Number(exp.amount).toLocaleString("pt-MZ")} MZN
+                  </span>
                 </div>
-                <span className="flex-1 text-sm">{exp.description}</span>
-                <span className="text-sm font-semibold text-red-500">
-                  -{exp.amount.toLocaleString("pt-MZ")} MZN
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
 
-        {/* Sales List */}
         <section>
           <h3 className="text-sm font-semibold mb-2">Vendas ({filteredSales.length})</h3>
-          <div className="card divide-y divide-[var(--color-border)]">
-            {filteredSales.map((sale) => (
-              <SaleItem
-                key={sale.id}
-                description={sale.description}
-                customer={sale.customer}
-                amount={sale.amount}
-                paymentMethod={sale.paymentMethod}
-                date={sale.date}
-                staff={sale.staff}
-                icon={sale.icon}
-              />
-            ))}
-          </div>
+          {filteredSales.length > 0 ? (
+            <div className="card divide-y divide-[var(--color-border)]">
+              {filteredSales.map((sale) => (
+                <SaleItem
+                  key={sale.id}
+                  description={sale.notes ?? "Venda"}
+                  customer={sale.customer?.name ?? "Cliente"}
+                  amount={Number(sale.total_amount)}
+                  paymentMethod={sale.payment_method}
+                  date={sale.date}
+                  staff={sale.staff?.name ?? "—"}
+                  icon={Scissors}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="card p-6 text-center">
+              <p className="text-sm text-[var(--color-text-muted)]">
+                {loading ? "A carregar..." : "Nenhuma venda registada hoje"}
+              </p>
+            </div>
+          )}
         </section>
 
-        {/* Close Caixa Summary */}
         <section className="card p-4 bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200">
           <h3 className="text-sm font-bold mb-3">Fechar Caixa</h3>
           <div className="space-y-2 text-sm">
@@ -235,17 +249,6 @@ export default function CaixaPage() {
               <span className="text-[var(--color-text-muted)]">Esperado em caixa</span>
               <span className="font-medium">{expectedClosing.toLocaleString("pt-MZ")} MZN</span>
             </div>
-            <div className="flex justify-between">
-              <span className="text-[var(--color-text-muted)]">Real em caixa</span>
-              <span className="font-medium">{actualClosing.toLocaleString("pt-MZ")} MZN</span>
-            </div>
-            <div className="flex justify-between pt-2 border-t border-gray-200">
-              <span className="font-semibold">Diferença</span>
-              <span className={`font-bold ${difference >= 0 ? "text-emerald-600" : "text-red-500"}`}>
-                {difference >= 0 ? "+" : ""}{difference.toLocaleString("pt-MZ")} MZN
-                {difference < 0 && " ⚠️"}
-              </span>
-            </div>
           </div>
           <button className="w-full mt-4 py-2.5 rounded-xl bg-gray-800 text-white text-sm font-semibold hover:bg-gray-900 transition-colors">
             Fechar Caixa do Dia
@@ -253,13 +256,12 @@ export default function CaixaPage() {
         </section>
       </main>
 
-      {/* FAB */}
       <button onClick={() => setShowAddModal(true)} className="fab">
         <Plus className="w-6 h-6" />
       </button>
 
       {showAddModal && (
-        <AddSaleModal onClose={() => setShowAddModal(false)} />
+        <AddSaleModal onClose={() => { setShowAddModal(false); reloadSales(); }} />
       )}
     </div>
   );

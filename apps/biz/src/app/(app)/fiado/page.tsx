@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   BookOpen,
   AlertTriangle,
@@ -15,6 +15,9 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { FiadoCard } from "@/components/fiado-card";
+import { useBusiness } from "@/hooks/use-business";
+import { createBrowserClient } from "@vida/auth/client";
+import { getActiveDebts } from "@/lib/supabase";
 
 interface FiadoEntry {
   id: string;
@@ -46,20 +49,59 @@ const COLLECTION_MESSAGES = [
   "Oi [nome], teu crédito está quase no limite. Podes regularizar antes de nova compra? 🙏",
 ];
 
+function deriveStatus(debt: any): "ok" | "attention" | "critical" {
+  if (debt.status === "overdue") return "critical";
+  if (debt.due_date) {
+    const due = new Date(debt.due_date);
+    const now = new Date();
+    const daysUntilDue = (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24);
+    if (daysUntilDue < 0) return "critical";
+    if (daysUntilDue < 7) return "attention";
+  }
+  return "ok";
+}
+
 export default function FiadoPage() {
+  const { business } = useBusiness();
+  const [fiados, setFiados] = useState<FiadoEntry[]>(MOCK_FIADOS);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterStatus>("all");
 
-  const filtered = MOCK_FIADOS.filter((f) => {
+  useEffect(() => {
+    if (!business?.id) return;
+    const supabase = createBrowserClient();
+    getActiveDebts(supabase, business.id)
+      .then((data) => {
+        const mapped: FiadoEntry[] = data.map((d: any) => ({
+          id: d.id,
+          customer: d.customer?.name ?? "Desconhecido",
+          amount: Number(d.amount) || 0,
+          limit: Number(d.amount) || 0,
+          lastPayment: undefined,
+          dueDate: d.due_date
+            ? new Date(d.due_date).toLocaleDateString("pt-MZ", { day: "numeric", month: "short" })
+            : undefined,
+          status: deriveStatus(d),
+          paymentHistory: 0,
+          phone: d.customer?.phone ?? "",
+        }));
+        if (mapped.length > 0) setFiados(mapped);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [business?.id]);
+
+  const filtered = fiados.filter((f) => {
     if (searchQuery && !f.customer.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (filter !== "all" && f.status !== filter) return false;
     return true;
   });
 
-  const totalFiado = MOCK_FIADOS.reduce((s, f) => s + f.amount, 0);
-  const totalClients = MOCK_FIADOS.length;
-  const criticalCount = MOCK_FIADOS.filter((f) => f.status === "critical").length;
-  const overdueAmount = MOCK_FIADOS.filter((f) => f.status === "critical").reduce((s, f) => s + f.amount, 0);
+  const totalFiado = fiados.reduce((s, f) => s + f.amount, 0);
+  const totalClients = fiados.length;
+  const criticalCount = fiados.filter((f) => f.status === "critical").length;
+  const overdueAmount = fiados.filter((f) => f.status === "critical").reduce((s, f) => s + f.amount, 0);
 
   return (
     <div className="min-h-screen pb-4">
