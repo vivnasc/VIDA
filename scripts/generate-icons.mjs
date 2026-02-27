@@ -51,6 +51,13 @@ const apps = {
       <rect x="220" y="246" width="76" height="38" rx="8" fill="white"/>
     `,
   },
+  landing: {
+    color: "#FF6B35",
+    // Single dot - VIDA master brand
+    innerIcon: `
+      <circle cx="260" cy="261" r="32" fill="white"/>
+    `,
+  },
 };
 
 function makeSvg(appName) {
