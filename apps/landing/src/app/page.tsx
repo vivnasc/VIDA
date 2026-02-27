@@ -1,17 +1,23 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "VIDA - Tua vida, organizada. Tua família, feliz.",
+  title: "VIDA - Tua vida, organizada. Tua familia, feliz.",
 };
 
 /* ──────────────────────────────────────────────
    Inline SVG Icons
    ────────────────────────────────────────────── */
 
-function IconHeart({ className, style }: { className?: string; style?: React.CSSProperties }) {
+interface IconProps {
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+function IconHeart({ className, style }: IconProps) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -24,10 +30,11 @@ function IconHeart({ className, style }: { className?: string; style?: React.CSS
   );
 }
 
-function IconWallet({ className }: { className?: string }) {
+function IconWallet({ className, style }: IconProps) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -42,10 +49,11 @@ function IconWallet({ className }: { className?: string }) {
   );
 }
 
-function IconHome({ className }: { className?: string }) {
+function IconHome({ className, style }: IconProps) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -59,10 +67,11 @@ function IconHome({ className }: { className?: string }) {
   );
 }
 
-function IconActivity({ className }: { className?: string }) {
+function IconActivity({ className, style }: IconProps) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -75,10 +84,11 @@ function IconActivity({ className }: { className?: string }) {
   );
 }
 
-function IconCheck({ className }: { className?: string }) {
+function IconCheck({ className, style }: IconProps) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -91,10 +101,11 @@ function IconCheck({ className }: { className?: string }) {
   );
 }
 
-function IconArrowRight({ className }: { className?: string }) {
+function IconArrowRight({ className, style }: IconProps) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -108,10 +119,11 @@ function IconArrowRight({ className }: { className?: string }) {
   );
 }
 
-function IconStar({ className }: { className?: string }) {
+function IconStar({ className, style }: IconProps) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 24 24"
       fill="currentColor"
       stroke="currentColor"
@@ -129,7 +141,6 @@ function IconStar({ className }: { className?: string }) {
 const apps = [
   {
     name: "VIDA.FAMILIA",
-    tagline: "O coracao da tua familia, digital",
     nameDisplay: "VIDA.FAM\u00CDLIA",
     taglineDisplay: "O cora\u00E7\u00E3o da tua fam\u00EDlia, digital",
     color: "#FF6B35",
@@ -144,7 +155,6 @@ const apps = [
   },
   {
     name: "VIDA.DINHEIRO",
-    tagline: "Tuas financas, teus sonhos",
     nameDisplay: "VIDA.DINHEIRO",
     taglineDisplay: "Tuas finan\u00E7as, teus sonhos",
     color: "#10B981",
@@ -159,7 +169,6 @@ const apps = [
   },
   {
     name: "VIDA.LAR",
-    tagline: "Tua casa, sem stress",
     nameDisplay: "VIDA.LAR",
     taglineDisplay: "Tua casa, sem stress",
     color: "#3B82F6",
@@ -174,7 +183,6 @@ const apps = [
   },
   {
     name: "VIDA.SAUDE",
-    tagline: "Tua familia, sempre saudavel",
     nameDisplay: "VIDA.SA\u00DADE",
     taglineDisplay: "Tua fam\u00EDlia, sempre saud\u00E1vel",
     color: "#F43F5E",
@@ -386,7 +394,10 @@ export default function LandingPage() {
                       className="w-12 h-12 rounded-2xl flex items-center justify-center"
                       style={{ backgroundColor: app.bgLight }}
                     >
-                      <Icon className="w-6 h-6" />
+                      <Icon
+                        className="w-6 h-6"
+                        style={{ color: app.color }}
+                      />
                     </div>
                     <div>
                       <h3
@@ -411,7 +422,6 @@ export default function LandingPage() {
                         >
                           <IconCheck
                             className="w-3 h-3"
-                            // @ts-expect-error -- style prop on SVG
                             style={{ color: app.color }}
                           />
                         </div>
@@ -569,21 +579,29 @@ export default function LandingPage() {
 
             {/* Links */}
             <div className="flex items-center gap-6 text-sm text-[var(--color-text-secondary)]">
-              <a href="#" className="hover:text-[var(--color-text-primary)] transition-colors">
+              <a
+                href="#"
+                className="hover:text-[var(--color-text-primary)] transition-colors"
+              >
                 Termos de Uso
               </a>
-              <a href="#" className="hover:text-[var(--color-text-primary)] transition-colors">
+              <a
+                href="#"
+                className="hover:text-[var(--color-text-primary)] transition-colors"
+              >
                 Pol&iacute;tica de Privacidade
               </a>
-              <a href="#" className="hover:text-[var(--color-text-primary)] transition-colors">
+              <a
+                href="#"
+                className="hover:text-[var(--color-text-primary)] transition-colors"
+              >
                 Contacto
               </a>
             </div>
 
             {/* Copyright */}
             <p className="text-sm text-[var(--color-text-muted)]">
-              &copy; {new Date().getFullYear()} VIDA. Todos os direitos
-              reservados.
+              &copy; 2025 VIDA. Todos os direitos reservados.
             </p>
           </div>
         </div>
