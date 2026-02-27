@@ -44,6 +44,13 @@ export const APP_NAMES: Record<string, AppDefinition> = {
     color: "#F43F5E",
     icon: "Activity",
   },
+  biz: {
+    slug: "biz",
+    name: "BIZ.MZ",
+    tagline: "Teu negócio, organizado",
+    color: "#F59E0B",
+    icon: "Briefcase",
+  },
 } as const;
 
 // ─── Pricing Tiers ──────────────────────────────────────────────────────────

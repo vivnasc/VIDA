@@ -40,6 +40,14 @@ export const VIDA_APPS: VidaApp[] = [
     color: "#F43F5E",
     url: process.env.NEXT_PUBLIC_SAUDE_URL || "http://localhost:3003",
   },
+  {
+    id: "biz",
+    name: "BIZ.MZ",
+    tagline: "Teu neg\u00f3cio, organizado",
+    icon: "Briefcase",
+    color: "#F59E0B",
+    url: process.env.NEXT_PUBLIC_BIZ_URL || "http://localhost:3004",
+  },
 ];
 
 export function getAppUrl(appId: string): string {

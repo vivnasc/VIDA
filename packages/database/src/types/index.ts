@@ -87,6 +87,39 @@ export type {
   InsuranceClaim,
 } from "./health";
 
+// Business types (BIZ.MZ)
+export type {
+  BusinessTemplate,
+  Business,
+  Product,
+  ProductVariant,
+  PaymentMethod,
+  SaleStatus,
+  Sale,
+  SaleItem,
+  CashRegisterStatus,
+  CashRegister,
+  CustomerCategory,
+  BusinessCustomer,
+  FiadoStatus,
+  CustomerDebt,
+  FiadoPayment,
+  StaffMember,
+  StaffCommission,
+  Supplier,
+  PurchaseOrderStatus,
+  PurchaseOrder,
+  BusinessExpense,
+  BusinessAppointment,
+  BusinessLicense,
+  LicenseStatus,
+  BusinessEquipment,
+  BusinessEducationModule,
+  BusinessEducationProgress,
+  PromotionType,
+  BusinessPromotion,
+} from "./business";
+
 // Family types (VIDA Familia)
 export type {
   EventType,
