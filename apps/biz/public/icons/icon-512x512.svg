@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="102" fill="#F59E0B"/>
+  <rect x="20" y="20" width="472" height="472" rx="86" fill="#FBBF24" opacity="0.3"/>
+  <text x="256" y="215" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="96" font-weight="800" fill="white" letter-spacing="-3">BIZ</text>
+  <text x="256" y="310" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="64" font-weight="700" fill="white" opacity="0.9">.MZ</text>
+  <rect x="128" y="340" width="256" height="6" rx="3" fill="white" opacity="0.5"/>
+  <text x="256" y="405" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="28" font-weight="600" fill="white" opacity="0.7">TEU NEGOCIO</text>
+</svg>
