@@ -12,6 +12,12 @@ export interface AuthFormProps {
   appColor: string;
   /** Tagline shown below the app name */
   appTagline: string;
+  /** Custom logo/branding ReactNode. When provided, replaces the default "VIDA.appName" header */
+  appLogo?: React.ReactNode;
+  /** Custom subtitle for register mode. Defaults to "Junta-te ao ecossistema VIDA" */
+  registerSubtitle?: string;
+  /** Custom footer text. Set to empty string to hide. Defaults to "Parte do ecossistema VIDA" */
+  footerText?: string;
   /** Called when the user submits the login form */
   onLogin: (email: string, password: string) => Promise<void>;
   /** Called when the user submits the registration form */
@@ -163,6 +169,9 @@ const AuthForm = React.forwardRef<HTMLDivElement, AuthFormProps>(
       appName,
       appColor,
       appTagline,
+      appLogo,
+      registerSubtitle,
+      footerText,
       onLogin,
       onRegister,
       onGoogleLogin,
@@ -312,7 +321,7 @@ const AuthForm = React.forwardRef<HTMLDivElement, AuthFormProps>(
       ? "Insere o teu email para receber um link de recuperação"
       : isLogin
         ? "Entra na tua conta para continuar"
-        : "Junta-te ao ecossistema VIDA";
+        : (registerSubtitle ?? "Junta-te ao ecossistema VIDA");
 
     const submitLabel = forgotPasswordMode
       ? "Enviar link de recuperação"
@@ -331,16 +340,20 @@ const AuthForm = React.forwardRef<HTMLDivElement, AuthFormProps>(
         <div className="w-full max-w-md">
           {/* ── Branding ──────────────────────────────────────────────── */}
           <div className="mb-8 text-center">
-            <div
-              className="mb-2 inline-flex items-center gap-1 text-3xl font-black tracking-tight"
-              style={{ color: appColor }}
-            >
-              <span className="opacity-60">VIDA</span>
-              <span className="text-4xl leading-none" style={{ color: appColor }}>
-                .
-              </span>
-              <span>{appName.replace("VIDA.", "")}</span>
-            </div>
+            {appLogo ? (
+              <>{appLogo}</>
+            ) : (
+              <div
+                className="mb-2 inline-flex items-center gap-1 text-3xl font-black tracking-tight"
+                style={{ color: appColor }}
+              >
+                <span className="opacity-60">VIDA</span>
+                <span className="text-4xl leading-none" style={{ color: appColor }}>
+                  .
+                </span>
+                <span>{appName.replace("VIDA.", "")}</span>
+              </div>
+            )}
             <p className="text-sm text-gray-500">{appTagline}</p>
           </div>
 
@@ -721,12 +734,18 @@ const AuthForm = React.forwardRef<HTMLDivElement, AuthFormProps>(
           </div>
 
           {/* Footer */}
-          <p className="mt-6 text-center text-xs text-gray-400">
-            Parte do ecossistema{" "}
-            <span className="font-semibold" style={{ color: appColor }}>
-              VIDA
-            </span>
-          </p>
+          {footerText !== "" && (
+            <p className="mt-6 text-center text-xs text-gray-400">
+              {footerText ?? (
+                <>
+                  Parte do ecossistema{" "}
+                  <span className="font-semibold" style={{ color: appColor }}>
+                    VIDA
+                  </span>
+                </>
+              )}
+            </p>
+          )}
         </div>
       </div>
     );
