@@ -9,56 +9,43 @@ import {
   Crown,
   Heart,
   UserPlus,
-  Phone,
-  ChevronRight,
   Filter,
 } from "lucide-react";
+import { useBusiness } from "@/hooks/use-business";
+import { useQuery } from "@/hooks/use-query";
+import { getCustomers } from "@/lib/supabase";
+import type { BusinessCustomer, CustomerCategory } from "@vida/database/types/business";
 
-interface Customer {
-  id: string;
-  name: string;
-  phone: string;
-  category: "vip" | "fiel" | "regular" | "nova";
-  totalSpent: number;
-  visits: number;
-  lastVisit: string;
-  favoriteService?: string;
-  loyaltyPoints: number;
-  debt: number;
-}
+type FilterCategory = "all" | CustomerCategory;
 
-const MOCK_CUSTOMERS: Customer[] = [
-  { id: "1", name: "Maria João", phone: "+258 84 123 4567", category: "vip", totalSpent: 45000, visits: 28, lastVisit: "2026-02-25", favoriteService: "Tranças", loyaltyPoints: 280, debt: 0 },
-  { id: "2", name: "Ana Silva", phone: "+258 82 987 6543", category: "fiel", totalSpent: 22000, visits: 15, lastVisit: "2026-02-27", favoriteService: "Unhas gel", loyaltyPoints: 150, debt: 0 },
-  { id: "3", name: "Sofia Manuel", phone: "+258 84 555 1234", category: "regular", totalSpent: 12000, visits: 8, lastVisit: "2026-02-20", favoriteService: "Corte", loyaltyPoints: 80, debt: 650 },
-  { id: "4", name: "Beatriz Costa", phone: "+258 86 111 2222", category: "vip", totalSpent: 38000, visits: 22, lastVisit: "2026-02-27", favoriteService: "Alisamento", loyaltyPoints: 220, debt: 0 },
-  { id: "5", name: "Carla Tembe", phone: "+258 84 333 4444", category: "regular", totalSpent: 8500, visits: 6, lastVisit: "2026-02-15", favoriteService: "Makeup", loyaltyPoints: 60, debt: 1200 },
-  { id: "6", name: "Lurdes Machel", phone: "+258 82 666 7777", category: "nova", totalSpent: 2400, visits: 3, lastVisit: "2026-02-10", favoriteService: "Sobrancelhas", loyaltyPoints: 30, debt: 0 },
-  { id: "7", name: "Graça Mondlane", phone: "+258 84 888 9999", category: "fiel", totalSpent: 18000, visits: 12, lastVisit: "2026-02-22", favoriteService: "Hidratação", loyaltyPoints: 120, debt: 800 },
-];
-
-type FilterCategory = "all" | "vip" | "fiel" | "regular" | "nova";
-
-const CATEGORY_CONFIG = {
-  vip: { label: "VIP", icon: Crown, color: "text-amber-600", bg: "bg-amber-100", border: "border-amber-200" },
-  fiel: { label: "Fiel", icon: Star, color: "text-blue-600", bg: "bg-blue-100", border: "border-blue-200" },
-  regular: { label: "Regular", icon: Heart, color: "text-emerald-600", bg: "bg-emerald-100", border: "border-emerald-200" },
-  nova: { label: "Nova", icon: UserPlus, color: "text-purple-600", bg: "bg-purple-100", border: "border-purple-200" },
+const CATEGORY_CONFIG: Record<CustomerCategory, { label: string; icon: typeof Crown; color: string; bg: string }> = {
+  vip: { label: "VIP", icon: Crown, color: "text-amber-600", bg: "bg-amber-100" },
+  fiel: { label: "Fiel", icon: Star, color: "text-blue-600", bg: "bg-blue-100" },
+  regular: { label: "Regular", icon: Heart, color: "text-emerald-600", bg: "bg-emerald-100" },
+  nova: { label: "Nova", icon: UserPlus, color: "text-purple-600", bg: "bg-purple-100" },
 };
 
 export default function ClientesPage() {
+  const { business } = useBusiness();
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterCategory>("all");
 
-  const filtered = MOCK_CUSTOMERS.filter((c) => {
+  const { data: customers, loading } = useQuery<BusinessCustomer[]>(
+    (supabase) => getCustomers(supabase, business!.id),
+    [business?.id],
+  );
+
+  const customerList = customers ?? [];
+
+  const filtered = customerList.filter((c) => {
     if (searchQuery && !c.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     if (filter !== "all" && c.category !== filter) return false;
     return true;
   });
 
-  const totalCustomers = MOCK_CUSTOMERS.length;
-  const vipCount = MOCK_CUSTOMERS.filter((c) => c.category === "vip").length;
-  const totalRevenue = MOCK_CUSTOMERS.reduce((s, c) => s + c.totalSpent, 0);
+  const totalCustomers = customerList.length;
+  const vipCount = customerList.filter((c) => c.category === "vip").length;
+  const totalRevenue = customerList.reduce((s, c) => s + c.total_spent, 0);
 
   return (
     <div className="min-h-screen pb-4">
@@ -106,7 +93,6 @@ export default function ClientesPage() {
       </header>
 
       <main className="px-4 pt-4 space-y-4">
-        {/* Summary */}
         <div className="flex gap-3">
           <div className="flex-1 card p-3 text-center">
             <Users className="w-5 h-5 text-primary-500 mx-auto mb-1" />
@@ -126,67 +112,62 @@ export default function ClientesPage() {
           </div>
         </div>
 
-        {/* Customer List */}
-        <div className="space-y-2">
-          {filtered.map((customer) => {
-            const config = CATEGORY_CONFIG[customer.category];
-            const CategoryIcon = config.icon;
-            const formattedDate = new Date(customer.lastVisit + "T00:00:00").toLocaleDateString("pt-MZ", { day: "numeric", month: "short" });
+        {filtered.length > 0 ? (
+          <div className="space-y-2">
+            {filtered.map((customer) => {
+              const config = CATEGORY_CONFIG[customer.category];
+              const formattedDate = customer.last_visit
+                ? new Date(customer.last_visit + "T00:00:00").toLocaleDateString("pt-MZ", { day: "numeric", month: "short" })
+                : null;
 
-            return (
-              <div key={customer.id} className="card p-3">
-                <div className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full ${config.bg} flex items-center justify-center flex-shrink-0`}>
-                    <span className="text-sm font-bold">{customer.name[0]}</span>
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <p className="text-sm font-semibold truncate">{customer.name}</p>
-                      <span className={`text-2xs font-medium px-1.5 py-0.5 rounded-md ${config.bg} ${config.color}`}>
-                        {config.label}
-                      </span>
+              return (
+                <div key={customer.id} className="card p-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-10 h-10 rounded-full ${config.bg} flex items-center justify-center flex-shrink-0`}>
+                      <span className="text-sm font-bold">{customer.name[0]}</span>
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-xs text-[var(--color-text-muted)]">
-                        {customer.visits} visitas
-                      </span>
-                      <span className="w-1 h-1 bg-gray-300 rounded-full" />
-                      <span className="text-xs text-[var(--color-text-muted)]">
-                        {formattedDate}
-                      </span>
-                      {customer.favoriteService && (
-                        <>
-                          <span className="w-1 h-1 bg-gray-300 rounded-full" />
-                          <span className="text-xs text-[var(--color-text-muted)]">
-                            {customer.favoriteService}
-                          </span>
-                        </>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm font-semibold truncate">{customer.name}</p>
+                        <span className={`text-2xs font-medium px-1.5 py-0.5 rounded-md ${config.bg} ${config.color}`}>
+                          {config.label}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        <span className="text-xs text-[var(--color-text-muted)]">
+                          {customer.visit_count} visitas
+                        </span>
+                        {formattedDate && (
+                          <>
+                            <span className="w-1 h-1 bg-gray-300 rounded-full" />
+                            <span className="text-xs text-[var(--color-text-muted)]">
+                              {formattedDate}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="text-right flex-shrink-0">
+                      <p className="text-sm font-semibold">
+                        {customer.total_spent.toLocaleString("pt-MZ")}
+                      </p>
+                      {customer.current_debt > 0 && (
+                        <p className="text-2xs text-violet-600 font-medium">
+                          Fiado: {customer.current_debt.toLocaleString("pt-MZ")}
+                        </p>
                       )}
                     </div>
                   </div>
-
-                  <div className="text-right flex-shrink-0">
-                    <p className="text-sm font-semibold">
-                      {customer.totalSpent.toLocaleString("pt-MZ")}
-                    </p>
-                    {customer.debt > 0 && (
-                      <p className="text-2xs text-violet-600 font-medium">
-                        Fiado: {customer.debt.toLocaleString("pt-MZ")}
-                      </p>
-                    )}
-                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {filtered.length === 0 && (
-          <div className="text-center py-12">
-            <Filter className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="card p-6 text-center">
             <p className="text-sm text-[var(--color-text-muted)]">
-              Nenhum cliente encontrado
+              {loading ? "A carregar..." : "Nenhum cliente encontrado"}
             </p>
           </div>
         )}

@@ -7,7 +7,7 @@ id = "vida-ecosystem"
 [api]
 enabled = true
 port = 54321
-schemas = ["public", "money_schema", "home_schema", "health_schema", "family_schema"]
+schemas = ["public", "money_schema", "home_schema", "health_schema", "family_schema", "biz_schema"]
 extra_search_path = ["public", "extensions"]
 max_rows = 1000
 

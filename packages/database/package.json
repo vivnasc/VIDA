@@ -12,7 +12,8 @@
     "./types/money": "./src/types/money.ts",
     "./types/home": "./src/types/home.ts",
     "./types/health": "./src/types/health.ts",
-    "./types/family": "./src/types/family.ts"
+    "./types/family": "./src/types/family.ts",
+    "./types/business": "./src/types/business.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
