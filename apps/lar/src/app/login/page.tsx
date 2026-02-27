@@ -75,7 +75,7 @@ export default function LoginPage() {
     <AuthForm
       appName="VIDA.LAR"
       appColor="#3B82F6"
-      appTagline="Tua casa gerida por IA"
+      appTagline="Tua casa, sem stress"
       onLogin={handleLogin}
       onRegister={handleRegister}
       onGoogleLogin={handleGoogleLogin}

@@ -75,7 +75,7 @@ export default function LoginPage() {
     <AuthForm
       appName="VIDA.DINHEIRO"
       appColor="#10B981"
-      appTagline="Teu dinheiro, tuas regras"
+      appTagline="Tuas finanças, teus sonhos"
       onLogin={handleLogin}
       onRegister={handleRegister}
       onGoogleLogin={handleGoogleLogin}

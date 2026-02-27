@@ -52,3 +52,9 @@ export { AuthForm } from "./components/auth-form";
 export type { AuthFormProps } from "./components/auth-form";
 
 export { ServiceWorkerRegister } from "./components/service-worker-register";
+
+export { FeedbackButton } from "./components/feedback-button";
+export type { FeedbackButtonProps } from "./components/feedback-button";
+
+export { Analytics } from "./components/analytics";
+export type { AnalyticsProps } from "./components/analytics";

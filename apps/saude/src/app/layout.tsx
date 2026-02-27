@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { ServiceWorkerRegister } from "@vida/ui";
+import { ServiceWorkerRegister, Analytics } from "@vida/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -7,7 +7,7 @@ export const metadata: Metadata = {
     default: "VIDA.SAÚDE",
     template: "%s | VIDA.SAÚDE",
   },
-  description: "Tua saúde e da tua família, organizada",
+  description: "Tua família, sempre saudável",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -40,6 +40,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="min-h-screen bg-[var(--color-background)] font-sans antialiased">
+        <Analytics domain="saude.vida.mz" />
         <ServiceWorkerRegister />
         {children}
       </body>
