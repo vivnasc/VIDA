@@ -19,7 +19,7 @@ export function AppShell({ children }: AppShellProps) {
 
   useEffect(() => {
     // Brief splash for PWA feel (only on initial load)
-    const hasLoaded = sessionStorage.getItem("biz-mz-loaded");
+    const hasLoaded = sessionStorage.getItem("mabiz-loaded");
     if (hasLoaded) {
       setShowSplash(false);
       setIsReady(true);
@@ -29,7 +29,7 @@ export function AppShell({ children }: AppShellProps) {
     const timer = setTimeout(() => {
       setShowSplash(false);
       setIsReady(true);
-      sessionStorage.setItem("biz-mz-loaded", "1");
+      sessionStorage.setItem("mabiz-loaded", "1");
     }, 800);
 
     return () => clearTimeout(timer);
@@ -39,7 +39,12 @@ export function AppShell({ children }: AppShellProps) {
     return (
       <div className="fixed inset-0 bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center z-[100]">
         <div className="text-center animate-in">
-          <div className="text-5xl font-black text-white mb-2 tracking-tight">BIZ.MZ</div>
+          <div className="text-5xl font-black text-white mb-2 tracking-tight">
+            <span className="inline-flex items-center gap-1">
+              <span className="bg-white/20 rounded-full px-3 py-0.5 text-3xl">ma</span>
+              <span>BIZ</span>
+            </span>
+          </div>
           <p className="text-primary-200 text-sm">Teu negócio, organizado</p>
           <div className="mt-6 w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
         </div>

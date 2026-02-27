@@ -72,8 +72,8 @@ export default function LoginPage() {
 
   return (
     <AuthForm
-      appName="BIZ.MZ"
-      appColor="#F59E0B"
+      appName="maBIZ"
+      appColor="#1E7A42"
       appTagline="Teu negócio, organizado"
       onLogin={handleLogin}
       onRegister={handleRegister}

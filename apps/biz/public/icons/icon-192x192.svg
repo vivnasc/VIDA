@@ -1,8 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="38" fill="#F59E0B"/>
-  <rect x="8" y="8" width="176" height="176" rx="32" fill="#FBBF24" opacity="0.3"/>
-  <text x="96" y="82" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="36" font-weight="800" fill="white" letter-spacing="-1">BIZ</text>
-  <text x="96" y="118" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="24" font-weight="700" fill="white" opacity="0.9">.MZ</text>
-  <rect x="48" y="130" width="96" height="3" rx="1.5" fill="white" opacity="0.5"/>
-  <text x="96" y="156" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="600" fill="white" opacity="0.7">TEU NEGOCIO</text>
+  <rect width="192" height="192" rx="38" fill="#1E7A42"/>
+  <rect x="8" y="8" width="176" height="176" rx="32" fill="#22C55E" opacity="0.15"/>
+  <!-- Green circle for "ma" -->
+  <circle cx="70" cy="82" r="30" fill="#DCFCE7"/>
+  <text x="70" y="90" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="22" font-weight="800" fill="#166534">ma</text>
+  <!-- "BIZ" text -->
+  <text x="126" y="93" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="36" font-weight="900" fill="white" letter-spacing="-1">BIZ</text>
+  <rect x="40" y="124" width="112" height="2.5" rx="1.25" fill="white" opacity="0.3"/>
+  <text x="96" y="150" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-size="11" font-weight="600" fill="white" opacity="0.7">TEU NEGOCIO</text>
 </svg>

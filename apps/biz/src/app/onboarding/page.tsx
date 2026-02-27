@@ -367,7 +367,7 @@ export default function OnboardingPage() {
               href="/"
               className="block w-full py-3.5 rounded-xl bg-primary-500 text-white font-semibold text-sm hover:bg-primary-600 transition-colors text-center"
             >
-              Começar a usar BIZ.MZ
+              Começar a usar maBIZ
             </a>
           </div>
         )}

@@ -4,8 +4,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "BIZ.MZ - Teu negócio, organizado",
-    template: "%s | BIZ.MZ",
+    default: "maBIZ - Teu negócio, organizado",
+    template: "%s | maBIZ",
   },
   description:
     "Gestão de micro e pequenos negócios moçambicanos. Controla vendas, stock, fiados, staff e muito mais.",
@@ -13,13 +13,13 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "BIZ.MZ",
+    title: "maBIZ",
   },
   openGraph: {
     type: "website",
-    title: "BIZ.MZ",
+    title: "maBIZ",
     description: "Teu negócio, organizado",
-    siteName: "BIZ.MZ",
+    siteName: "maBIZ",
   },
 };
 
@@ -28,7 +28,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#F59E0B",
+  themeColor: "#1E7A42",
   viewportFit: "cover",
 };
 

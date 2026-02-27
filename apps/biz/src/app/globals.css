@@ -4,14 +4,14 @@
 
 @layer base {
   :root {
-    /* ─── BIZ.MZ Amber/Gold Theme ─── */
-    --color-biz: #F59E0B;
-    --color-biz-light: #FFFBEB;
-    --color-biz-dark: #78350F;
+    /* ─── maBIZ Green Brand Theme ─── */
+    --color-biz: #1E7A42;
+    --color-biz-light: #F0FDF4;
+    --color-biz-dark: #14532D;
 
-    --color-primary: #F59E0B;
-    --color-primary-light: #FEF3C7;
-    --color-primary-dark: #B45309;
+    --color-primary: #1E7A42;
+    --color-primary-light: #DCFCE7;
+    --color-primary-dark: #166534;
 
     --color-background: #F9FAFB;
     --color-surface: #FFFFFF;
@@ -34,9 +34,9 @@
   }
 
   .dark {
-    --color-background: #17130D;
-    --color-surface: #231E17;
-    --color-surface-elevated: #2D261E;
+    --color-background: #0C1A12;
+    --color-surface: #142219;
+    --color-surface-elevated: #1C2E22;
     --color-text-primary: #F9FAFB;
     --color-text-secondary: #9CA3AF;
     --color-text-muted: #6B7280;

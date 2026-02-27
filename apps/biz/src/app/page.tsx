@@ -142,7 +142,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-primary-100 text-sm">Olá, bem-vindo</p>
-            <h1 className="text-xl font-bold">BIZ.MZ</h1>
+            <h1 className="text-xl font-bold">maBIZ</h1>
           </div>
           <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
             <MoreHorizontal className="w-5 h-5" />
@@ -449,7 +449,7 @@ export default function DashboardPage() {
         </section>
 
         {/* Trend indicator */}
-        <section className="card p-4 bg-gradient-to-r from-primary-50 to-amber-50 border-primary-100">
+        <section className="card p-4 bg-gradient-to-r from-primary-50 to-emerald-50 border-primary-100">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
               <TrendingUp className="w-5 h-5 text-primary-600" />

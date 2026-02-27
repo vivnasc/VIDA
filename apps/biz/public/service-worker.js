@@ -1,9 +1,9 @@
-// BIZ.MZ Service Worker v2
+// maBIZ Service Worker v3
 // Supports: offline-first, auto-update, cache versioning, background sync
-const APP_VERSION = "2.0.0";
-const CACHE_STATIC = `biz-mz-static-v${APP_VERSION}`;
-const CACHE_DYNAMIC = `biz-mz-dynamic-v${APP_VERSION}`;
-const CACHE_IMAGES = `biz-mz-images-v${APP_VERSION}`;
+const APP_VERSION = "3.0.0";
+const CACHE_STATIC = `mabiz-static-v${APP_VERSION}`;
+const CACHE_DYNAMIC = `mabiz-dynamic-v${APP_VERSION}`;
+const CACHE_IMAGES = `mabiz-images-v${APP_VERSION}`;
 
 // Static assets to pre-cache on install
 const PRECACHE_URLS = [
@@ -44,7 +44,7 @@ self.addEventListener("activate", (event) => {
       const validCaches = [CACHE_STATIC, CACHE_DYNAMIC, CACHE_IMAGES];
       return Promise.all(
         keys
-          .filter((key) => key.startsWith("biz-mz-") && !validCaches.includes(key))
+          .filter((key) => (key.startsWith("mabiz-") || key.startsWith("biz-mz-")) && !validCaches.includes(key))
           .map((key) => caches.delete(key))
       );
     }).then(() => {
@@ -153,11 +153,11 @@ function offlineFallback(request) {
       `<!DOCTYPE html>
       <html lang="pt">
         <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-          <title>BIZ.MZ - Offline</title>
+          <title>maBIZ - Offline</title>
           <style>
-            body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#FFFBEB;color:#92400E;text-align:center;padding:24px}
+            body{font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;background:#F0FDF4;color:#14532D;text-align:center;padding:24px}
             .box{max-width:300px}.icon{font-size:48px;margin-bottom:16px}h1{font-size:20px;margin:0 0 8px}p{font-size:14px;margin:0 0 24px;opacity:.7}
-            button{background:#F59E0B;color:white;border:none;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer}
+            button{background:#1E7A42;color:white;border:none;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer}
           </style>
         </head>
         <body>

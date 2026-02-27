@@ -20,7 +20,7 @@ export function usePwaInstall() {
     setIsInstalled(isStandalone);
 
     // Check if user dismissed install recently
-    const dismissed = localStorage.getItem("biz-mz-install-dismissed");
+    const dismissed = localStorage.getItem("mabiz-install-dismissed");
     if (dismissed) {
       const dismissedAt = parseInt(dismissed, 10);
       // Show again after 3 days
@@ -68,7 +68,7 @@ export function usePwaInstall() {
 
   const dismiss = useCallback(() => {
     setCanInstall(false);
-    localStorage.setItem("biz-mz-install-dismissed", Date.now().toString());
+    localStorage.setItem("mabiz-install-dismissed", Date.now().toString());
   }, []);
 
   return { canInstall, isInstalled, install, dismiss };
