@@ -1,7 +1,9 @@
-import { createClient } from "@vida/auth/server";
+import { createServerClient } from "@vida/auth/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "VIDA - Tua vida, organizada. Tua familia, feliz.",
@@ -194,7 +196,7 @@ const pricingPlans = [
    ────────────────────────────────────────────── */
 
 export default async function RootPage() {
-  const supabase = await createClient();
+  const supabase = await createServerClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
