@@ -85,28 +85,32 @@ const FEATURES = [
 
 const ORIENTATION_ITEMS = [
   {
+    icon: GraduationCap,
+    title: "Educação Financeira",
+    description:
+      "Aprende a separar finanças pessoais do negócio, a calcular margem de lucro, a poupar e a investir no crescimento.",
+    free: true,
+  },
+  {
     icon: Landmark,
     title: "Pedido de Empréstimos",
     description:
       "Orientação passo-a-passo para preparar documentação e candidatar-te a microcrédito. Sabe que bancos e instituições oferecem as melhores condições.",
+    free: false,
   },
   {
     icon: FileText,
     title: "Formalização do Negócio",
     description:
       "Guia completo para registar o teu negócio. NUIT, alvará, licenças — todos os passos explicados de forma simples.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Educação Financeira",
-    description:
-      "Aprende a separar finanças pessoais do negócio, a calcular margem de lucro, a poupar e a investir no crescimento.",
+    free: false,
   },
   {
     icon: BookOpen,
     title: "Dicas de Gestão",
     description:
       "Conteúdos práticos sobre marketing, atendimento ao cliente, gestão de inventário e muito mais. Aprende enquanto geres.",
+    free: false,
   },
 ];
 
@@ -439,7 +443,8 @@ export function LandingPage() {
                   <span className="text-[#C5975B]">crescer</span>
                 </h2>
                 <p className="text-gray-600 max-w-xl mx-auto text-lg">
-                  O maBIZ não é só um sistema de vendas. É o teu parceiro de crescimento com orientação prática para formalizar e expandir o teu negócio.
+                  O maBIZ não é só um sistema de vendas. É o teu parceiro de crescimento com orientação prática para formalizar e expandir o teu negócio.{" "}
+                  <strong className="text-[#1A5C35]">Educação financeira é grátis para todos.</strong>
                 </p>
               </div>
 
@@ -447,9 +452,14 @@ export function LandingPage() {
                 {ORIENTATION_ITEMS.map((item) => (
                   <div
                     key={item.title}
-                    className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white shadow-md hover:shadow-lg transition-shadow"
+                    className={`relative backdrop-blur-sm rounded-2xl p-6 border shadow-md hover:shadow-lg transition-shadow ${item.free ? "bg-white border-emerald-200 ring-2 ring-emerald-100" : "bg-white/80 border-white"}`}
                   >
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#C5975B] to-[#A67C4A] rounded-xl flex items-center justify-center mb-4 shadow-md">
+                    {item.free && (
+                      <span className="absolute -top-2.5 right-4 bg-[#1A5C35] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wide shadow-md">
+                        Grátis
+                      </span>
+                    )}
+                    <div className={`w-12 h-12 bg-gradient-to-br ${item.free ? "from-[#1A5C35] to-[#1E7A42]" : "from-[#C5975B] to-[#A67C4A]"} rounded-xl flex items-center justify-center mb-4 shadow-md`}>
                       <item.icon className="w-6 h-6 text-white" />
                     </div>
                     <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
