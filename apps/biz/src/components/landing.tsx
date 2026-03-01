@@ -11,7 +11,7 @@ import {
   Smartphone,
   ArrowRight,
   Check,
-  X,
+
   Zap,
   Shield,
   Wifi,
@@ -26,7 +26,7 @@ import {
   Heart,
   Quote,
   BookOpen,
-  BadgeCheck,
+
   Banknote,
 } from "lucide-react";
 
@@ -162,7 +162,7 @@ export function LandingPage() {
               href="/login?mode=register"
               className="text-sm font-bold text-white bg-[#1A5C35] hover:bg-[#14472A] px-5 py-2.5 rounded-xl transition-all shadow-md shadow-emerald-500/20 hover:shadow-lg active:scale-[0.97]"
             >
-              Começar grátis
+              Começar agora
             </Link>
           </div>
         </div>
@@ -205,7 +205,7 @@ export function LandingPage() {
                   href="/login?mode=register"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-base font-bold text-[#1A5C35] bg-white hover:bg-gray-50 px-8 py-4 rounded-2xl shadow-xl shadow-black/20 transition-all hover:shadow-2xl active:scale-[0.97]"
                 >
-                  Começar grátis
+                  Experimentar 7 dias
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
@@ -490,7 +490,7 @@ export function LandingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
             {[
-              { n: "1", title: "Cria a tua conta", desc: "Registo gratuito em 30 segundos. Sem cartão de crédito." },
+              { n: "1", title: "Cria a tua conta", desc: "Registo em 30 segundos. 7 dias para experimentar sem compromisso." },
               { n: "2", title: "Configura o negócio", desc: "Escolhe o tipo de negócio e adiciona os teus produtos ou serviços." },
               { n: "3", title: "Começa a vender", desc: "Regista vendas, controla stock e vê o teu negócio crescer dia a dia." },
             ].map((step, i) => (
@@ -562,51 +562,13 @@ export function LandingPage() {
               Planos para cada fase do teu negócio
             </h2>
             <p className="text-gray-500 max-w-lg mx-auto text-lg">
-              Começa grátis. Cresce quando estiveres pronto.
+              Preços acessíveis para soluções profissionais. Experimenta 7 dias sem compromisso.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            {/* Free */}
-            <div className="bg-white rounded-2xl p-7 border border-gray-200 shadow-md flex flex-col hover:shadow-lg transition-shadow">
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Grátis</h3>
-              <div className="flex items-baseline gap-1 mb-1">
-                <span className="text-4xl font-black text-gray-900">0</span>
-                <span className="text-sm text-gray-500">MZN/mês</span>
-              </div>
-              <p className="text-sm text-gray-500 mb-6">Para quem está a começar</p>
-
-              <ul className="space-y-3 mb-8 flex-1">
-                {[
-                  { text: "Até 5 vendas/mês", ok: true },
-                  { text: "Controlo de stock básico", ok: true },
-                  { text: "Controlo de dívidas", ok: true },
-                  { text: "Orientação empresarial", ok: true },
-                  { text: "1 utilizador", ok: true },
-                  { text: "Relatórios avançados", ok: false },
-                  { text: "Multi-utilizador", ok: false },
-                ].map((item) => (
-                  <li key={item.text} className="flex items-center gap-2.5 text-sm">
-                    {item.ok ? (
-                      <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-                    ) : (
-                      <X className="w-4 h-4 text-gray-300 flex-shrink-0" />
-                    )}
-                    <span className={item.ok ? "text-gray-700" : "text-gray-400"}>{item.text}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link
-                href="/login?mode=register"
-                className="block w-full text-center font-bold text-[#1A5C35] bg-emerald-50 hover:bg-emerald-100 py-3.5 rounded-xl transition-colors active:scale-[0.97] border border-emerald-100"
-              >
-                Começar grátis
-              </Link>
-            </div>
-
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
             {/* Pro */}
-            <div className="bg-white rounded-2xl p-7 border-2 border-[#1A5C35] shadow-xl shadow-emerald-500/10 flex flex-col relative scale-[1.02]">
+            <div className="bg-white rounded-2xl p-8 border-2 border-[#1A5C35] shadow-xl shadow-emerald-500/10 flex flex-col relative">
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
                 <span className="inline-flex items-center gap-1.5 bg-gradient-to-r from-[#1A5C35] to-[#1E7A42] text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
                   <Star className="w-3 h-3" />
@@ -618,16 +580,17 @@ export function LandingPage() {
                 <span className="text-4xl font-black text-gray-900">499</span>
                 <span className="text-sm text-gray-500">MZN/mês</span>
               </div>
-              <p className="text-sm text-gray-500 mb-6">Para negócios em crescimento</p>
+              <p className="text-sm text-gray-500 mb-6">Para empreendedores e negócios em crescimento</p>
 
               <ul className="space-y-3 mb-8 flex-1">
                 {[
                   "Vendas ilimitadas",
-                  "Stock com alertas",
+                  "Stock com alertas automáticos",
                   "Controlo de dívidas completo",
                   "Orientação empresarial completa",
                   "Até 3 utilizadores",
                   "Relatórios avançados",
+                  "Funciona offline",
                   "Suporte prioritário",
                 ].map((text) => (
                   <li key={text} className="flex items-center gap-2.5 text-sm">
@@ -641,28 +604,30 @@ export function LandingPage() {
                 href="/login?mode=register"
                 className="block w-full text-center font-bold text-white bg-[#1A5C35] hover:bg-[#14472A] py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl active:scale-[0.97]"
               >
-                Experimentar 1 semana grátis
+                Experimentar 7 dias
               </Link>
+              <p className="text-xs text-gray-400 text-center mt-2">Sem compromisso. Cancela quando quiseres.</p>
             </div>
 
             {/* Business */}
-            <div className="bg-white rounded-2xl p-7 border border-gray-200 shadow-md flex flex-col hover:shadow-lg transition-shadow">
+            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-md flex flex-col hover:shadow-lg transition-shadow">
               <h3 className="text-xl font-bold text-gray-900 mb-2">Negócio</h3>
               <div className="flex items-baseline gap-1 mb-1">
                 <span className="text-4xl font-black text-gray-900">1.499</span>
                 <span className="text-sm text-gray-500">MZN/mês</span>
               </div>
-              <p className="text-sm text-gray-500 mb-6">Para equipas e multi-loja</p>
+              <p className="text-sm text-gray-500 mb-6">Para equipas e operações multi-loja</p>
 
               <ul className="space-y-3 mb-8 flex-1">
                 {[
-                  "Tudo do Pro",
+                  "Tudo do plano Pro",
                   "Utilizadores ilimitados",
-                  "Multi-loja",
-                  "Orientação + consultoria",
+                  "Gestão multi-loja",
+                  "Orientação + consultoria dedicada",
                   "Exportação de dados",
                   "API e integrações",
                   "Gestor de conta dedicado",
+                  "Onboarding personalizado",
                 ].map((text) => (
                   <li key={text} className="flex items-center gap-2.5 text-sm">
                     <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
@@ -677,6 +642,7 @@ export function LandingPage() {
               >
                 Falar com vendas
               </Link>
+              <p className="text-xs text-gray-400 text-center mt-2">Inclui onboarding e suporte dedicado.</p>
             </div>
           </div>
         </div>
@@ -705,7 +671,7 @@ export function LandingPage() {
             href="/login?mode=register"
             className="inline-flex items-center gap-2 text-lg font-bold text-[#1A5C35] bg-white hover:bg-gray-50 px-10 py-4 rounded-2xl shadow-xl shadow-black/20 transition-all hover:shadow-2xl active:scale-[0.97]"
           >
-            Começar agora — é grátis
+            Começar agora
             <ChevronRight className="w-5 h-5" />
           </Link>
         </div>
