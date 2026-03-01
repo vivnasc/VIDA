@@ -20,57 +20,68 @@ import {
   Star,
 } from "lucide-react";
 
-/* ─── maBIZ Logo (inline SVG) ──────────────────────────────────────────────── */
+/* ─── maBIZ Brand Colors ───────────────────────────────────────────────────── */
 
-function MaBizLogo({ size = 64 }: { size?: number }) {
+const BRAND = {
+  green: "#1A5C35",
+  greenDark: "#14472A",
+  gold: "#C5975B",
+  goldLight: "#D4A96B",
+};
+
+/* ─── maBIZ Cube Mark (isometric M/B cube) ─────────────────────────────────── */
+
+function MaBizMark({ size = 48 }: { size?: number }) {
+  const scale = size / 48;
   return (
     <svg
       width={size}
       height={size}
-      viewBox="0 0 192 192"
+      viewBox="0 0 48 48"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <rect width="192" height="192" rx="38" fill="#1E7A42" />
-      <rect x="8" y="8" width="176" height="176" rx="32" fill="#22C55E" opacity="0.15" />
-      <circle cx="70" cy="82" r="30" fill="#DCFCE7" />
-      <text
-        x="70"
-        y="90"
-        textAnchor="middle"
-        fontFamily="system-ui,-apple-system,sans-serif"
-        fontSize="22"
-        fontWeight="800"
-        fill="#166534"
-      >
-        ma
-      </text>
-      <text
-        x="126"
-        y="93"
-        textAnchor="middle"
-        fontFamily="system-ui,-apple-system,sans-serif"
-        fontSize="36"
-        fontWeight="900"
-        fill="white"
-        letterSpacing="-1"
-      >
-        BIZ
-      </text>
-      <rect x="40" y="124" width="112" height="2.5" rx="1.25" fill="white" opacity="0.3" />
-      <text
-        x="96"
-        y="150"
-        textAnchor="middle"
-        fontFamily="system-ui,-apple-system,sans-serif"
-        fontSize="11"
-        fontWeight="600"
-        fill="white"
-        opacity="0.7"
-      >
-        TEU NEGOCIO
-      </text>
+      <g transform={`scale(${scale > 1 ? 1 : 1})`}>
+        {/* Left face - gold */}
+        <path d="M4 16 L24 6 L24 38 L4 28Z" fill={BRAND.gold} />
+        <path d="M4 16 L24 6 L24 38 L4 28Z" fill="black" opacity="0.05" />
+        {/* Right face - green dark */}
+        <path d="M24 6 L44 16 L44 28 L24 38Z" fill={BRAND.greenDark} />
+        {/* Top face left - green */}
+        <path d="M4 16 L14 11 L24 16 L14 21Z" fill={BRAND.green} />
+        {/* Top face right - green light */}
+        <path d="M24 16 L34 11 L44 16 L34 21Z" fill={BRAND.green} opacity="0.85" />
+        {/* Center V notch - creates M/B shape */}
+        <path d="M14 21 L24 16 L34 21 L24 26Z" fill={BRAND.green} opacity="0.7" />
+        {/* Left ridge - M shape */}
+        <path d="M4 16 L14 11 L14 21 L4 26Z" fill={BRAND.gold} opacity="0.8" />
+        {/* Right ridge */}
+        <path d="M44 16 L34 11 L34 21 L44 26Z" fill={BRAND.greenDark} opacity="0.8" />
+        {/* Bottom edge highlight */}
+        <path d="M4 28 L24 38 L44 28" stroke={BRAND.green} strokeWidth="0.5" fill="none" opacity="0.3" />
+      </g>
     </svg>
+  );
+}
+
+/* ─── maBIZ Full Logo (mark + text) ────────────────────────────────────────── */
+
+function MaBizLogo({ size = 64, showText = true }: { size?: number; showText?: boolean }) {
+  if (!showText) return <MaBizMark size={size} />;
+
+  return (
+    <div className="inline-flex items-center gap-2.5">
+      <MaBizMark size={size} />
+      <div className="flex flex-col">
+        <span className="text-xl font-black tracking-tight leading-none" style={{ fontSize: size * 0.45 }}>
+          <span style={{ color: BRAND.gold }}>ma</span>
+          <span style={{ color: BRAND.green }}>BIZ</span>
+        </span>
+        <svg width={size * 1.2} height={size * 0.12} viewBox="0 0 60 6" className="-mt-0.5">
+          <path d="M0 3 Q15 0 30 3 Q45 6 60 3" stroke={BRAND.green} strokeWidth="1.5" fill="none" opacity="0.5" />
+        </svg>
+      </div>
+    </div>
   );
 }
 
@@ -148,12 +159,7 @@ export function LandingPage() {
       {/* ── Header / Nav ─────────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2.5">
-            <MaBizLogo size={36} />
-            <span className="text-lg font-black tracking-tight text-gray-900">
-              <span className="text-[#1E7A42]/60">ma</span>BIZ
-            </span>
-          </div>
+          <MaBizLogo size={32} />
           <div className="flex items-center gap-2">
             <Link
               href="/login"
@@ -335,7 +341,7 @@ export function LandingPage() {
 
               <ul className="space-y-2.5 mb-6 flex-1">
                 {[
-                  { text: "Até 50 vendas/mês", ok: true },
+                  { text: "Até 5 vendas/mês", ok: true },
                   { text: "Controlo de stock básico", ok: true },
                   { text: "Controlo de dívidas", ok: true },
                   { text: "1 utilizador", ok: true },
@@ -439,7 +445,9 @@ export function LandingPage() {
       {/* ── Final CTA ────────────────────────────────────────────────── */}
       <section>
         <div className="max-w-5xl mx-auto px-4 py-16 text-center">
-          <MaBizLogo size={56} />
+          <div className="flex justify-center">
+            <MaBizMark size={56} />
+          </div>
           <h2 className="text-2xl font-black text-gray-900 mt-6 mb-3">
             Organiza o teu negócio hoje
           </h2>
@@ -460,12 +468,7 @@ export function LandingPage() {
       <footer className="border-t border-gray-100 bg-gray-50">
         <div className="max-w-5xl mx-auto px-4 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <MaBizLogo size={28} />
-              <span className="text-sm font-bold text-gray-900">
-                <span className="text-[#1E7A42]/60">ma</span>BIZ
-              </span>
-            </div>
+            <MaBizLogo size={24} />
             <p className="text-xs text-gray-400">
               &copy; {new Date().getFullYear()} maBIZ. Teu negócio, organizado.
             </p>
