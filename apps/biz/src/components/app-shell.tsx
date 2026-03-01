@@ -41,7 +41,7 @@ export function AppShell({ children }: AppShellProps) {
         <div className="text-center animate-in">
           <div className="bg-white rounded-3xl p-4 inline-block mx-auto mb-4 shadow-lg shadow-black/10">
             <img
-              src="/logos/mabis-logo.completo.png"
+              src="/logos/mabiz-full.png"
               alt="maBIZ"
               style={{ height: 72 }}
               className="object-contain"
