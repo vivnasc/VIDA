@@ -15,21 +15,21 @@
   "prefer_related_applications": false,
   "icons": [
     {
-      "src": "/icons/icon-192x192.svg",
-      "sizes": "192x192",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512x512.svg",
+      "src": "/logos/mabis_Mlogo.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-192x192.svg",
+      "src": "/logos/mabis_Mlogo.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logos/mabis_Mlogo.png",
+      "sizes": "192x192",
+      "type": "image/png",
       "purpose": "maskable"
     }
   ]
