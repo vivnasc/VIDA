@@ -39,21 +39,13 @@ export function AppShell({ children }: AppShellProps) {
     return (
       <div className="fixed inset-0 bg-gradient-to-br from-[#1A5C35] to-[#14472A] flex items-center justify-center z-[100]">
         <div className="text-center animate-in">
-          {/* Isometric M/B cube mark */}
-          <svg width="72" height="72" viewBox="0 0 48 48" fill="none" className="mx-auto mb-4">
-            <path d="M4 16 L24 6 L24 38 L4 28Z" fill="#C5975B" />
-            <path d="M4 16 L24 6 L24 38 L4 28Z" fill="black" opacity="0.05" />
-            <path d="M24 6 L44 16 L44 28 L24 38Z" fill="#14472A" />
-            <path d="M4 16 L14 11 L24 16 L14 21Z" fill="#1A5C35" />
-            <path d="M24 16 L34 11 L44 16 L34 21Z" fill="#1A5C35" opacity="0.85" />
-            <path d="M14 21 L24 16 L34 21 L24 26Z" fill="#1A5C35" opacity="0.7" />
-            <path d="M4 16 L14 11 L14 21 L4 26Z" fill="#C5975B" opacity="0.8" />
-            <path d="M44 16 L34 11 L34 21 L44 26Z" fill="#14472A" opacity="0.8" />
-          </svg>
-          <div className="text-3xl font-black tracking-tight mb-1">
+          <div className="text-4xl font-black tracking-tight mb-2">
             <span className="text-[#C5975B]">ma</span>
             <span className="text-white">BIZ</span>
           </div>
+          <svg width="100" height="8" viewBox="0 0 60 6" className="mx-auto mb-1">
+            <path d="M0 4 Q15 0 30 3 Q45 6 60 2" stroke="white" strokeWidth="2" fill="none" opacity="0.3" strokeLinecap="round" />
+          </svg>
           <p className="text-emerald-200 text-sm">Teu negócio, organizado</p>
           <div className="mt-6 w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto" />
         </div>

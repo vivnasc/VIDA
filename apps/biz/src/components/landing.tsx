@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import {
   ShoppingBag,
   Package,
   CreditCard,
   Users,
-  Banknote,
   BarChart3,
   Smartphone,
   ArrowRight,
@@ -26,61 +24,28 @@ const BRAND = {
   green: "#1A5C35",
   greenDark: "#14472A",
   gold: "#C5975B",
-  goldLight: "#D4A96B",
 };
 
-/* ─── maBIZ Cube Mark (isometric M/B cube) ─────────────────────────────────── */
+/* ─── maBIZ Text Logo (clean typography) ───────────────────────────────────── */
 
-function MaBizMark({ size = 48 }: { size?: number }) {
-  const scale = size / 48;
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 48 48"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <g transform={`scale(${scale > 1 ? 1 : 1})`}>
-        {/* Left face - gold */}
-        <path d="M4 16 L24 6 L24 38 L4 28Z" fill={BRAND.gold} />
-        <path d="M4 16 L24 6 L24 38 L4 28Z" fill="black" opacity="0.05" />
-        {/* Right face - green dark */}
-        <path d="M24 6 L44 16 L44 28 L24 38Z" fill={BRAND.greenDark} />
-        {/* Top face left - green */}
-        <path d="M4 16 L14 11 L24 16 L14 21Z" fill={BRAND.green} />
-        {/* Top face right - green light */}
-        <path d="M24 16 L34 11 L44 16 L34 21Z" fill={BRAND.green} opacity="0.85" />
-        {/* Center V notch - creates M/B shape */}
-        <path d="M14 21 L24 16 L34 21 L24 26Z" fill={BRAND.green} opacity="0.7" />
-        {/* Left ridge - M shape */}
-        <path d="M4 16 L14 11 L14 21 L4 26Z" fill={BRAND.gold} opacity="0.8" />
-        {/* Right ridge */}
-        <path d="M44 16 L34 11 L34 21 L44 26Z" fill={BRAND.greenDark} opacity="0.8" />
-        {/* Bottom edge highlight */}
-        <path d="M4 28 L24 38 L44 28" stroke={BRAND.green} strokeWidth="0.5" fill="none" opacity="0.3" />
-      </g>
-    </svg>
-  );
-}
-
-/* ─── maBIZ Full Logo (mark + text) ────────────────────────────────────────── */
-
-function MaBizLogo({ size = 64, showText = true }: { size?: number; showText?: boolean }) {
-  if (!showText) return <MaBizMark size={size} />;
+function MaBizLogo({ size = "md" }: { size?: "sm" | "md" | "lg" | "xl" }) {
+  const styles = {
+    sm: { text: "text-lg", swoosh: { w: 52, h: 5 } },
+    md: { text: "text-2xl", swoosh: { w: 68, h: 6 } },
+    lg: { text: "text-3xl", swoosh: { w: 84, h: 7 } },
+    xl: { text: "text-5xl", swoosh: { w: 120, h: 8 } },
+  };
+  const s = styles[size];
 
   return (
-    <div className="inline-flex items-center gap-2.5">
-      <MaBizMark size={size} />
-      <div className="flex flex-col">
-        <span className="text-xl font-black tracking-tight leading-none" style={{ fontSize: size * 0.45 }}>
-          <span style={{ color: BRAND.gold }}>ma</span>
-          <span style={{ color: BRAND.green }}>BIZ</span>
-        </span>
-        <svg width={size * 1.2} height={size * 0.12} viewBox="0 0 60 6" className="-mt-0.5">
-          <path d="M0 3 Q15 0 30 3 Q45 6 60 3" stroke={BRAND.green} strokeWidth="1.5" fill="none" opacity="0.5" />
-        </svg>
-      </div>
+    <div className="inline-flex flex-col items-start">
+      <span className={`${s.text} font-black tracking-tight leading-none`}>
+        <span style={{ color: BRAND.gold }}>ma</span>
+        <span style={{ color: BRAND.green }}>BIZ</span>
+      </span>
+      <svg width={s.swoosh.w} height={s.swoosh.h} viewBox="0 0 60 6" className="-mt-0.5">
+        <path d="M0 4 Q15 0 30 3 Q45 6 60 2" stroke={BRAND.green} strokeWidth="2" fill="none" opacity="0.4" strokeLinecap="round" />
+      </svg>
     </div>
   );
 }
@@ -159,7 +124,7 @@ export function LandingPage() {
       {/* ── Header / Nav ─────────────────────────────────────────────── */}
       <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-5xl mx-auto flex items-center justify-between px-4 py-3">
-          <MaBizLogo size={32} />
+          <MaBizLogo size="md" />
           <div className="flex items-center gap-2">
             <Link
               href="/login"
@@ -169,7 +134,7 @@ export function LandingPage() {
             </Link>
             <Link
               href="/login?mode=register"
-              className="text-sm font-semibold text-white bg-[#1E7A42] hover:bg-[#166534] px-4 py-2 rounded-xl transition-colors"
+              className="text-sm font-semibold text-white bg-[#1A5C35] hover:bg-[#14472A] px-4 py-2 rounded-xl transition-colors"
             >
               Começar grátis
             </Link>
@@ -188,7 +153,7 @@ export function LandingPage() {
 
           <h1 className="text-4xl sm:text-5xl font-black text-gray-900 tracking-tight leading-tight mb-4">
             Teu negócio,{" "}
-            <span className="text-[#1E7A42]">organizado</span>
+            <span className="text-[#1A5C35]">organizado</span>
           </h1>
 
           <p className="text-lg text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
@@ -199,7 +164,7 @@ export function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
             <Link
               href="/login?mode=register"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-base font-bold text-white bg-[#1E7A42] hover:bg-[#166534] px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl hover:shadow-emerald-500/30 active:scale-[0.98]"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-base font-bold text-white bg-[#1A5C35] hover:bg-[#14472A] px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl hover:shadow-emerald-500/30 active:scale-[0.98]"
             >
               Começar grátis
               <ArrowRight className="w-5 h-5" />
@@ -216,7 +181,7 @@ export function LandingPage() {
           <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
             {SELLING_POINTS.map((point) => (
               <div key={point.text} className="flex items-center gap-1.5 text-xs text-gray-500">
-                <point.icon className="w-3.5 h-3.5 text-[#1E7A42]" />
+                <point.icon className="w-3.5 h-3.5 text-[#1A5C35]" />
                 {point.text}
               </div>
             ))}
@@ -361,7 +326,7 @@ export function LandingPage() {
 
               <Link
                 href="/login?mode=register"
-                className="block w-full text-center font-semibold text-[#1E7A42] bg-emerald-50 hover:bg-emerald-100 py-3 rounded-xl transition-colors active:scale-[0.98]"
+                className="block w-full text-center font-semibold text-[#1A5C35] bg-emerald-50 hover:bg-emerald-100 py-3 rounded-xl transition-colors active:scale-[0.98]"
               >
                 Começar grátis
               </Link>
@@ -370,7 +335,7 @@ export function LandingPage() {
             {/* ── Pro (destaque) ── */}
             <div className="bg-white rounded-2xl p-6 border-2 border-[#1E7A42] shadow-xl shadow-emerald-500/10 flex flex-col relative">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                <span className="inline-flex items-center gap-1 bg-[#1E7A42] text-white text-xs font-bold px-3 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1 bg-[#1A5C35] text-white text-xs font-bold px-3 py-1 rounded-full">
                   <Star className="w-3 h-3" />
                   Popular
                 </span>
@@ -400,9 +365,9 @@ export function LandingPage() {
 
               <Link
                 href="/login?mode=register"
-                className="block w-full text-center font-bold text-white bg-[#1E7A42] hover:bg-[#166534] py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
+                className="block w-full text-center font-bold text-white bg-[#1A5C35] hover:bg-[#14472A] py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
               >
-                Experimentar 14 dias grátis
+                Experimentar 1 semana grátis
               </Link>
             </div>
 
@@ -446,7 +411,7 @@ export function LandingPage() {
       <section>
         <div className="max-w-5xl mx-auto px-4 py-16 text-center">
           <div className="flex justify-center">
-            <MaBizMark size={56} />
+            <MaBizLogo size="lg" />
           </div>
           <h2 className="text-2xl font-black text-gray-900 mt-6 mb-3">
             Organiza o teu negócio hoje
@@ -456,7 +421,7 @@ export function LandingPage() {
           </p>
           <Link
             href="/login?mode=register"
-            className="inline-flex items-center gap-2 text-base font-bold text-white bg-[#1E7A42] hover:bg-[#166534] px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
+            className="inline-flex items-center gap-2 text-base font-bold text-white bg-[#1A5C35] hover:bg-[#14472A] px-8 py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
           >
             Começar agora
             <ChevronRight className="w-5 h-5" />
@@ -468,7 +433,7 @@ export function LandingPage() {
       <footer className="border-t border-gray-100 bg-gray-50">
         <div className="max-w-5xl mx-auto px-4 py-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <MaBizLogo size={24} />
+            <MaBizLogo size="sm" />
             <p className="text-xs text-gray-400">
               &copy; {new Date().getFullYear()} maBIZ. Teu negócio, organizado.
             </p>
