@@ -314,13 +314,13 @@ const AuthForm = React.forwardRef<HTMLDivElement, AuthFormProps>(
     const title = forgotPasswordMode
       ? "Recuperar palavra-passe"
       : isLogin
-        ? "Bem-vindo de volta"
+        ? "Que bom ter-te de volta!"
         : "Criar conta";
 
     const subtitle = forgotPasswordMode
       ? "Insere o teu email para receber um link de recuperação"
       : isLogin
-        ? "Entra na tua conta para continuar"
+        ? "Continua de onde paraste"
         : (registerSubtitle ?? "Junta-te ao ecossistema VIDA");
 
     const submitLabel = forgotPasswordMode

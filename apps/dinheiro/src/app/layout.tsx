@@ -1,9 +1,10 @@
 import type { Metadata, Viewport } from "next";
+import { ServiceWorkerRegister, Analytics } from "@vida/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "VIDA.DINHEIRO - Teu dinheiro, tuas regras",
+    default: "VIDA.DINHEIRO - Tuas finanças, teus sonhos",
     template: "%s | VIDA.DINHEIRO",
   },
   description:
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title: "VIDA.DINHEIRO",
-    description: "Teu dinheiro, tuas regras",
+    description: "Tuas finanças, teus sonhos",
     siteName: "VIDA.DINHEIRO",
   },
 };
@@ -39,10 +40,15 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
-      <body className="font-sans">{children}</body>
+      <body className="font-sans">
+        <Analytics domain="dinheiro.vida.mz" />
+        <ServiceWorkerRegister />
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { ServiceWorkerRegister, Analytics } from "@vida/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -38,9 +39,12 @@ export default function RootLayout({
     <html lang="pt" suppressHydrationWarning>
       <head>
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased dark:bg-background-dark">
+        <Analytics domain="familia.vida.mz" />
+        <ServiceWorkerRegister />
         {children}
       </body>
     </html>

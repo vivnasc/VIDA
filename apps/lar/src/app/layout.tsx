@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
+import { ServiceWorkerRegister, Analytics } from "@vida/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VIDA.LAR - Tua casa gerida por IA",
+  title: "VIDA.LAR - Tua casa, sem stress",
   description:
     "Gestão inteligente da tua casa: inventário, compras, refeições e manutenção. Tudo num só lugar.",
   manifest: "/manifest.json",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
     title: "VIDA.LAR",
   },
   openGraph: {
-    title: "VIDA.LAR - Tua casa gerida por IA",
+    title: "VIDA.LAR - Tua casa, sem stress",
     description:
       "Gestão inteligente da tua casa: inventário, compras, refeições e manutenção.",
     type: "website",
@@ -36,10 +37,12 @@ export default function RootLayout({
   return (
     <html lang="pt">
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="font-sans antialiased bg-blue-50/30 text-gray-900 min-h-screen">
+        <Analytics domain="lar.vida.mz" />
+        <ServiceWorkerRegister />
         {children}
       </body>
     </html>

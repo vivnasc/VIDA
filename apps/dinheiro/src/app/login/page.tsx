@@ -33,6 +33,7 @@ export default function LoginPage() {
             full_name: fullName,
             phone,
           },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       if (error) throw new Error(error.message);
@@ -74,7 +75,7 @@ export default function LoginPage() {
     <AuthForm
       appName="VIDA.DINHEIRO"
       appColor="#10B981"
-      appTagline="Teu dinheiro, tuas regras"
+      appTagline="Tuas finanças, teus sonhos"
       onLogin={handleLogin}
       onRegister={handleRegister}
       onGoogleLogin={handleGoogleLogin}
