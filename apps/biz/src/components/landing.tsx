@@ -26,26 +26,44 @@ const BRAND = {
   gold: "#C5975B",
 };
 
-/* ─── maBIZ Text Logo (clean typography) ───────────────────────────────────── */
+/* ─── maBIZ Isometric Cube Mark ────────────────────────────────────────────── */
+
+function MaBizMark({ size = 32 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
+      {/* Top face: M chevron */}
+      <path d="M9 34 L27 17 L49 30 L72 17 L91 34 L50 55 Z" fill={BRAND.green} />
+      {/* Left face: gold */}
+      <path d="M7 37 L48 58 L48 93 L7 72 Z" fill={BRAND.gold} />
+      {/* Right face: dark green with B notch */}
+      <path d="M52 58 L93 37 L93 47 L82 51 L82 57 L93 61 L93 72 L52 93 Z" fill={BRAND.greenDark} />
+    </svg>
+  );
+}
+
+/* ─── maBIZ Full Logo (Cube + Text + Swoosh) ───────────────────────────────── */
 
 function MaBizLogo({ size = "md" }: { size?: "sm" | "md" | "lg" | "xl" }) {
   const styles = {
-    sm: { text: "text-lg", swoosh: { w: 52, h: 5 } },
-    md: { text: "text-2xl", swoosh: { w: 68, h: 6 } },
-    lg: { text: "text-3xl", swoosh: { w: 84, h: 7 } },
-    xl: { text: "text-5xl", swoosh: { w: 120, h: 8 } },
+    sm: { mark: 24, text: "text-lg", swoosh: { w: 52, h: 5 }, gap: "gap-1.5" },
+    md: { mark: 32, text: "text-2xl", swoosh: { w: 68, h: 6 }, gap: "gap-2" },
+    lg: { mark: 40, text: "text-3xl", swoosh: { w: 84, h: 7 }, gap: "gap-2.5" },
+    xl: { mark: 56, text: "text-5xl", swoosh: { w: 120, h: 8 }, gap: "gap-3" },
   };
   const s = styles[size];
 
   return (
-    <div className="inline-flex flex-col items-start">
-      <span className={`${s.text} font-black tracking-tight leading-none`}>
-        <span style={{ color: BRAND.gold }}>ma</span>
-        <span style={{ color: BRAND.green }}>BIZ</span>
-      </span>
-      <svg width={s.swoosh.w} height={s.swoosh.h} viewBox="0 0 60 6" className="-mt-0.5">
-        <path d="M0 4 Q15 0 30 3 Q45 6 60 2" stroke={BRAND.green} strokeWidth="2" fill="none" opacity="0.4" strokeLinecap="round" />
-      </svg>
+    <div className={`inline-flex items-center ${s.gap}`}>
+      <MaBizMark size={s.mark} />
+      <div className="inline-flex flex-col items-start">
+        <span className={`${s.text} font-black tracking-tight leading-none`}>
+          <span style={{ color: BRAND.gold }}>ma</span>
+          <span style={{ color: BRAND.green }}>BIZ</span>
+        </span>
+        <svg width={s.swoosh.w} height={s.swoosh.h} viewBox="0 0 60 6" className="-mt-0.5">
+          <path d="M0 4 Q15 0 30 3 Q45 6 60 2" stroke={BRAND.green} strokeWidth="2" fill="none" opacity="0.4" strokeLinecap="round" />
+        </svg>
+      </div>
     </div>
   );
 }
