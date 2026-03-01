@@ -1,19 +1,23 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   ShoppingBag,
   Package,
-  BookOpen,
+  CreditCard,
   Users,
+  Banknote,
   BarChart3,
   Smartphone,
   ArrowRight,
   Check,
+  X,
   Zap,
   Shield,
   Wifi,
   ChevronRight,
+  Star,
 } from "lucide-react";
 
 /* ─── maBIZ Logo (inline SVG) ──────────────────────────────────────────────── */
@@ -86,9 +90,9 @@ const FEATURES = [
     color: "bg-blue-100 text-blue-700",
   },
   {
-    icon: BookOpen,
-    title: "Gestão de Fiado",
-    description: "Controla quem te deve. Histórico completo. Nunca mais esqueces um fiado.",
+    icon: CreditCard,
+    title: "Controlo de Dívidas",
+    description: "Sabe quem te deve e quanto. Histórico completo. Nunca mais perdes dinheiro.",
     color: "bg-violet-100 text-violet-700",
   },
   {
@@ -182,7 +186,7 @@ export function LandingPage() {
           </h1>
 
           <p className="text-lg text-gray-500 max-w-md mx-auto mb-8 leading-relaxed">
-            Vendas, stock, fiados, staff — tudo o que precisas para gerir o teu
+            Vendas, stock, dívidas, staff — tudo o que precisas para gerir o teu
             negócio, no teu telemóvel.
           </p>
 
@@ -236,7 +240,7 @@ export function LandingPage() {
             </div>
             <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
               <div className="text-2xl mb-3">💸</div>
-              <h3 className="font-semibold text-gray-900 mb-1">Fiados esquecidos</h3>
+              <h3 className="font-semibold text-gray-900 mb-1">Dívidas esquecidas</h3>
               <p className="text-sm text-gray-500">
                 Clientes que devem e ninguém lembra. Dinheiro que nunca volta.
               </p>
@@ -307,42 +311,125 @@ export function LandingPage() {
         </div>
       </section>
 
-      {/* ── Pricing / Value ──────────────────────────────────────────── */}
-      <section className="bg-gray-50 border-y border-gray-100">
+      {/* ── Pricing ──────────────────────────────────────────────────── */}
+      <section id="precos" className="bg-gray-50 border-y border-gray-100 scroll-mt-16">
         <div className="max-w-5xl mx-auto px-4 py-16">
-          <div className="max-w-md mx-auto text-center">
-            <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-xl shadow-gray-200/50">
-              <div className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 text-xs font-semibold px-3 py-1 rounded-full mb-4 border border-amber-100">
-                Lançamento
-              </div>
-              <h3 className="text-2xl font-black text-gray-900 mb-1">Gratuito</h3>
-              <p className="text-gray-500 text-sm mb-6">
-                Para sempre no plano básico. Sem surpresas.
-              </p>
+          <div className="text-center mb-12">
+            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+              Planos para cada fase do teu negócio
+            </h2>
+            <p className="text-gray-500 max-w-md mx-auto">
+              Começa grátis. Cresce quando estiveres pronto.
+            </p>
+          </div>
 
-              <ul className="text-left space-y-3 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto">
+            {/* ── Grátis ── */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col">
+              <h3 className="text-lg font-bold text-gray-900 mb-1">Grátis</h3>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-3xl font-black text-gray-900">0</span>
+                <span className="text-sm text-gray-500">MZN/mês</span>
+              </div>
+              <p className="text-xs text-gray-500 mb-5">Para quem está a começar</p>
+
+              <ul className="space-y-2.5 mb-6 flex-1">
                 {[
-                  "Vendas ilimitadas",
-                  "Controlo de stock",
-                  "Gestão de fiados",
-                  "Relatórios básicos",
-                  "Funciona offline",
-                  "Suporte por WhatsApp",
+                  { text: "Até 50 vendas/mês", ok: true },
+                  { text: "Controlo de stock básico", ok: true },
+                  { text: "Controlo de dívidas", ok: true },
+                  { text: "1 utilizador", ok: true },
+                  { text: "Relatórios avançados", ok: false },
+                  { text: "Multi-utilizador", ok: false },
                 ].map((item) => (
-                  <li key={item} className="flex items-center gap-2.5 text-sm text-gray-700">
-                    <div className="w-5 h-5 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Check className="w-3 h-3 text-emerald-600" />
-                    </div>
-                    {item}
+                  <li key={item.text} className="flex items-center gap-2 text-sm">
+                    {item.ok ? (
+                      <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    ) : (
+                      <X className="w-4 h-4 text-gray-300 flex-shrink-0" />
+                    )}
+                    <span className={item.ok ? "text-gray-700" : "text-gray-400"}>{item.text}</span>
                   </li>
                 ))}
               </ul>
 
               <Link
                 href="/login?mode=register"
-                className="block w-full text-center font-bold text-white bg-[#1E7A42] hover:bg-[#166534] py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
+                className="block w-full text-center font-semibold text-[#1E7A42] bg-emerald-50 hover:bg-emerald-100 py-3 rounded-xl transition-colors active:scale-[0.98]"
               >
-                Criar conta grátis
+                Começar grátis
+              </Link>
+            </div>
+
+            {/* ── Pro (destaque) ── */}
+            <div className="bg-white rounded-2xl p-6 border-2 border-[#1E7A42] shadow-xl shadow-emerald-500/10 flex flex-col relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                <span className="inline-flex items-center gap-1 bg-[#1E7A42] text-white text-xs font-bold px-3 py-1 rounded-full">
+                  <Star className="w-3 h-3" />
+                  Popular
+                </span>
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-1">Pro</h3>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-3xl font-black text-gray-900">499</span>
+                <span className="text-sm text-gray-500">MZN/mês</span>
+              </div>
+              <p className="text-xs text-gray-500 mb-5">Para negócios em crescimento</p>
+
+              <ul className="space-y-2.5 mb-6 flex-1">
+                {[
+                  { text: "Vendas ilimitadas", ok: true },
+                  { text: "Stock com alertas", ok: true },
+                  { text: "Controlo de dívidas completo", ok: true },
+                  { text: "Até 3 utilizadores", ok: true },
+                  { text: "Relatórios avançados", ok: true },
+                  { text: "Suporte prioritário", ok: true },
+                ].map((item) => (
+                  <li key={item.text} className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <span className="text-gray-700">{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/login?mode=register"
+                className="block w-full text-center font-bold text-white bg-[#1E7A42] hover:bg-[#166534] py-3 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl active:scale-[0.98]"
+              >
+                Experimentar 14 dias grátis
+              </Link>
+            </div>
+
+            {/* ── Negócio ── */}
+            <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex flex-col">
+              <h3 className="text-lg font-bold text-gray-900 mb-1">Negócio</h3>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-3xl font-black text-gray-900">1.499</span>
+                <span className="text-sm text-gray-500">MZN/mês</span>
+              </div>
+              <p className="text-xs text-gray-500 mb-5">Para equipas e multi-loja</p>
+
+              <ul className="space-y-2.5 mb-6 flex-1">
+                {[
+                  { text: "Tudo do Pro", ok: true },
+                  { text: "Utilizadores ilimitados", ok: true },
+                  { text: "Multi-loja", ok: true },
+                  { text: "Exportação de dados", ok: true },
+                  { text: "API e integrações", ok: true },
+                  { text: "Gestor de conta dedicado", ok: true },
+                ].map((item) => (
+                  <li key={item.text} className="flex items-center gap-2 text-sm">
+                    <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <span className="text-gray-700">{item.text}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/login?mode=register"
+                className="block w-full text-center font-semibold text-gray-700 bg-gray-100 hover:bg-gray-200 py-3 rounded-xl transition-colors active:scale-[0.98]"
+              >
+                Falar com vendas
               </Link>
             </div>
           </div>
