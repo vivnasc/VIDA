@@ -576,7 +576,41 @@ export function LandingPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            {/* Free */}
+            <div className="bg-white rounded-2xl p-8 border border-gray-200 shadow-md flex flex-col hover:shadow-lg transition-shadow">
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Grátis</h3>
+              <div className="flex items-baseline gap-1 mb-1">
+                <span className="text-4xl font-black text-gray-900">0</span>
+                <span className="text-sm text-gray-500">MZN/mês</span>
+              </div>
+              <p className="text-sm text-gray-500 mb-6">Para quem está a começar</p>
+
+              <ul className="space-y-3 mb-8 flex-1">
+                {[
+                  "20 transações/mês",
+                  "Até 15 produtos",
+                  "Até 10 clientes",
+                  "Controlo de dívidas básico",
+                  "Educação financeira completa",
+                  "Funciona offline",
+                ].map((text) => (
+                  <li key={text} className="flex items-center gap-2.5 text-sm">
+                    <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <span className="text-gray-700">{text}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                href="/login?mode=register"
+                className="block w-full text-center font-bold text-gray-700 bg-gray-100 hover:bg-gray-200 py-3.5 rounded-xl transition-colors active:scale-[0.97]"
+              >
+                Começar grátis
+              </Link>
+              <p className="text-xs text-gray-400 text-center mt-2">Sem cartão de crédito necessário.</p>
+            </div>
+
             {/* Pro */}
             <div className="bg-white rounded-2xl p-8 border-2 border-[#1A5C35] shadow-xl shadow-emerald-500/10 flex flex-col relative">
               <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
@@ -601,7 +635,7 @@ export function LandingPage() {
                   "Até 3 utilizadores",
                   "Relatórios avançados",
                   "Funciona offline",
-                  "Suporte prioritário",
+                  "Sem publicidade",
                 ].map((text) => (
                   <li key={text} className="flex items-center gap-2.5 text-sm">
                     <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
@@ -614,7 +648,7 @@ export function LandingPage() {
                 href="/login?mode=register"
                 className="block w-full text-center font-bold text-white bg-[#1A5C35] hover:bg-[#14472A] py-3.5 rounded-xl shadow-lg shadow-emerald-500/20 transition-all hover:shadow-xl active:scale-[0.97]"
               >
-                Experimentar 7 dias
+                Experimentar 7 dias grátis
               </Link>
               <p className="text-xs text-gray-400 text-center mt-2">Sem compromisso. Cancela quando quiseres.</p>
             </div>
@@ -633,11 +667,9 @@ export function LandingPage() {
                   "Tudo do plano Pro",
                   "Utilizadores ilimitados",
                   "Gestão multi-loja",
-                  "Orientação + consultoria dedicada",
                   "Exportação de dados",
                   "API e integrações",
-                  "Gestor de conta dedicado",
-                  "Onboarding personalizado",
+                  "Suporte prioritário",
                 ].map((text) => (
                   <li key={text} className="flex items-center gap-2.5 text-sm">
                     <Check className="w-4 h-4 text-emerald-500 flex-shrink-0" />
@@ -654,6 +686,23 @@ export function LandingPage() {
               </Link>
               <p className="text-xs text-gray-400 text-center mt-2">Inclui onboarding e suporte dedicado.</p>
             </div>
+          </div>
+
+          {/* Referral promo below pricing */}
+          <div className="max-w-2xl mx-auto mt-10 bg-gradient-to-r from-emerald-50 to-green-50 rounded-2xl p-6 border border-emerald-200 text-center">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">
+              Convida amigos, ganha dias grátis
+            </h3>
+            <p className="text-sm text-gray-600 mb-3">
+              Por cada amigo que activar o maBIZ com o teu código, ambos ganham 7 dias grátis no plano Pro.
+              Convida 3 amigos = 21 dias grátis!
+            </p>
+            <Link
+              href="/login?mode=register"
+              className="inline-flex items-center gap-2 text-sm font-bold text-white bg-[#1A5C35] hover:bg-[#14472A] px-6 py-2.5 rounded-xl transition-all active:scale-[0.97]"
+            >
+              Criar conta e começar a convidar
+            </Link>
           </div>
         </div>
       </section>

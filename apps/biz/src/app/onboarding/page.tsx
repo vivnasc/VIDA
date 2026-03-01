@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ChevronRight,
   ChevronLeft,
@@ -9,8 +9,12 @@ import {
   MapPin,
   Phone,
   Banknote,
+  Gift,
+  Zap,
 } from "lucide-react";
 import { getTemplateList, type TemplateDefinition } from "@/lib/templates";
+import { checkAndStoreReferral } from "@/lib/referral";
+import { getFreemiumData, getTrialDaysRemaining } from "@/lib/freemium";
 
 type Step = "template" | "details" | "services" | "done";
 
@@ -28,8 +32,18 @@ export default function OnboardingPage() {
   const [businessAddress, setBusinessAddress] = useState("");
   const [businessPhone, setBusinessPhone] = useState("");
   const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
+  const [referralCode, setReferralCode] = useState("");
+  const [trialDays, setTrialDays] = useState(7);
 
   const templates = getTemplateList();
+
+  // Check for referral code in URL and set trial info
+  useEffect(() => {
+    const ref = checkAndStoreReferral();
+    if (ref) setReferralCode(ref);
+    const freemium = getFreemiumData();
+    setTrialDays(getTrialDaysRemaining(freemium));
+  }, []);
   const currentStepIndex = STEPS.findIndex((s) => s.key === step);
 
   const handleSelectTemplate = (template: TemplateDefinition) => {
@@ -339,6 +353,23 @@ export default function OnboardingPage() {
               </p>
             </div>
 
+            {/* Trial info */}
+            <div className="card p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-100">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                  <Zap className="w-5 h-5 text-amber-600" />
+                </div>
+                <div className="text-left flex-1">
+                  <p className="text-sm font-bold text-amber-800">
+                    {trialDays} dias grátis no plano Pro!
+                  </p>
+                  <p className="text-xs text-amber-600">
+                    Vendas ilimitadas, relatórios, sem publicidade
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="card p-4 text-left space-y-2">
               <div className="flex items-center gap-2 text-sm">
                 <div className={`w-8 h-8 ${selectedTemplate.color} rounded-lg flex items-center justify-center`}>
@@ -361,6 +392,33 @@ export default function OnboardingPage() {
                 {selectedTemplate.hasAppointments && <span>Marcações activas</span>}
                 {selectedTemplate.quickSaleMode && <span>Venda rápida</span>}
               </div>
+            </div>
+
+            {/* Referral code input */}
+            <div className="card p-4 text-left">
+              <div className="flex items-center gap-2 mb-2">
+                <Gift className="w-4 h-4 text-primary-600" />
+                <p className="text-sm font-semibold">Tens código de convite?</p>
+              </div>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={referralCode}
+                  onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
+                  placeholder="Ex: ABC123"
+                  maxLength={6}
+                  className="flex-1 px-3 py-2 bg-gray-50 rounded-lg text-sm font-mono tracking-widest uppercase focus:outline-none focus:ring-2 focus:ring-primary-500"
+                />
+                {referralCode.length === 6 && (
+                  <div className="flex items-center gap-1 text-emerald-600 text-xs font-medium">
+                    <Check className="w-3.5 h-3.5" />
+                    +7 dias!
+                  </div>
+                )}
+              </div>
+              <p className="text-2xs text-[var(--color-text-muted)] mt-1">
+                Se alguém te recomendou, introduz o código para ambos ganharem 7 dias grátis
+              </p>
             </div>
 
             <a

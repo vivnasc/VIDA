@@ -27,6 +27,9 @@ import { SaleItem } from "@/components/sale-item";
 import { StockAlert } from "@/components/stock-alert";
 import { BottomNav } from "@/components/bottom-nav";
 import { useBusiness, useDashboard } from "@/hooks/use-business";
+import { ReferralCard } from "@/components/referral-card";
+import { AdBanner } from "@/components/ad-banner";
+import { PlanBadge, TransactionLimitBar } from "@/components/freemium-gate";
 
 const DAILY_TIPS = [
   {
@@ -106,9 +109,12 @@ export default function DashboardPage() {
             </p>
             <h1 className="text-xl font-bold">maBIZ</h1>
           </div>
-          <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-2">
+            <PlanBadge />
+            <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+              <MoreHorizontal className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Today's Revenue Card */}
@@ -233,6 +239,12 @@ export default function DashboardPage() {
             </div>
           </section>
         )}
+
+        {/* Transaction Limit Bar (free plan only) */}
+        <TransactionLimitBar />
+
+        {/* Ad Banner (free plan only) */}
+        <AdBanner placement="dashboard" />
 
         {/* Dica do Dia */}
         <section className="card p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-100">
@@ -443,6 +455,9 @@ export default function DashboardPage() {
             </a>
           </section>
         )}
+
+        {/* Referral Card */}
+        <ReferralCard businessName={business?.name} compact />
 
         {/* Trend indicator */}
         {monthProfit > 0 && (
