@@ -17,6 +17,7 @@ import {
   Settings,
   Wrench,
   X,
+  Gift,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -59,6 +60,7 @@ const MORE_MENU_ITEMS = [
   { label: "Relatórios", icon: BarChart3, href: "/relatorios", color: "bg-purple-500" },
   { label: "Licenças", icon: FileText, href: "/licencas", color: "bg-rose-500" },
   { label: "Educação", icon: GraduationCap, href: "/educacao", color: "bg-emerald-500" },
+  { label: "Convidar", icon: Gift, href: "/referral", color: "bg-primary-500" },
   { label: "Definições", icon: Settings, href: "#settings", color: "bg-gray-500" },
 ];
 

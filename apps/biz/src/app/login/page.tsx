@@ -11,7 +11,7 @@ function MaBizAuthLogo() {
   return (
     <div className="flex flex-col items-center">
       <img
-        src="/logos/mabis-logo.completo.png"
+        src="/logos/mabiz-full.png"
         alt="maBIZ"
         style={{ height: 80 }}
         className="object-contain"
