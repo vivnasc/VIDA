@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   MoreHorizontal,
   TrendingUp,
@@ -22,8 +22,12 @@ import {
   Scissors,
   Clock,
   UserCheck,
+  Bell,
+  Wallet,
 } from "lucide-react";
 import { SaleItem } from "@/components/sale-item";
+import { NotificationsPanel } from "@/components/notifications-panel";
+import { AddExpenseModal } from "@/components/add-expense-modal";
 import { StockAlert } from "@/components/stock-alert";
 import { BottomNav } from "@/components/bottom-nav";
 import { useBusiness, useDashboard } from "@/hooks/use-business";
@@ -49,6 +53,8 @@ const DAILY_TIPS = [
 export default function DashboardPage() {
   const { business, loading: bizLoading } = useBusiness();
   const { data: dashboard, loading: dashLoading } = useDashboard(business?.id);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
 
   const currentDate = useMemo(() => {
     return new Date().toLocaleDateString("pt-MZ", {
@@ -111,8 +117,14 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-2">
             <PlanBadge />
-            <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <MoreHorizontal className="w-5 h-5" />
+            <button
+              onClick={() => setShowNotifications(true)}
+              className="relative w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm"
+            >
+              <Bell className="w-5 h-5" />
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white rounded-full text-2xs flex items-center justify-center font-bold">
+                3
+              </span>
             </button>
           </div>
         </div>
@@ -170,7 +182,10 @@ export default function DashboardPage() {
               </p>
             </div>
 
-            <div className="card flex-shrink-0 w-28 p-3 space-y-1">
+            <button
+              onClick={() => setShowExpenseModal(true)}
+              className="card flex-shrink-0 w-28 p-3 space-y-1 text-left"
+            >
               <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
                 <ArrowDownRight className="w-4 h-4 text-red-500" />
               </div>
@@ -178,7 +193,7 @@ export default function DashboardPage() {
               <p className="text-sm font-bold text-red-500">
                 {todayExpenses.toLocaleString("pt-MZ")}
               </p>
-            </div>
+            </button>
 
             <div className="card flex-shrink-0 w-28 p-3 space-y-1">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -480,6 +495,14 @@ export default function DashboardPage() {
       </main>
 
       <BottomNav />
+
+      {showNotifications && (
+        <NotificationsPanel onClose={() => setShowNotifications(false)} />
+      )}
+
+      {showExpenseModal && (
+        <AddExpenseModal onClose={() => setShowExpenseModal(false)} />
+      )}
     </div>
   );
 }

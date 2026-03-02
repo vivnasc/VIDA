@@ -33,7 +33,6 @@ interface ChatbotConfig {
   showStock: boolean;
   takeOrders: boolean;
   autoReply: boolean;
-  language: "pt" | "changana" | "both";
   platform: "telegram" | "whatsapp" | "both";
 }
 
@@ -48,7 +47,6 @@ const DEFAULT_CONFIG: ChatbotConfig = {
   showStock: false,
   takeOrders: true,
   autoReply: true,
-  language: "pt",
   platform: "telegram",
 };
 
@@ -128,7 +126,7 @@ LOCAL: ${config.location}
 TELEFONE: ${config.phone}
 MOSTRAR_PREÇOS: ${config.showPrices ? "SIM" : "NÃO"}
 ACEITAR_ENCOMENDAS: ${config.takeOrders ? "SIM" : "NÃO"}
-IDIOMA: ${config.language === "pt" ? "Português" : config.language === "changana" ? "Changana" : "Português + Changana"}`;
+IDIOMA: Português`;
 
     navigator.clipboard.writeText(script).then(() => {
       setCopied(true);

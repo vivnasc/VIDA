@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import {
   BarChart3,
   TrendingUp,
@@ -14,6 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Scissors,
+  FileBarChart,
 } from "lucide-react";
 
 type Period = "semanal" | "mensal" | "trimestral" | "anual";
@@ -60,10 +62,13 @@ export default function RelatoriosPage() {
       <header className="bg-[var(--color-surface)] border-b border-[var(--color-border)] px-4 pt-12 pb-4 sticky top-0 z-30">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold">Relatórios</h1>
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-500 text-white text-xs font-medium">
-            <Download className="w-3.5 h-3.5" />
-            Exportar
-          </button>
+          <Link
+            href="/relatorios/gerar"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary-500 text-white text-xs font-medium"
+          >
+            <FileBarChart className="w-3.5 h-3.5" />
+            Exportar PDF
+          </Link>
         </div>
 
         {/* Period Selector */}
