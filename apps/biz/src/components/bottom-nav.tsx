@@ -18,6 +18,10 @@ import {
   Wrench,
   X,
   Gift,
+  Bot,
+  ShoppingBag as CatalogIcon,
+  FileBarChart,
+  Calendar,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -57,11 +61,15 @@ const MORE_MENU_ITEMS = [
   { label: "Fiado", icon: BookOpen, href: "/fiado", color: "bg-violet-500" },
   { label: "Staff", icon: UserCheck, href: "/staff", color: "bg-teal-500" },
   { label: "Fornecedores", icon: Truck, href: "/fornecedores", color: "bg-orange-500" },
+  { label: "Marcações", icon: Calendar, href: "/agendamentos", color: "bg-pink-500" },
   { label: "Relatórios", icon: BarChart3, href: "/relatorios", color: "bg-purple-500" },
   { label: "Licenças", icon: FileText, href: "/licencas", color: "bg-rose-500" },
   { label: "Educação", icon: GraduationCap, href: "/educacao", color: "bg-emerald-500" },
+  { label: "Chatbot", icon: Bot, href: "/chatbot", color: "bg-blue-500" },
+  { label: "Catálogo", icon: CatalogIcon, href: "/catalogo", color: "bg-amber-500" },
+  { label: "Exportar", icon: FileBarChart, href: "/relatorios/gerar", color: "bg-purple-600" },
   { label: "Convidar", icon: Gift, href: "/referral", color: "bg-primary-500" },
-  { label: "Definições", icon: Settings, href: "#settings", color: "bg-gray-500" },
+  { label: "Definições", icon: Settings, href: "/definicoes", color: "bg-gray-500" },
 ];
 
 export function BottomNav() {
@@ -70,7 +78,7 @@ export function BottomNav() {
   const [showAddModal, setShowAddModal] = useState(false);
 
   const isMoreActive = MORE_MENU_ITEMS.some(
-    (item) => item.href !== "#settings" && pathname.startsWith(item.href),
+    (item) => pathname.startsWith(item.href),
   );
 
   return (
@@ -193,12 +201,12 @@ export function BottomNav() {
             <div className="grid grid-cols-4 gap-1 p-3">
               {MORE_MENU_ITEMS.map((item) => {
                 const isActive =
-                  item.href !== "#settings" && pathname.startsWith(item.href);
+                  pathname.startsWith(item.href);
 
                 return (
                   <Link
                     key={item.href}
-                    href={item.href === "#settings" ? "/" : item.href}
+                    href={item.href}
                     onClick={() => setShowMore(false)}
                     className={`flex flex-col items-center gap-1.5 py-3 px-1 rounded-xl transition-colors ${
                       isActive

@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   ShoppingBag,
@@ -19,7 +18,6 @@ import {
   Star,
   GraduationCap,
   FileText,
-  Landmark,
   TrendingUp,
   MapPin,
   Clock,
@@ -92,13 +90,6 @@ const ORIENTATION_ITEMS = [
     free: true,
   },
   {
-    icon: Landmark,
-    title: "Pedido de Empréstimos",
-    description:
-      "Orientação passo-a-passo para preparar documentação e candidatar-te a microcrédito. Sabe que bancos e instituições oferecem as melhores condições.",
-    free: false,
-  },
-  {
     icon: FileText,
     title: "Formalização do Negócio",
     description:
@@ -112,13 +103,20 @@ const ORIENTATION_ITEMS = [
       "Conteúdos práticos sobre marketing, atendimento ao cliente, gestão de inventário e muito mais. Aprende enquanto geres.",
     free: false,
   },
+  {
+    icon: Smartphone,
+    title: "Marketing Digital",
+    description:
+      "Como usar redes sociais para atrair clientes. Facebook, WhatsApp Business e Instagram para o teu negócio.",
+    free: false,
+  },
 ];
 
 const STATS = [
-  { value: "500+", label: "Negócios activos", icon: TrendingUp },
-  { value: "10K+", label: "Vendas registadas", icon: ShoppingBag },
-  { value: "24/7", label: "Disponível sempre", icon: Clock },
   { value: "100%", label: "Feito em Moçambique", icon: MapPin },
+  { value: "2 min", label: "Para começar", icon: Zap },
+  { value: "24/7", label: "Disponível sempre", icon: Clock },
+  { value: "Grátis", label: "Para experimentar", icon: TrendingUp },
 ];
 
 const TESTIMONIALS = [
@@ -130,7 +128,7 @@ const TESTIMONIALS = [
   {
     name: "Carlos Sitoe",
     role: "Barbeiro, Matola",
-    text: "A parte de orientação para empréstimos ajudou-me a preparar tudo para o microcrédito. Consegui o financiamento à primeira tentativa.",
+    text: "Os módulos de educação financeira ensinaram-me a calcular o lucro real. Descobri que alguns serviços davam prejuízo! Agora sei exactamente quanto ganho.",
   },
   {
     name: "Fátima Nhaca",
@@ -147,13 +145,10 @@ export function LandingPage() {
       {/* ━━ Header ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-sm">
         <div className="max-w-6xl mx-auto flex items-center justify-between px-4 py-2.5">
-          <Image
+          <img
             src="/logos/mabiz-full.png"
             alt="maBIZ"
-            width={400}
-            height={160}
             className="h-11 w-auto"
-            priority
           />
           <div className="flex items-center gap-2">
             <Link
@@ -244,11 +239,9 @@ export function LandingPage() {
                     {/* Status bar */}
                     <div className="bg-[#1A5C35] px-6 pt-10 pb-4">
                       <div className="flex items-center justify-between mb-3">
-                        <Image
+                        <img
                           src="/logos/mabiz-full.png"
                           alt="maBIZ"
-                          width={200}
-                          height={80}
                           className="h-7 w-auto brightness-0 invert"
                         />
                         <div className="w-8 h-8 bg-white/20 rounded-full" />
@@ -443,7 +436,7 @@ export function LandingPage() {
                   <span className="text-[#C5975B]">crescer</span>
                 </h2>
                 <p className="text-gray-600 max-w-xl mx-auto text-lg">
-                  O maBIZ não é só um sistema de vendas. É o teu parceiro de crescimento com orientação prática para formalizar e expandir o teu negócio.{" "}
+                  O maBIZ não é só um sistema de vendas. É o teu parceiro de crescimento com educação prática, dicas de gestão e marketing para o teu negócio.{" "}
                   <strong className="text-[#1A5C35]">Educação financeira é grátis para todos.</strong>
                 </p>
               </div>
@@ -713,11 +706,9 @@ export function LandingPage() {
           <div className="absolute top-10 right-20 w-72 h-72 bg-[#C5975B] rounded-full blur-3xl" />
         </div>
         <div className="relative max-w-4xl mx-auto px-4 py-20 text-center">
-          <Image
+          <img
             src="/logos/mabiz-full.png"
             alt="maBIZ"
-            width={400}
-            height={160}
             className="h-16 w-auto mx-auto mb-6 brightness-0 invert"
           />
           <h2 className="text-3xl sm:text-4xl font-black text-white mb-4">
@@ -741,11 +732,9 @@ export function LandingPage() {
         <div className="max-w-6xl mx-auto px-4 py-12">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
             <div>
-              <Image
+              <img
                 src="/logos/mabiz-full.png"
                 alt="maBIZ"
-                width={400}
-                height={160}
                 className="h-10 w-auto brightness-0 invert mb-3"
               />
               <p className="text-sm text-gray-400 leading-relaxed">
