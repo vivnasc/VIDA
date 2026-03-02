@@ -18,7 +18,6 @@ import {
   Star,
   GraduationCap,
   FileText,
-  Landmark,
   TrendingUp,
   MapPin,
   Clock,
@@ -91,13 +90,6 @@ const ORIENTATION_ITEMS = [
     free: true,
   },
   {
-    icon: Landmark,
-    title: "Pedido de Empréstimos",
-    description:
-      "Orientação passo-a-passo para preparar documentação e candidatar-te a microcrédito. Sabe que bancos e instituições oferecem as melhores condições.",
-    free: false,
-  },
-  {
     icon: FileText,
     title: "Formalização do Negócio",
     description:
@@ -109,6 +101,13 @@ const ORIENTATION_ITEMS = [
     title: "Dicas de Gestão",
     description:
       "Conteúdos práticos sobre marketing, atendimento ao cliente, gestão de inventário e muito mais. Aprende enquanto geres.",
+    free: false,
+  },
+  {
+    icon: Smartphone,
+    title: "Marketing Digital",
+    description:
+      "Como usar redes sociais para atrair clientes. Facebook, WhatsApp Business e Instagram para o teu negócio.",
     free: false,
   },
 ];
@@ -129,7 +128,7 @@ const TESTIMONIALS = [
   {
     name: "Carlos Sitoe",
     role: "Barbeiro, Matola",
-    text: "A parte de orientação para empréstimos ajudou-me a preparar tudo para o microcrédito. Consegui o financiamento à primeira tentativa.",
+    text: "Os módulos de educação financeira ensinaram-me a calcular o lucro real. Descobri que alguns serviços davam prejuízo! Agora sei exactamente quanto ganho.",
   },
   {
     name: "Fátima Nhaca",
@@ -437,7 +436,7 @@ export function LandingPage() {
                   <span className="text-[#C5975B]">crescer</span>
                 </h2>
                 <p className="text-gray-600 max-w-xl mx-auto text-lg">
-                  O maBIZ não é só um sistema de vendas. É o teu parceiro de crescimento com orientação prática para formalizar e expandir o teu negócio.{" "}
+                  O maBIZ não é só um sistema de vendas. É o teu parceiro de crescimento com educação prática, dicas de gestão e marketing para o teu negócio.{" "}
                   <strong className="text-[#1A5C35]">Educação financeira é grátis para todos.</strong>
                 </p>
               </div>
