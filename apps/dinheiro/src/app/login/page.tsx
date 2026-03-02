@@ -16,7 +16,7 @@ export default function LoginPage() {
         password,
       });
       if (error) throw new Error(error.message);
-      router.push("/");
+      router.push("/painel");
       router.refresh();
     },
     [router],

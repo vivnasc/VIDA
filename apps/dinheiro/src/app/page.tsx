@@ -1,504 +1,169 @@
-"use client";
+import { createServerClient } from "@vida/auth/server";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import type { Metadata } from "next";
 
-import { useState } from "react";
-import {
-  ArrowUpRight,
-  ArrowDownRight,
-  TrendingUp,
-  Wallet,
-  Smartphone,
-  Landmark,
-  Banknote,
-  Home,
-  ShoppingCart,
-  Utensils,
-  Car,
-  Zap,
-  MoreHorizontal,
-  Lightbulb,
-  Users,
-  Heart,
-  Activity,
-  Star,
-  ChevronRight,
-} from "lucide-react";
-import { BalanceCard } from "@/components/balance-card";
-import { TransactionItem } from "@/components/transaction-item";
-import { BudgetProgress } from "@/components/budget-progress";
-import { BottomNav } from "@/components/bottom-nav";
+export const dynamic = "force-dynamic";
 
-const MOCK_ACCOUNTS = [
-  {
-    id: "1",
-    name: "M-Pesa",
-    icon: Smartphone,
-    balance: 12450.0,
-    currency: "MZN",
-    color: "bg-red-500",
-  },
-  {
-    id: "2",
-    name: "Banco",
-    icon: Landmark,
-    balance: 45800.0,
-    currency: "MZN",
-    color: "bg-blue-500",
-  },
-  {
-    id: "3",
-    name: "Dinheiro",
-    icon: Banknote,
-    balance: 3200.0,
-    currency: "MZN",
-    color: "bg-amber-500",
-  },
-];
+export const metadata: Metadata = {
+  title: "VIDA.DINHEIRO - Tuas financas, teus sonhos",
+  description:
+    "Controla receitas e despesas, cria orcamentos inteligentes, define metas de poupanca e acompanha o teu xitique. Comeca gratis.",
+};
 
-const MOCK_TRANSACTIONS = [
-  {
-    id: "1",
-    description: "Salário",
-    category: "Rendimento",
-    amount: 65000,
-    type: "income" as const,
-    date: "2026-02-25",
-    account: "Banco",
-    icon: Wallet,
-  },
-  {
-    id: "2",
-    description: "Shoprite",
-    category: "Alimentação",
-    amount: -4500,
-    type: "expense" as const,
-    date: "2026-02-24",
-    account: "M-Pesa",
-    icon: ShoppingCart,
-  },
-  {
-    id: "3",
-    description: "Restaurante Polana",
-    category: "Alimentação",
-    amount: -1800,
-    type: "expense" as const,
-    date: "2026-02-23",
-    account: "M-Pesa",
-    icon: Utensils,
-  },
-  {
-    id: "4",
-    description: "Combustível",
-    category: "Transporte",
-    amount: -3200,
-    type: "expense" as const,
-    date: "2026-02-22",
-    account: "Banco",
-    icon: Car,
-  },
-  {
-    id: "5",
-    description: "Electricidade EDM",
-    category: "Contas",
-    amount: -2100,
-    type: "expense" as const,
-    date: "2026-02-21",
-    account: "M-Pesa",
-    icon: Zap,
-  },
-];
+/* ── Inline SVG Icons ── */
 
-const MOCK_BUDGETS = [
-  {
-    category: "Alimentação",
-    budgeted: 15000,
-    spent: 11200,
-    icon: Utensils,
-  },
-  {
-    category: "Transporte",
-    budgeted: 8000,
-    spent: 6400,
-    icon: Car,
-  },
-  {
-    category: "Contas",
-    budgeted: 10000,
-    spent: 7800,
-    icon: Zap,
-  },
-  {
-    category: "Casa",
-    budgeted: 20000,
-    spent: 20000,
-    icon: Home,
-  },
-];
-
-const DAILY_TIPS = [
-  {
-    tip: "Antes de gastar, pergunta-te: preciso ou quero? Essa simples questão pode poupar milhares por mês.",
-    category: "Poupança",
-  },
-  {
-    tip: "Configura uma transferência automática de 10% do salário para a poupança logo quando recebes.",
-    category: "Automação",
-  },
-  {
-    tip: "Revisa as tuas subscrições mensais. Cancela o que não usas há mais de 30 dias.",
-    category: "Despesas",
-  },
-];
-
-function getHealthScore(budgets: typeof MOCK_BUDGETS): number {
-  const totalBudgeted = budgets.reduce((sum, b) => sum + b.budgeted, 0);
-  const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);
-  const overBudgetCount = budgets.filter((b) => b.spent > b.budgeted).length;
-  const ratio = totalSpent / totalBudgeted;
-
-  let score = 100;
-  score -= ratio * 60;
-  score -= overBudgetCount * 8;
-  return Math.max(0, Math.min(100, Math.round(score)));
+interface IconProps {
+  className?: string;
 }
 
-export default function DashboardPage() {
-  const [currentMonth] = useState("Fevereiro 2026");
+function IconWallet({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+      <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+      <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+    </svg>
+  );
+}
 
-  const totalBalance = MOCK_ACCOUNTS.reduce((sum, acc) => sum + acc.balance, 0);
-  const totalIncome = 65000;
-  const totalExpenses = 11600;
-  const incomePercent = (totalIncome / (totalIncome + totalExpenses)) * 100;
+function IconCheck({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
 
-  const healthScore = getHealthScore(MOCK_BUDGETS);
-  const healthColor =
-    healthScore >= 70
-      ? "text-emerald-600"
-      : healthScore >= 40
-        ? "text-amber-600"
-        : "text-red-500";
-  const healthBg =
-    healthScore >= 70
-      ? "bg-emerald-500"
-      : healthScore >= 40
-        ? "bg-amber-500"
-        : "bg-red-500";
-  const healthLabel =
-    healthScore >= 70
-      ? "Saudável"
-      : healthScore >= 40
-        ? "Atenção"
-        : "Crítico";
+function IconArrowRight({ className }: IconProps) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
+  );
+}
 
-  const dailyTip = DAILY_TIPS[0]!;
+/* ── Data ── */
 
-  // Mock xitique & debt data for dashboard summary
-  const activeXitiqueGroups = 3;
-  const nextXitiquePayment = "1 Março";
-  const myTurnXitique = true;
-  const totalDebtOwed = 63000;
-  const totalDebtReceivable = 27500;
+const features = [
+  {
+    title: "Controlo de receitas e despesas",
+    description: "Regista tudo o que entra e sai. V\u00EA para onde vai o teu dinheiro com categorias autom\u00E1ticas.",
+  },
+  {
+    title: "Or\u00E7amentos inteligentes",
+    description: "Define limites por categoria. Recebe alertas antes de ultrapassar o or\u00E7amento.",
+  },
+  {
+    title: "Metas de poupan\u00E7a",
+    description: "Sonha em grande. Acompanha o progresso das tuas metas de poupan\u00E7a dia a dia.",
+  },
+  {
+    title: "Xitique digital",
+    description: "Organiza poupan\u00E7as em grupo com transpar\u00EAncia total. O xitique da tua fam\u00EDlia, simplificado.",
+  },
+  {
+    title: "Relat\u00F3rios e gr\u00E1ficos claros",
+    description: "Entende as tuas finan\u00E7as com gr\u00E1ficos simples. Toma decis\u00F5es informadas.",
+  },
+  {
+    title: "Gest\u00E3o de d\u00EDvidas",
+    description: "Acompanha d\u00EDvidas e empr\u00E9stimos. Nunca mais esque\u00E7as quem te deve ou a quem deves.",
+  },
+];
+
+/* ── Page ── */
+
+export default async function DinheiroLanding() {
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    redirect("/painel");
+  }
 
   return (
-    <div className="min-h-screen pb-4">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-primary-500 to-primary-700 text-white px-4 pt-12 pb-6 rounded-b-3xl">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <p className="text-primary-100 text-sm">Olá, bem-vindo</p>
-            <h1 className="text-xl font-bold">VIDA.DINHEIRO</h1>
-          </div>
-          <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
-        </div>
-
-        <BalanceCard
-          totalBalance={totalBalance}
-          currency="MZN"
-          trend={+5.2}
-          period={currentMonth}
-        />
-      </header>
-
-      <main className="px-4 -mt-2 space-y-6">
-        {/* Quick Account Cards */}
-        <section>
-          <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-            {MOCK_ACCOUNTS.map((account) => (
-              <div
-                key={account.id}
-                className="card flex-shrink-0 w-36 p-3 space-y-2"
-              >
-                <div
-                  className={`w-8 h-8 ${account.color} rounded-lg flex items-center justify-center`}
-                >
-                  <account.icon className="w-4 h-4 text-white" />
-                </div>
-                <p className="text-xs text-[var(--color-text-secondary)]">
-                  {account.name}
-                </p>
-                <p className="text-sm font-bold">
-                  {account.balance.toLocaleString("pt-MZ")}{" "}
-                  <span className="text-xs font-normal text-[var(--color-text-muted)]">
-                    {account.currency}
-                  </span>
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Financial Health Score */}
-        <section className="card p-4">
-          <div className="flex items-center gap-4">
-            <div className="relative w-16 h-16 flex-shrink-0">
-              <svg className="w-16 h-16 -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#E5E7EB"
-                  strokeWidth="8"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke={healthScore >= 70 ? "#10B981" : healthScore >= 40 ? "#F59E0B" : "#EF4444"}
-                  strokeWidth="8"
-                  strokeDasharray={`${healthScore * 2.51} ${251 - healthScore * 2.51}`}
-                  strokeLinecap="round"
-                  className="transition-all duration-700"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className={`text-sm font-bold ${healthColor}`}>
-                  {healthScore}
-                </span>
-              </div>
+    <div className="min-h-screen bg-[var(--color-background)]">
+      {/* Nav */}
+      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-[var(--color-border)]">
+        <div className="max-w-4xl mx-auto px-4 flex items-center justify-between h-16">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+              <IconWallet className="w-4 h-4 text-white" />
             </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <Activity className="w-4 h-4 text-[var(--color-text-secondary)]" />
-                <h3 className="text-sm font-semibold">Saúde Financeira</h3>
-              </div>
-              <p className={`text-xs font-bold ${healthColor}`}>
-                {healthLabel}
-              </p>
-              <p className="text-2xs text-[var(--color-text-muted)] mt-0.5">
-                Baseado no teu orçamento e padrão de gastos
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Dica do Dia */}
-        <section className="card p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-100">
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Lightbulb className="w-5 h-5 text-amber-600" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <p className="text-xs font-bold text-amber-800">Dica do Dia</p>
-                <span className="text-2xs bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-md font-medium">
-                  {dailyTip.category}
-                </span>
-              </div>
-              <p className="text-sm text-amber-700 leading-relaxed">
-                {dailyTip.tip}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Income vs Expense Summary */}
-        <section className="card p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-sm">Resumo do Mês</h2>
-            <span className="text-xs text-[var(--color-text-muted)]">
-              {currentMonth}
+            <span className="text-xl font-bold text-[var(--color-text-primary)]">
+              VIDA<span className="text-emerald-500">.DINHEIRO</span>
             </span>
           </div>
+          <Link
+            href="/login"
+            className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+          >
+            Entrar
+          </Link>
+        </div>
+      </nav>
 
-          {/* Visual bar */}
-          <div className="h-3 bg-gray-100 rounded-full overflow-hidden mb-4">
+      {/* Hero */}
+      <section className="max-w-4xl mx-auto px-4 pt-20 pb-16 text-center">
+        <div className="inline-flex items-center gap-2 bg-emerald-50 rounded-full px-4 py-2 mb-8 border border-emerald-200">
+          <IconWallet className="w-4 h-4 text-emerald-500" />
+          <span className="text-sm font-medium text-emerald-700">Parte do ecossistema VIDA</span>
+        </div>
+        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-[var(--color-text-primary)] leading-tight">
+          Tuas finan&ccedil;as,
+          <br />
+          <span className="text-emerald-500">teus sonhos.</span>
+        </h1>
+        <p className="mt-6 text-lg text-[var(--color-text-secondary)] max-w-xl mx-auto">
+          Controla o teu dinheiro sem complica&ccedil;&otilde;es. Or&ccedil;amentos, metas, xitique e relat&oacute;rios &mdash; tudo num s&oacute; lugar.
+        </p>
+        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            href="/login"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-lg transition-all hover:shadow-xl"
+          >
+            Come&ccedil;ar Gr&aacute;tis
+            <IconArrowRight className="w-5 h-5" />
+          </Link>
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="max-w-4xl mx-auto px-4 pb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {features.map((f) => (
             <div
-              className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-500"
-              style={{ width: `${incomePercent}%` }}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
-                <ArrowUpRight className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-xs text-[var(--color-text-muted)]">
-                  Receitas
-                </p>
-                <p className="text-sm font-bold text-emerald-600">
-                  +{totalIncome.toLocaleString("pt-MZ")}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
-                <ArrowDownRight className="w-5 h-5 text-red-500" />
-              </div>
-              <div>
-                <p className="text-xs text-[var(--color-text-muted)]">
-                  Despesas
-                </p>
-                <p className="text-sm font-bold text-red-500">
-                  -{totalExpenses.toLocaleString("pt-MZ")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Xitique Summary */}
-        <section className="card p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-primary-500" />
-              <h2 className="font-semibold text-sm">Xitique</h2>
-            </div>
-            <a
-              href="/xitique"
-              className="flex items-center gap-1 text-xs text-primary-600 font-medium"
+              key={f.title}
+              className="bg-white rounded-2xl border border-[var(--color-border)] p-6 shadow-sm"
             >
-              Ver tudo
-              <ChevronRight className="w-3 h-3" />
-            </a>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex-1 space-y-1.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[var(--color-text-muted)]">Grupos activos</span>
-                <span className="font-semibold">{activeXitiqueGroups}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[var(--color-text-muted)]">Próximo pagamento</span>
-                <span className="font-semibold">{nextXitiquePayment}</span>
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 w-6 h-6 rounded-full bg-emerald-50 flex items-center justify-center flex-shrink-0">
+                  <IconCheck className="w-3.5 h-3.5 text-emerald-500" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-[var(--color-text-primary)]">{f.title}</h3>
+                  <p className="mt-1 text-sm text-[var(--color-text-secondary)] leading-relaxed">{f.description}</p>
+                </div>
               </div>
             </div>
-            {myTurnXitique && (
-              <div className="flex-shrink-0 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-center">
-                <Star className="w-4 h-4 text-amber-500 mx-auto mb-0.5" />
-                <p className="text-2xs font-bold text-amber-700">Minha vez!</p>
-              </div>
-            )}
-          </div>
-        </section>
+          ))}
+        </div>
+      </section>
 
-        {/* Debt Summary */}
-        <section className="card p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-red-400" />
-              <h2 className="font-semibold text-sm">Dívidas</h2>
-            </div>
-            <a
-              href="/dividas"
-              className="flex items-center gap-1 text-xs text-primary-600 font-medium"
-            >
-              Ver tudo
-              <ChevronRight className="w-3 h-3" />
-            </a>
+      {/* Footer */}
+      <footer className="border-t border-[var(--color-border)] bg-white py-8">
+        <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-[var(--color-text-muted)]">
+          <span>&copy; 2025 VIDA. Todos os direitos reservados.</span>
+          <div className="flex gap-4">
+            <Link href="/terms" className="hover:text-[var(--color-text-primary)] transition-colors">Termos</Link>
+            <Link href="/privacy" className="hover:text-[var(--color-text-primary)] transition-colors">Privacidade</Link>
           </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-red-50 rounded-xl p-3 text-center">
-              <p className="text-2xs text-red-600">Devo</p>
-              <p className="text-sm font-bold text-red-600">
-                {totalDebtOwed.toLocaleString("pt-MZ")}
-              </p>
-              <p className="text-2xs text-red-400">MZN</p>
-            </div>
-            <div className="bg-emerald-50 rounded-xl p-3 text-center">
-              <p className="text-2xs text-emerald-600">Devem-me</p>
-              <p className="text-sm font-bold text-emerald-600">
-                {totalDebtReceivable.toLocaleString("pt-MZ")}
-              </p>
-              <p className="text-2xs text-emerald-400">MZN</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Budget Progress */}
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold">Orçamento</h2>
-            <a
-              href="/orcamento"
-              className="text-xs text-primary-600 font-medium"
-            >
-              Ver tudo
-            </a>
-          </div>
-          <div className="space-y-3">
-            {MOCK_BUDGETS.map((budget) => (
-              <BudgetProgress
-                key={budget.category}
-                category={budget.category}
-                budgeted={budget.budgeted}
-                spent={budget.spent}
-                icon={budget.icon}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Recent Transactions */}
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold">Transacções Recentes</h2>
-            <a
-              href="/transacoes"
-              className="text-xs text-primary-600 font-medium"
-            >
-              Ver todas
-            </a>
-          </div>
-          <div className="card divide-y divide-[var(--color-border)]">
-            {MOCK_TRANSACTIONS.map((tx) => (
-              <TransactionItem
-                key={tx.id}
-                description={tx.description}
-                category={tx.category}
-                amount={tx.amount}
-                type={tx.type}
-                date={tx.date}
-                account={tx.account}
-                icon={tx.icon}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Trend indicator */}
-        <section className="card p-4 bg-gradient-to-r from-primary-50 to-emerald-50 border-primary-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-primary-600" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-primary-800">
-                Estás a poupar bem!
-              </p>
-              <p className="text-xs text-primary-600">
-                Poupaste 82% mais que o mês passado
-              </p>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <BottomNav />
+        </div>
+      </footer>
     </div>
   );
 }

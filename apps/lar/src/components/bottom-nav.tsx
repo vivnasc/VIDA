@@ -27,7 +27,7 @@ const mainNavItems = [
     id: "inicio",
     label: "Inicio",
     icon: Home,
-    href: "/",
+    href: "/painel",
   },
   {
     id: "inventario",

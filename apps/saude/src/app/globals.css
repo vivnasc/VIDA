@@ -31,6 +31,11 @@
     --color-muted-foreground: #78716C;
     --color-border: #E7DDE0;
 
+    /* ─── Landing page text aliases ─── */
+    --color-text-primary: var(--color-on-surface);
+    --color-text-secondary: var(--color-muted-foreground);
+    --color-text-muted: #A8A29E;
+
     /* ─── Success / Warning / Error ─── */
     --color-success: #10B981;
     --color-warning: #F59E0B;
