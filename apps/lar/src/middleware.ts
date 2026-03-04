@@ -4,6 +4,6 @@ export default createMiddleware();
 
 export const config = {
   matcher: [
-    "/((?!login|_next/static|_next/image|favicon.ico|manifest.json|service-worker.js|icons).*)",
+    "/((?!login|privacy|terms|_next/static|_next/image|favicon\\.ico|favicon\\.svg|manifest\\.json|service-worker\\.js|icons).+)",
   ],
 };

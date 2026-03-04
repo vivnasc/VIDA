@@ -72,74 +72,82 @@ function IconArrowRight({ className, style }: IconProps) {
   );
 }
 
-function IconStar({ className, style }: IconProps) {
-  return (
-    <svg className={className} style={style} viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth={1}>
-      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-    </svg>
-  );
-}
-
 /* ──────────────────────────────────────────────
    Data
    ────────────────────────────────────────────── */
 
-const appCards = [
+const modules = [
   {
     name: "VIDA.FAMILIA",
     nameDisplay: "VIDA.FAM\u00CDLIA",
-    taglineDisplay: "O cora\u00E7\u00E3o da tua fam\u00EDlia, digital",
+    tagline: "O cora\u00E7\u00E3o da tua fam\u00EDlia, digital",
+    description: "Calend\u00E1rio partilhado, tarefas, chat familiar e mem\u00F3rias \u2014 tudo o que une a tua fam\u00EDlia num s\u00F3 lugar.",
     color: "#FF6B35",
     bgLight: "#FFF3ED",
+    borderColor: "border-orange-200",
+    textColor: "text-familia-500",
     icon: IconHeart,
     features: [
-      "Calend\u00E1rio familiar partilhado",
-      "Lista de tarefas em conjunto",
-      "Mem\u00F3rias e fotos organizadas",
-      "Chat familiar privado",
+      "Calend\u00E1rio familiar",
+      "Chat privado",
+      "Fotos & Mem\u00F3rias",
+      "Tarefas partilhadas",
     ],
+    href: "#",
   },
   {
     name: "VIDA.DINHEIRO",
     nameDisplay: "VIDA.DINHEIRO",
-    taglineDisplay: "Tuas finan\u00E7as, teus sonhos",
+    tagline: "Tuas finan\u00E7as, teus sonhos",
+    description: "Controla receitas e despesas, cria or\u00E7amentos, define metas de poupan\u00E7a e organiza o xitique familiar.",
     color: "#10B981",
     bgLight: "#ECFDF5",
+    borderColor: "border-emerald-200",
+    textColor: "text-dinheiro-500",
     icon: IconWallet,
     features: [
-      "Controlo de receitas e despesas",
-      "Or\u00E7amentos inteligentes",
-      "Metas de poupan\u00E7a",
-      "Relat\u00F3rios e gr\u00E1ficos claros",
+      "Transa\u00E7\u00F5es",
+      "Or\u00E7amentos",
+      "Xitique digital",
+      "Relat\u00F3rios",
     ],
+    href: "#",
   },
   {
     name: "VIDA.LAR",
     nameDisplay: "VIDA.LAR",
-    taglineDisplay: "Tua casa, sem stress",
+    tagline: "Tua casa, sem stress",
+    description: "Invent\u00E1rio dom\u00E9stico, listas de compras, plano de refei\u00E7\u00F5es e manuten\u00E7\u00E3o \u2014 a tua casa sob controlo.",
     color: "#3B82F6",
     bgLight: "#EFF6FF",
+    borderColor: "border-blue-200",
+    textColor: "text-lar-500",
     icon: IconHome,
     features: [
-      "Gest\u00E3o de manuten\u00E7\u00E3o da casa",
-      "Invent\u00E1rio dom\u00E9stico",
-      "Lembretes de contas e servi\u00E7os",
-      "Projectos de melhoria",
+      "Invent\u00E1rio",
+      "Compras",
+      "Refei\u00E7\u00F5es",
+      "Manuten\u00E7\u00E3o",
     ],
+    href: "#",
   },
   {
     name: "VIDA.SAUDE",
     nameDisplay: "VIDA.SA\u00DADE",
-    taglineDisplay: "Tua fam\u00EDlia, sempre saud\u00E1vel",
+    tagline: "Tua fam\u00EDlia, sempre saud\u00E1vel",
+    description: "Hist\u00F3rico m\u00E9dico, medica\u00E7\u00E3o, consultas e vacinas \u2014 a sa\u00FAde de toda a fam\u00EDlia organizada.",
     color: "#F43F5E",
     bgLight: "#FFF1F2",
+    borderColor: "border-rose-200",
+    textColor: "text-saude-500",
     icon: IconActivity,
     features: [
-      "Hist\u00F3rico m\u00E9dico familiar",
-      "Lembretes de consultas e vacinas",
-      "Acompanhamento de medicamentos",
-      "Dicas de sa\u00FAde personalizadas",
+      "Hist\u00F3rico m\u00E9dico",
+      "Medica\u00E7\u00E3o",
+      "Consultas",
+      "Vacinas",
     ],
+    href: "#",
   },
 ];
 
@@ -206,36 +214,31 @@ export default async function RootPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-[#0A0A0F] text-white">
       {/* ── Navigation ── */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-lg border-b border-[var(--color-border)]">
+      <nav className="sticky top-0 z-50 bg-[#0A0A0F]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-familia-500 to-familia-600 flex items-center justify-center">
-                <span className="text-white font-bold text-sm">V</span>
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-familia-500 via-dinheiro-500 to-lar-500 flex items-center justify-center shadow-lg shadow-familia-500/20">
+                <span className="text-white font-black text-sm">V</span>
               </div>
-              <span className="text-xl font-bold text-[var(--color-text-primary)]">
-                VIDA
-              </span>
+              <span className="text-xl font-bold tracking-tight">VIDA</span>
             </div>
             <div className="hidden sm:flex items-center gap-8">
-              <a
-                href="#apps"
-                className="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
-              >
-                Apps
+              <a href="#ecossistema" className="text-sm text-white/50 hover:text-white transition-colors">
+                Ecossistema
               </a>
-              <a
-                href="#precos"
-                className="text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors"
-              >
+              <a href="#modulos" className="text-sm text-white/50 hover:text-white transition-colors">
+                M&oacute;dulos
+              </a>
+              <a href="#precos" className="text-sm text-white/50 hover:text-white transition-colors">
                 Pre&ccedil;os
               </a>
             </div>
             <Link
               href="/login"
-              className="bg-familia-500 hover:bg-familia-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors"
+              className="bg-white text-[#0A0A0F] text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors"
             >
               Come&ccedil;ar
             </Link>
@@ -246,124 +249,230 @@ export default async function RootPage() {
       {/* ── Hero Section ── */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-20 left-1/4 w-72 h-72 bg-familia-200/30 rounded-full blur-3xl" />
-          <div className="absolute top-40 right-1/4 w-96 h-96 bg-dinheiro-200/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 left-1/3 w-64 h-64 bg-lar-200/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-familia-500/10 rounded-full blur-[120px]" />
+          <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-dinheiro-500/8 rounded-full blur-[100px]" />
+          <div className="absolute bottom-0 left-1/2 w-[600px] h-[300px] bg-lar-500/5 rounded-full blur-[120px]" />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 sm:pt-28 sm:pb-32">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 sm:pt-32 sm:pb-20">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-soft mb-8 border border-[var(--color-border)]">
-              <IconStar className="w-4 h-4 text-accent-500" />
-              <span className="text-sm font-medium text-[var(--color-text-secondary)]">
-                O ecossistema que a tua fam&iacute;lia merece
+            <div className="inline-flex items-center gap-2 bg-white/5 rounded-full px-4 py-2 mb-8 border border-white/10 backdrop-blur-sm">
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-sm font-medium text-white/60">
+                4 apps &middot; 1 ecossistema &middot; Tudo gr&aacute;tis para come&ccedil;ar
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[var(--color-text-primary)] leading-tight">
-              Tua vida, organizada.
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight leading-[1.1]">
+              Tua vida,
               <br />
-              <span className="bg-gradient-to-r from-familia-500 via-dinheiro-500 to-lar-500 bg-clip-text text-transparent">
-                Tua fam&iacute;lia, feliz.
+              <span className="bg-gradient-to-r from-familia-400 via-dinheiro-400 to-lar-400 bg-clip-text text-transparent">
+                organizada.
               </span>
             </h1>
 
-            <p className="mt-6 text-lg sm:text-xl text-[var(--color-text-secondary)] max-w-2xl mx-auto leading-relaxed">
-              Quatro apps. Um ecossistema. Tudo o que precisas para organizar as
-              finan&ccedil;as, a casa, a sa&uacute;de e os momentos em
-              fam&iacute;lia &mdash; num s&oacute; lugar.
+            <p className="mt-6 text-lg sm:text-xl text-white/50 max-w-2xl mx-auto leading-relaxed">
+              Um ecossistema completo para organizar a fam&iacute;lia, as finan&ccedil;as, a casa e a sa&uacute;de &mdash; tudo conectado, tudo simples.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
                 href="/login"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-familia-500 hover:bg-familia-600 text-white font-semibold text-lg px-8 py-4 rounded-2xl shadow-soft-lg transition-all hover:shadow-xl"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white text-[#0A0A0F] font-semibold text-lg px-8 py-4 rounded-2xl shadow-2xl shadow-white/10 transition-all hover:shadow-white/20 hover:scale-[1.02]"
               >
                 Come&ccedil;ar Gr&aacute;tis
                 <IconArrowRight className="w-5 h-5" />
               </Link>
               <a
-                href="#apps"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-muted text-[var(--color-text-primary)] font-semibold text-lg px-8 py-4 rounded-2xl border border-[var(--color-border)] transition-colors"
+                href="#ecossistema"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-white/70 hover:text-white font-semibold text-lg px-8 py-4 rounded-2xl border border-white/10 hover:border-white/20 transition-all"
               >
-                Conhecer as Apps
+                Ver Ecossistema
               </a>
             </div>
+          </div>
+        </div>
+      </section>
 
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-[var(--color-text-muted)]">
-              <div className="flex items-center gap-1.5">
-                <IconCheck className="w-4 h-4 text-dinheiro-500" />
-                <span>Sem cart&atilde;o de cr&eacute;dito</span>
+      {/* ── Ecosystem Constellation ── */}
+      <section id="ecossistema" className="py-16 sm:py-24 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold">O Ecossistema</h2>
+            <p className="mt-4 text-lg text-white/40">
+              Quatro m&oacute;dulos conectados &agrave; volta da tua vida familiar
+            </p>
+          </div>
+
+          {/* Constellation Diagram */}
+          <div className="relative mx-auto w-full max-w-lg aspect-square">
+            {/* Connecting Lines SVG */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 400" fill="none">
+              <line x1="200" y1="200" x2="200" y2="50" stroke="url(#grad-familia)" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+              <line x1="200" y1="200" x2="350" y2="200" stroke="url(#grad-dinheiro)" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+              <line x1="200" y1="200" x2="200" y2="350" stroke="url(#grad-saude)" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+              <line x1="200" y1="200" x2="50" y2="200" stroke="url(#grad-lar)" strokeWidth="1" strokeDasharray="4 4" opacity="0.4" />
+              {/* Orbital ring */}
+              <circle cx="200" cy="200" r="145" stroke="white" strokeWidth="0.5" opacity="0.06" />
+              <circle cx="200" cy="200" r="80" stroke="white" strokeWidth="0.5" opacity="0.04" />
+              <defs>
+                <linearGradient id="grad-familia" x1="200" y1="200" x2="200" y2="50">
+                  <stop offset="0%" stopColor="white" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#FF6B35" />
+                </linearGradient>
+                <linearGradient id="grad-dinheiro" x1="200" y1="200" x2="350" y2="200">
+                  <stop offset="0%" stopColor="white" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#10B981" />
+                </linearGradient>
+                <linearGradient id="grad-saude" x1="200" y1="200" x2="200" y2="350">
+                  <stop offset="0%" stopColor="white" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#F43F5E" />
+                </linearGradient>
+                <linearGradient id="grad-lar" x1="200" y1="200" x2="50" y2="200">
+                  <stop offset="0%" stopColor="white" stopOpacity="0" />
+                  <stop offset="100%" stopColor="#3B82F6" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {/* Center - VIDA */}
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+              <div className="w-24 h-24 rounded-full bg-gradient-to-br from-white/10 to-white/5 border border-white/10 flex items-center justify-center backdrop-blur-sm">
+                <div className="text-center">
+                  <div className="w-10 h-10 mx-auto rounded-xl bg-gradient-to-br from-familia-500 via-dinheiro-500 to-lar-500 flex items-center justify-center shadow-lg">
+                    <span className="text-white font-black text-sm">V</span>
+                  </div>
+                  <span className="text-[10px] font-bold text-white/60 mt-1 block tracking-widest">VIDA</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <IconCheck className="w-4 h-4 text-dinheiro-500" />
-                <span>Configura em 2 minutos</span>
+            </div>
+
+            {/* Top - Familia */}
+            <div className="absolute left-1/2 top-0 -translate-x-1/2 z-10">
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#1a1218] border border-familia-500/30 flex items-center justify-center shadow-lg shadow-familia-500/10">
+                  <IconHeart className="w-7 h-7 sm:w-8 sm:h-8 text-familia-400" />
+                </div>
+                <div className="text-center">
+                  <span className="text-xs font-bold text-familia-400">FAM&Iacute;LIA</span>
+                  <span className="block text-[10px] text-white/30">Fam&iacute;lia</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <IconCheck className="w-4 h-4 text-dinheiro-500" />
-                <span>Cancela quando quiseres</span>
+            </div>
+
+            {/* Right - Dinheiro */}
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10">
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#0f1a17] border border-dinheiro-500/30 flex items-center justify-center shadow-lg shadow-dinheiro-500/10">
+                  <IconWallet className="w-7 h-7 sm:w-8 sm:h-8 text-dinheiro-400" />
+                </div>
+                <div className="text-center">
+                  <span className="text-xs font-bold text-dinheiro-400">DINHEIRO</span>
+                  <span className="block text-[10px] text-white/30">Finan&ccedil;as</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom - Saude */}
+            <div className="absolute left-1/2 bottom-0 -translate-x-1/2 z-10">
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#1a1115] border border-saude-500/30 flex items-center justify-center shadow-lg shadow-saude-500/10">
+                  <IconActivity className="w-7 h-7 sm:w-8 sm:h-8 text-saude-400" />
+                </div>
+                <div className="text-center">
+                  <span className="text-xs font-bold text-saude-400">SA&Uacute;DE</span>
+                  <span className="block text-[10px] text-white/30">Sa&uacute;de</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Left - Lar */}
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10">
+              <div className="flex flex-col items-center gap-2">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#0f1420] border border-lar-500/30 flex items-center justify-center shadow-lg shadow-lar-500/10">
+                  <IconHome className="w-7 h-7 sm:w-8 sm:h-8 text-lar-400" />
+                </div>
+                <div className="text-center">
+                  <span className="text-xs font-bold text-lar-400">LAR</span>
+                  <span className="block text-[10px] text-white/30">Casa</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Apps Section ── */}
-      <section id="apps" className="py-20 sm:py-28">
+      {/* ── Module Cards Section ── */}
+      <section id="modulos" className="py-16 sm:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--color-text-primary)]">
-              Um ecossistema, quatro super-poderes
-            </h2>
-            <p className="mt-4 text-lg text-[var(--color-text-secondary)]">
-              Cada app resolve um desafio da vida familiar. Juntas, transformam a
-              tua rotina.
+            <h2 className="text-3xl sm:text-4xl font-bold">Os M&oacute;dulos</h2>
+            <p className="mt-4 text-lg text-white/40">
+              Cada m&oacute;dulo resolve um desafio da vida familiar. Juntos, transformam a tua rotina.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-            {appCards.map((app) => {
-              const Icon = app.icon;
+            {modules.map((mod) => {
+              const Icon = mod.icon;
               return (
                 <div
-                  key={app.name}
-                  className="group relative bg-white rounded-3xl border border-[var(--color-border)] p-8 shadow-soft hover:shadow-soft-lg transition-all duration-300"
+                  key={mod.name}
+                  className="group relative rounded-3xl border border-white/5 bg-white/[0.02] p-8 backdrop-blur-sm transition-all duration-300 hover:border-white/10 hover:bg-white/[0.04]"
                 >
+                  {/* Colored top accent */}
                   <div
-                    className="absolute top-0 left-8 right-8 h-1 rounded-b-full"
-                    style={{ backgroundColor: app.color }}
+                    className="absolute top-0 left-8 right-8 h-[2px] rounded-b-full opacity-60"
+                    style={{ backgroundColor: mod.color }}
                   />
-                  <div className="flex items-center gap-4 mb-4">
+
+                  {/* Icon + Name */}
+                  <div className="flex items-center gap-4 mb-5">
                     <div
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                      style={{ backgroundColor: app.bgLight }}
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center border"
+                      style={{ backgroundColor: `${mod.color}10`, borderColor: `${mod.color}20` }}
                     >
-                      <Icon className="w-6 h-6" style={{ color: app.color }} />
+                      <Icon className="w-7 h-7" style={{ color: mod.color }} />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold" style={{ color: app.color }}>
-                        {app.nameDisplay}
+                      <h3 className="text-xl font-bold" style={{ color: mod.color }}>
+                        {mod.nameDisplay}
                       </h3>
-                      <p className="text-sm text-[var(--color-text-secondary)]">
-                        {app.taglineDisplay}
-                      </p>
+                      <p className="text-sm text-white/40">{mod.tagline}</p>
                     </div>
                   </div>
-                  <ul className="space-y-3 mt-6">
-                    {app.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-3">
-                        <div
-                          className="mt-0.5 w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                          style={{ backgroundColor: app.bgLight }}
-                        >
-                          <IconCheck className="w-3 h-3" style={{ color: app.color }} />
-                        </div>
-                        <span className="text-[var(--color-text-secondary)] text-sm leading-relaxed">
-                          {feature}
-                        </span>
-                      </li>
+
+                  {/* Description */}
+                  <p className="text-white/50 text-sm leading-relaxed mb-6">
+                    {mod.description}
+                  </p>
+
+                  {/* Feature tags */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {mod.features.map((f) => (
+                      <span
+                        key={f}
+                        className="text-xs font-medium px-3 py-1.5 rounded-lg border"
+                        style={{
+                          color: mod.color,
+                          backgroundColor: `${mod.color}08`,
+                          borderColor: `${mod.color}15`,
+                        }}
+                      >
+                        {f}
+                      </span>
                     ))}
-                  </ul>
+                  </div>
+
+                  {/* CTA link */}
+                  <Link
+                    href="/login"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold transition-all group-hover:gap-2.5"
+                    style={{ color: mod.color }}
+                  >
+                    Explorar
+                    <IconArrowRight className="w-4 h-4" />
+                  </Link>
                 </div>
               );
             })}
@@ -372,18 +481,17 @@ export default async function RootPage() {
       </section>
 
       {/* ── Pricing Section ── */}
-      <section
-        id="precos"
-        className="py-20 sm:py-28 bg-gradient-to-b from-transparent via-familia-50/50 to-transparent"
-      >
+      <section id="precos" className="py-16 sm:py-24 relative">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-familia-500/5 rounded-full blur-[120px]" />
+        </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-[var(--color-text-primary)]">
+            <h2 className="text-3xl sm:text-4xl font-bold">
               Planos simples, sem surpresas
             </h2>
-            <p className="mt-4 text-lg text-[var(--color-text-secondary)]">
-              Come&ccedil;a gr&aacute;tis. Muda de plano quando a tua
-              fam&iacute;lia crescer.
+            <p className="mt-4 text-lg text-white/40">
+              Come&ccedil;a gr&aacute;tis. Muda de plano quando a tua fam&iacute;lia crescer.
             </p>
           </div>
 
@@ -391,33 +499,25 @@ export default async function RootPage() {
             {pricingPlans.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative bg-white rounded-3xl border p-8 flex flex-col ${
+                className={`relative rounded-3xl border p-8 flex flex-col backdrop-blur-sm ${
                   plan.highlighted
-                    ? "border-familia-300 shadow-soft-lg ring-2 ring-familia-100 scale-[1.02]"
-                    : "border-[var(--color-border)] shadow-soft"
+                    ? "border-familia-500/30 bg-white/[0.04] shadow-2xl shadow-familia-500/5 scale-[1.02]"
+                    : "border-white/5 bg-white/[0.02]"
                 }`}
               >
                 {plan.highlighted && (
                   <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                    <span className="bg-familia-500 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide">
+                    <span className="bg-gradient-to-r from-familia-500 to-dinheiro-500 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-wide">
                       Mais Popular
                     </span>
                   </div>
                 )}
-                <h3 className="text-lg font-bold text-[var(--color-text-primary)]">
-                  {plan.name}
-                </h3>
-                <p className="text-sm text-[var(--color-text-secondary)] mt-1">
-                  {plan.description}
-                </p>
+                <h3 className="text-lg font-bold">{plan.name}</h3>
+                <p className="text-sm text-white/40 mt-1">{plan.description}</p>
                 <div className="mt-6 mb-8">
-                  <span className="text-4xl font-extrabold text-[var(--color-text-primary)]">
-                    {plan.price}
-                  </span>
+                  <span className="text-4xl font-extrabold">{plan.price}</span>
                   {plan.period && (
-                    <span className="text-[var(--color-text-muted)] text-sm ml-1">
-                      {plan.period}
-                    </span>
+                    <span className="text-white/30 text-sm ml-1">{plan.period}</span>
                   )}
                 </div>
                 <ul className="space-y-3 mb-8 flex-1">
@@ -425,21 +525,19 @@ export default async function RootPage() {
                     <li key={feature} className="flex items-center gap-3">
                       <IconCheck
                         className={`w-4 h-4 flex-shrink-0 ${
-                          plan.highlighted ? "text-familia-500" : "text-dinheiro-500"
+                          plan.highlighted ? "text-familia-400" : "text-dinheiro-400"
                         }`}
                       />
-                      <span className="text-sm text-[var(--color-text-secondary)]">
-                        {feature}
-                      </span>
+                      <span className="text-sm text-white/50">{feature}</span>
                     </li>
                   ))}
                 </ul>
                 <Link
                   href="/login"
-                  className={`block w-full text-center font-semibold py-3.5 rounded-xl transition-colors ${
+                  className={`block w-full text-center font-semibold py-3.5 rounded-xl transition-all ${
                     plan.highlighted
-                      ? "bg-familia-500 hover:bg-familia-600 text-white"
-                      : "bg-muted hover:bg-familia-50 text-[var(--color-text-primary)] border border-[var(--color-border)]"
+                      ? "bg-white text-[#0A0A0F] hover:bg-white/90"
+                      : "bg-white/5 hover:bg-white/10 text-white border border-white/10"
                   }`}
                 >
                   {plan.cta}
@@ -451,57 +549,54 @@ export default async function RootPage() {
       </section>
 
       {/* ── CTA Banner ── */}
-      <section className="py-20 sm:py-28">
+      <section className="py-16 sm:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-familia-500 via-familia-600 to-saude-600 rounded-3xl p-10 sm:p-16 text-center text-white relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
-            <div className="relative z-10">
-              <h2 className="text-3xl sm:text-4xl font-bold">
-                Pronto para organizar a tua vida?
-              </h2>
-              <p className="mt-4 text-lg text-white/80 max-w-xl mx-auto">
-                Junta-te a milhares de fam&iacute;lias que j&aacute; usam o VIDA
-                para simplificar o dia-a-dia.
-              </p>
-              <Link
-                href="/login"
-                className="mt-8 inline-flex items-center gap-2 bg-white text-familia-600 font-semibold text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all"
-              >
-                Come&ccedil;ar Gr&aacute;tis Agora
-                <IconArrowRight className="w-5 h-5" />
-              </Link>
+          <div className="relative rounded-3xl p-10 sm:p-16 text-center overflow-hidden border border-white/5 bg-white/[0.02]">
+            <div className="absolute inset-0 -z-10">
+              <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-familia-500/10 rounded-full blur-[80px]" />
+              <div className="absolute bottom-0 right-1/4 w-[200px] h-[200px] bg-dinheiro-500/10 rounded-full blur-[80px]" />
             </div>
+            <h2 className="text-3xl sm:text-4xl font-bold">
+              Pronto para organizar a tua vida?
+            </h2>
+            <p className="mt-4 text-lg text-white/50 max-w-xl mx-auto">
+              Junta-te a fam&iacute;lias que j&aacute; usam o VIDA para simplificar o dia-a-dia.
+            </p>
+            <Link
+              href="/login"
+              className="mt-8 inline-flex items-center gap-2 bg-white text-[#0A0A0F] font-semibold text-lg px-8 py-4 rounded-2xl shadow-2xl shadow-white/10 hover:scale-[1.02] transition-all"
+            >
+              Come&ccedil;ar Gr&aacute;tis Agora
+              <IconArrowRight className="w-5 h-5" />
+            </Link>
           </div>
         </div>
       </section>
 
       {/* ── Footer ── */}
-      <footer className="border-t border-[var(--color-border)] bg-white">
+      <footer className="border-t border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="flex flex-col items-center md:items-start gap-2">
               <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-familia-500 to-familia-600 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-familia-500 via-dinheiro-500 to-lar-500 flex items-center justify-center">
                   <span className="text-white font-bold text-xs">V</span>
                 </div>
-                <span className="text-lg font-bold text-[var(--color-text-primary)]">
-                  VIDA
-                </span>
+                <span className="text-lg font-bold">VIDA</span>
               </div>
-              <p className="text-sm text-[var(--color-text-muted)]">
-                Parte do ecossistema VIDA
+              <p className="text-sm text-white/30">
+                Tua vida, organizada. Tua fam&iacute;lia, feliz.
               </p>
             </div>
-            <div className="flex items-center gap-6 text-sm text-[var(--color-text-secondary)]">
-              <Link href="/terms" className="hover:text-[var(--color-text-primary)] transition-colors">
+            <div className="flex items-center gap-6 text-sm text-white/30">
+              <Link href="/terms" className="hover:text-white/60 transition-colors">
                 Termos de Uso
               </Link>
-              <Link href="/privacy" className="hover:text-[var(--color-text-primary)] transition-colors">
+              <Link href="/privacy" className="hover:text-white/60 transition-colors">
                 Pol&iacute;tica de Privacidade
               </Link>
             </div>
-            <p className="text-sm text-[var(--color-text-muted)]">
+            <p className="text-sm text-white/20">
               &copy; 2025 VIDA. Todos os direitos reservados.
             </p>
           </div>

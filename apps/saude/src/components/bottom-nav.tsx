@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 const mainNavItems = [
-  { label: "Inicio", icon: Home, href: "/" },
+  { label: "Inicio", icon: Home, href: "/painel" },
   { label: "Medicacao", icon: Pill, href: "/medicacao" },
   { label: "Consultas", icon: Calendar, href: "/consultas" },
 ];
@@ -40,7 +40,7 @@ export function BottomNav() {
 
   const isActive = (href: string) => {
     if (href === "#") return false;
-    if (href === "/") return pathname === "/";
+    if (href === "/painel") return pathname === "/painel";
     return pathname.startsWith(href);
   };
 

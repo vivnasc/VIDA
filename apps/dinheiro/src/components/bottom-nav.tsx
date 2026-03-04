@@ -24,7 +24,7 @@ const NAV_ITEMS = [
   {
     label: "Início",
     icon: Home,
-    href: "/",
+    href: "/painel",
   },
   {
     label: "Transacções",
@@ -128,7 +128,7 @@ export function BottomNav() {
             // Regular nav items
             const isActive =
               pathname === item.href ||
-              (item.href !== "/" && pathname.startsWith(item.href));
+              (item.href !== "/painel" && pathname.startsWith(item.href));
 
             return (
               <Link
@@ -197,7 +197,7 @@ export function BottomNav() {
                 return (
                   <Link
                     key={item.href}
-                    href={item.href === "#settings" ? "/" : item.href}
+                    href={item.href === "#settings" ? "/painel" : item.href}
                     onClick={() => setShowMore(false)}
                     className={`flex flex-col items-center gap-1.5 py-3 px-1 rounded-xl transition-colors ${
                       isActive

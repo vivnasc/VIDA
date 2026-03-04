@@ -1,504 +1,469 @@
-"use client";
+import { createServerClient } from "@vida/auth/server";
+import { redirect } from "next/navigation";
+import Link from "next/link";
+import type { Metadata } from "next";
 
-import { useState } from "react";
-import {
-  ArrowUpRight,
-  ArrowDownRight,
-  TrendingUp,
-  Wallet,
-  Smartphone,
-  Landmark,
-  Banknote,
-  Home,
-  ShoppingCart,
-  Utensils,
-  Car,
-  Zap,
-  MoreHorizontal,
-  Lightbulb,
-  Users,
-  Heart,
-  Activity,
-  Star,
-  ChevronRight,
-} from "lucide-react";
-import { BalanceCard } from "@/components/balance-card";
-import { TransactionItem } from "@/components/transaction-item";
-import { BudgetProgress } from "@/components/budget-progress";
-import { BottomNav } from "@/components/bottom-nav";
+export const dynamic = "force-dynamic";
 
-const MOCK_ACCOUNTS = [
-  {
-    id: "1",
-    name: "M-Pesa",
-    icon: Smartphone,
-    balance: 12450.0,
-    currency: "MZN",
-    color: "bg-red-500",
-  },
-  {
-    id: "2",
-    name: "Banco",
-    icon: Landmark,
-    balance: 45800.0,
-    currency: "MZN",
-    color: "bg-blue-500",
-  },
-  {
-    id: "3",
-    name: "Dinheiro",
-    icon: Banknote,
-    balance: 3200.0,
-    currency: "MZN",
-    color: "bg-amber-500",
-  },
-];
+export const metadata: Metadata = {
+  title: "VIDA.DINHEIRO - Tuas financas, teus sonhos",
+  description:
+    "Controla receitas e despesas, cria orcamentos inteligentes, define metas de poupanca e acompanha o teu xitique. Comeca gratis.",
+};
 
-const MOCK_TRANSACTIONS = [
-  {
-    id: "1",
-    description: "Salário",
-    category: "Rendimento",
-    amount: 65000,
-    type: "income" as const,
-    date: "2026-02-25",
-    account: "Banco",
-    icon: Wallet,
-  },
-  {
-    id: "2",
-    description: "Shoprite",
-    category: "Alimentação",
-    amount: -4500,
-    type: "expense" as const,
-    date: "2026-02-24",
-    account: "M-Pesa",
-    icon: ShoppingCart,
-  },
-  {
-    id: "3",
-    description: "Restaurante Polana",
-    category: "Alimentação",
-    amount: -1800,
-    type: "expense" as const,
-    date: "2026-02-23",
-    account: "M-Pesa",
-    icon: Utensils,
-  },
-  {
-    id: "4",
-    description: "Combustível",
-    category: "Transporte",
-    amount: -3200,
-    type: "expense" as const,
-    date: "2026-02-22",
-    account: "Banco",
-    icon: Car,
-  },
-  {
-    id: "5",
-    description: "Electricidade EDM",
-    category: "Contas",
-    amount: -2100,
-    type: "expense" as const,
-    date: "2026-02-21",
-    account: "M-Pesa",
-    icon: Zap,
-  },
-];
+/* ── Inline SVG Icons ── */
 
-const MOCK_BUDGETS = [
-  {
-    category: "Alimentação",
-    budgeted: 15000,
-    spent: 11200,
-    icon: Utensils,
-  },
-  {
-    category: "Transporte",
-    budgeted: 8000,
-    spent: 6400,
-    icon: Car,
-  },
-  {
-    category: "Contas",
-    budgeted: 10000,
-    spent: 7800,
-    icon: Zap,
-  },
-  {
-    category: "Casa",
-    budgeted: 20000,
-    spent: 20000,
-    icon: Home,
-  },
-];
-
-const DAILY_TIPS = [
-  {
-    tip: "Antes de gastar, pergunta-te: preciso ou quero? Essa simples questão pode poupar milhares por mês.",
-    category: "Poupança",
-  },
-  {
-    tip: "Configura uma transferência automática de 10% do salário para a poupança logo quando recebes.",
-    category: "Automação",
-  },
-  {
-    tip: "Revisa as tuas subscrições mensais. Cancela o que não usas há mais de 30 dias.",
-    category: "Despesas",
-  },
-];
-
-function getHealthScore(budgets: typeof MOCK_BUDGETS): number {
-  const totalBudgeted = budgets.reduce((sum, b) => sum + b.budgeted, 0);
-  const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);
-  const overBudgetCount = budgets.filter((b) => b.spent > b.budgeted).length;
-  const ratio = totalSpent / totalBudgeted;
-
-  let score = 100;
-  score -= ratio * 60;
-  score -= overBudgetCount * 8;
-  return Math.max(0, Math.min(100, Math.round(score)));
+interface IconProps {
+  className?: string;
+  style?: React.CSSProperties;
 }
 
-export default function DashboardPage() {
-  const [currentMonth] = useState("Fevereiro 2026");
+function IconWallet({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+      <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+      <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+    </svg>
+  );
+}
 
-  const totalBalance = MOCK_ACCOUNTS.reduce((sum, acc) => sum + acc.balance, 0);
-  const totalIncome = 65000;
-  const totalExpenses = 11600;
-  const incomePercent = (totalIncome / (totalIncome + totalExpenses)) * 100;
+function IconCheck({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
+  );
+}
 
-  const healthScore = getHealthScore(MOCK_BUDGETS);
-  const healthColor =
-    healthScore >= 70
-      ? "text-emerald-600"
-      : healthScore >= 40
-        ? "text-amber-600"
-        : "text-red-500";
-  const healthBg =
-    healthScore >= 70
-      ? "bg-emerald-500"
-      : healthScore >= 40
-        ? "bg-amber-500"
-        : "bg-red-500";
-  const healthLabel =
-    healthScore >= 70
-      ? "Saudável"
-      : healthScore >= 40
-        ? "Atenção"
-        : "Crítico";
+function IconArrowRight({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
+    </svg>
+  );
+}
 
-  const dailyTip = DAILY_TIPS[0]!;
+function IconX({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
 
-  // Mock xitique & debt data for dashboard summary
-  const activeXitiqueGroups = 3;
-  const nextXitiquePayment = "1 Março";
-  const myTurnXitique = true;
-  const totalDebtOwed = 63000;
-  const totalDebtReceivable = 27500;
+function IconTrendingUp({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+      <polyline points="16 7 22 7 22 13" />
+    </svg>
+  );
+}
+
+function IconPieChart({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+      <path d="M22 12A10 10 0 0 0 12 2v10z" />
+    </svg>
+  );
+}
+
+function IconTarget({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </svg>
+  );
+}
+
+function IconUsers({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  );
+}
+
+function IconBarChart({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <line x1="12" x2="12" y1="20" y2="10" />
+      <line x1="18" x2="18" y1="20" y2="4" />
+      <line x1="6" x2="6" y1="20" y2="16" />
+    </svg>
+  );
+}
+
+function IconCreditCard({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <rect width="20" height="14" x="2" y="5" rx="2" />
+      <line x1="2" x2="22" y1="10" y2="10" />
+    </svg>
+  );
+}
+
+function IconRepeat({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="m17 2 4 4-4 4" />
+      <path d="M3 11v-1a4 4 0 0 1 4-4h14" />
+      <path d="m7 22-4-4 4-4" />
+      <path d="M21 13v1a4 4 0 0 1-4 4H3" />
+    </svg>
+  );
+}
+
+function IconBell({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" />
+      <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" />
+    </svg>
+  );
+}
+
+function IconCalendar({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M8 2v4" />
+      <path d="M16 2v4" />
+      <rect width="18" height="18" x="3" y="4" rx="2" />
+      <path d="M3 10h18" />
+    </svg>
+  );
+}
+
+function IconBookOpen({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 7v14" />
+      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+    </svg>
+  );
+}
+
+function IconZap({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z" />
+    </svg>
+  );
+}
+
+function IconGlobe({ className, style }: IconProps) {
+  return (
+    <svg className={className} style={style} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20" />
+      <path d="M2 12h20" />
+    </svg>
+  );
+}
+
+/* ── Data ── */
+
+const stats = [
+  { value: "72%", label: "das fam\u00EDlias n\u00E3o controlam despesas" },
+  { value: "6x", label: "mais poupan\u00E7a com or\u00E7amento" },
+  { value: "15 min", label: "por semana \u00E9 o que precisas" },
+  { value: "0 MT", label: "para come\u00E7ar" },
+];
+
+const problems = [
+  "Despesas em pap\u00E9is soltos ou no WhatsApp",
+  "Fim do m\u00EAs sem saber para onde foi o dinheiro",
+  "Xitique desorganizado com discuss\u00F5es constantes",
+  "D\u00EDvidas esquecidas que se acumulam",
+  "Metas de poupan\u00E7a que nunca avan\u00E7am",
+];
+
+const solutions = [
+  "Cada metical registado automaticamente por categoria",
+  "Relat\u00F3rios claros que mostram para onde vai o dinheiro",
+  "Xitique digital com total transpar\u00EAncia para todos",
+  "Painel de d\u00EDvidas com lembretes autom\u00E1ticos",
+  "Metas visuais com progresso di\u00E1rio que motivam",
+];
+
+const steps = [
+  {
+    number: "01",
+    title: "Regista as tuas contas",
+    description: "Adiciona as tuas contas banc\u00E1rias, carteiras e fontes de rendimento. Tudo num s\u00F3 painel.",
+  },
+  {
+    number: "02",
+    title: "Define or\u00E7amentos e metas",
+    description: "Cria limites por categoria e define metas de poupan\u00E7a. O VIDA.DINHEIRO acompanha tudo por ti.",
+  },
+  {
+    number: "03",
+    title: "V\u00EA o teu dinheiro crescer",
+    description: "Acompanha o progresso, recebe alertas inteligentes e toma decis\u00F5es financeiras com confian\u00E7a.",
+  },
+];
+
+const platformFeatures = [
+  { icon: IconCreditCard, title: "Multi-contas", description: "Gere v\u00E1rias contas banc\u00E1rias, carteiras e fontes de rendimento num s\u00F3 lugar." },
+  { icon: IconRepeat, title: "Transa\u00E7\u00F5es autom\u00E1ticas", description: "Receitas e despesas recorrentes registadas automaticamente todos os meses." },
+  { icon: IconPieChart, title: "Or\u00E7amentos por categoria", description: "Define limites para alimenta\u00E7\u00E3o, transportes, lazer e mais. V\u00EA o progresso em tempo real." },
+  { icon: IconTarget, title: "Metas de poupan\u00E7a", description: "Cria metas visuais com prazos e acompanha quanto falta para o teu objectivo." },
+  { icon: IconUsers, title: "Xitique digital", description: "Organiza poupan\u00E7as em grupo com total transpar\u00EAncia. Hist\u00F3rico, turnos e notifica\u00E7\u00F5es." },
+  { icon: IconBarChart, title: "Relat\u00F3rios detalhados", description: "Gr\u00E1ficos mensais, tend\u00EAncias de gastos e compara\u00E7\u00F5es que te ajudam a decidir." },
+  { icon: IconTrendingUp, title: "Gest\u00E3o de d\u00EDvidas", description: "Acompanha empr\u00E9stimos e d\u00EDvidas. Sabe exactamente quanto deves e a quem." },
+  { icon: IconBell, title: "Alertas inteligentes", description: "Notifica\u00E7\u00F5es quando te aproximas do limite do or\u00E7amento ou tens pagamentos pendentes." },
+  { icon: IconCalendar, title: "Calend\u00E1rio financeiro", description: "V\u00EA pagamentos futuros, datas de sal\u00E1rio e vencimentos num calend\u00E1rio visual." },
+  { icon: IconBookOpen, title: "Educa\u00E7\u00E3o financeira", description: "Dicas e conte\u00FAdo adaptado ao teu perfil financeiro para tomares melhores decis\u00F5es." },
+];
+
+const uniqueFeatures = [
+  {
+    badge: "EXCLUSIVO",
+    title: "Xitique digital integrado",
+    description: "O primeiro xitique 100% digital de Mo\u00E7ambique. Cria grupos, define turnos, acompanha pagamentos e mant\u00E9m a transpar\u00EAncia total.",
+    icon: IconUsers,
+  },
+  {
+    badge: "AUTOM\u00C1TICO",
+    title: "Or\u00E7amento que se adapta",
+    description: "O or\u00E7amento aprende com os teus h\u00E1bitos e sugere ajustes. Se gastas menos numa categoria, redistribui para as tuas metas.",
+    icon: IconZap,
+  },
+  {
+    badge: "LOCAL",
+    title: "Pensado em meticais",
+    description: "Pre\u00E7os, categorias e conte\u00FAdo adaptados \u00E0 realidade mo\u00E7ambicana. Categorias como chapa, xitique e machamba.",
+    icon: IconGlobe,
+  },
+];
+
+/* ── Page ── */
+
+export default async function DinheiroLanding() {
+  const supabase = await createServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) redirect("/painel");
 
   return (
-    <div className="min-h-screen pb-4">
-      {/* Header */}
-      <header className="bg-gradient-to-br from-primary-500 to-primary-700 text-white px-4 pt-12 pb-6 rounded-b-3xl">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <p className="text-primary-100 text-sm">Olá, bem-vindo</p>
-            <h1 className="text-xl font-bold">VIDA.DINHEIRO</h1>
+    <div className="min-h-screen bg-[#0A0F0A]">
+      {/* Nav */}
+      <nav className="sticky top-0 z-50 bg-[#0A0F0A]/80 backdrop-blur-lg border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center">
+              <IconWallet className="w-4 h-4 text-white" />
+            </div>
+            <span className="text-xl font-bold text-white">VIDA<span className="text-emerald-400">.DINHEIRO</span></span>
           </div>
-          <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
+          <div className="hidden sm:flex items-center gap-8">
+            <a href="#funcionalidades" className="text-sm text-white/60 hover:text-white transition-colors">Funcionalidades</a>
+            <a href="#como-funciona" className="text-sm text-white/60 hover:text-white transition-colors">Como Funciona</a>
+          </div>
+          <Link href="/login" className="bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors">Come&ccedil;ar</Link>
         </div>
+      </nav>
 
-        <BalanceCard
-          totalBalance={totalBalance}
-          currency="MZN"
-          trend={+5.2}
-          period={currentMonth}
-        />
-      </header>
+      {/* Hero */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute top-20 left-1/4 w-72 h-72 bg-emerald-500/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-24 sm:pt-28 sm:pb-32">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-flex items-center gap-2 bg-emerald-500/10 rounded-full px-4 py-2 mb-8 border border-emerald-500/20">
+              <IconWallet className="w-4 h-4 text-emerald-400" />
+              <span className="text-sm font-medium text-emerald-300">Parte do ecossistema VIDA</span>
+            </div>
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold tracking-tight text-white leading-tight">
+              Tuas finan&ccedil;as,<br /><span className="text-emerald-400">teus sonhos.</span>
+            </h1>
+            <p className="mt-6 text-lg sm:text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
+              Controla o teu dinheiro sem complica&ccedil;&otilde;es. Or&ccedil;amentos inteligentes, xitique digital, metas de poupan&ccedil;a e relat&oacute;rios claros &mdash; tudo num s&oacute; lugar.
+            </p>
+            <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+              <Link href="/login" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold text-lg px-8 py-4 rounded-2xl transition-all">
+                Come&ccedil;ar Gr&aacute;tis <IconArrowRight className="w-5 h-5" />
+              </Link>
+              <a href="#funcionalidades" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-semibold text-lg px-8 py-4 rounded-2xl border border-white/10 transition-colors">Ver Funcionalidades</a>
+            </div>
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-white/40">
+              <div className="flex items-center gap-1.5"><IconCheck className="w-4 h-4 text-emerald-400" /><span>Sem cart&atilde;o de cr&eacute;dito</span></div>
+              <div className="flex items-center gap-1.5"><IconCheck className="w-4 h-4 text-emerald-400" /><span>Configura em 2 minutos</span></div>
+              <div className="flex items-center gap-1.5"><IconCheck className="w-4 h-4 text-emerald-400" /><span>Xitique inclu&iacute;do</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      <main className="px-4 -mt-2 space-y-6">
-        {/* Quick Account Cards */}
-        <section>
-          <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 scrollbar-none">
-            {MOCK_ACCOUNTS.map((account) => (
-              <div
-                key={account.id}
-                className="card flex-shrink-0 w-36 p-3 space-y-2"
-              >
-                <div
-                  className={`w-8 h-8 ${account.color} rounded-lg flex items-center justify-center`}
-                >
-                  <account.icon className="w-4 h-4 text-white" />
+      {/* Stats */}
+      <section className="border-y border-white/10 bg-white/[0.02]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((s) => (
+              <div key={s.label} className="text-center">
+                <div className="text-3xl sm:text-4xl font-extrabold text-emerald-400">{s.value}</div>
+                <div className="mt-1 text-sm text-white/50">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Problem vs Solution */}
+      <section className="py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">O dinheiro n&atilde;o tem de ser um problema.<br /><span className="text-white/50">Tem de ser uma ferramenta.</span></h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="bg-white/[0.03] rounded-3xl border border-white/10 p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center"><IconX className="w-5 h-5 text-red-400" /></div>
+                <h3 className="text-lg font-bold text-red-400">O que N&Atilde;O funciona</h3>
+              </div>
+              <ul className="space-y-4">
+                {problems.map((p) => (
+                  <li key={p} className="flex items-start gap-3">
+                    <div className="mt-1 w-5 h-5 rounded-full bg-red-500/10 flex items-center justify-center flex-shrink-0"><IconX className="w-3 h-3 text-red-400" /></div>
+                    <span className="text-white/60 text-sm leading-relaxed">{p}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-white/[0.03] rounded-3xl border border-emerald-500/20 p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center"><IconCheck className="w-5 h-5 text-emerald-400" /></div>
+                <h3 className="text-lg font-bold text-emerald-400">O que FUNCIONA com VIDA.DINHEIRO</h3>
+              </div>
+              <ul className="space-y-4">
+                {solutions.map((s) => (
+                  <li key={s} className="flex items-start gap-3">
+                    <div className="mt-1 w-5 h-5 rounded-full bg-emerald-500/10 flex items-center justify-center flex-shrink-0"><IconCheck className="w-3 h-3 text-emerald-400" /></div>
+                    <span className="text-white/70 text-sm leading-relaxed">{s}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section id="como-funciona" className="py-20 sm:py-28 bg-white/[0.02]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">As 3 fases do controlo financeiro</h2>
+            <p className="mt-4 text-lg text-white/50">De desorganizado a no controlo em minutos.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {steps.map((step, i) => (
+              <div key={step.number} className="relative">
+                {i < steps.length - 1 && <div className="hidden md:block absolute top-12 left-full w-full h-px bg-gradient-to-r from-white/20 to-transparent -translate-x-8" />}
+                <div className="bg-white/[0.03] rounded-3xl border border-white/10 p-8 h-full">
+                  <div className="text-5xl font-extrabold text-emerald-400/30 mb-4">{step.number}</div>
+                  <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
+                  <p className="text-white/50 text-sm leading-relaxed">{step.description}</p>
                 </div>
-                <p className="text-xs text-[var(--color-text-secondary)]">
-                  {account.name}
-                </p>
-                <p className="text-sm font-bold">
-                  {account.balance.toLocaleString("pt-MZ")}{" "}
-                  <span className="text-xs font-normal text-[var(--color-text-muted)]">
-                    {account.currency}
-                  </span>
-                </p>
               </div>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Financial Health Score */}
-        <section className="card p-4">
-          <div className="flex items-center gap-4">
-            <div className="relative w-16 h-16 flex-shrink-0">
-              <svg className="w-16 h-16 -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke="#E5E7EB"
-                  strokeWidth="8"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="40"
-                  fill="none"
-                  stroke={healthScore >= 70 ? "#10B981" : healthScore >= 40 ? "#F59E0B" : "#EF4444"}
-                  strokeWidth="8"
-                  strokeDasharray={`${healthScore * 2.51} ${251 - healthScore * 2.51}`}
-                  strokeLinecap="round"
-                  className="transition-all duration-700"
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className={`text-sm font-bold ${healthColor}`}>
-                  {healthScore}
-                </span>
+      {/* Platform Features */}
+      <section id="funcionalidades" className="py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">A plataforma completa</h2>
+            <p className="mt-4 text-lg text-white/50">Tudo o que precisas para dominar as tuas finan&ccedil;as, numa s&oacute; app.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {platformFeatures.map((f) => {
+              const Icon = f.icon;
+              return (
+                <div key={f.title} className="bg-white/[0.03] rounded-2xl border border-white/10 p-6 hover:border-emerald-500/20 transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-4"><Icon className="w-5 h-5 text-emerald-400" /></div>
+                  <h3 className="font-bold text-white mb-2">{f.title}</h3>
+                  <p className="text-sm text-white/50 leading-relaxed">{f.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Unique Features */}
+      <section className="py-20 sm:py-28 bg-white/[0.02]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-white">Funcionalidades exclusivas</h2>
+            <p className="mt-4 text-lg text-white/50">O que s&oacute; encontras no VIDA.DINHEIRO.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {uniqueFeatures.map((f) => {
+              const Icon = f.icon;
+              return (
+                <div key={f.badge} className="bg-white/[0.03] rounded-3xl border border-white/10 p-8 hover:border-emerald-500/20 transition-all">
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center"><Icon className="w-6 h-6 text-emerald-400" /></div>
+                    <span className="text-[10px] font-bold tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full">{f.badge}</span>
+                  </div>
+                  <h3 className="text-lg font-bold text-white mb-3">{f.title}</h3>
+                  <p className="text-white/50 text-sm leading-relaxed">{f.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-20 sm:py-28">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-gradient-to-br from-emerald-600 to-emerald-500 rounded-3xl p-10 sm:p-16 text-center text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+            <div className="relative z-10">
+              <h2 className="text-3xl sm:text-4xl font-bold">Pronto para controlar o teu dinheiro?</h2>
+              <p className="mt-4 text-lg text-white/80 max-w-xl mx-auto">Come&ccedil;a hoje e v&ecirc; exactamente para onde vai cada metical.</p>
+              <Link href="/login" className="mt-8 inline-flex items-center gap-2 bg-white text-emerald-600 font-semibold text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transition-all">
+                Come&ccedil;ar Gr&aacute;tis Agora <IconArrowRight className="w-5 h-5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex flex-col items-center md:items-start gap-2">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-emerald-500 flex items-center justify-center"><IconWallet className="w-3.5 h-3.5 text-white" /></div>
+                <span className="text-lg font-bold text-white">VIDA<span className="text-emerald-400">.DINHEIRO</span></span>
               </div>
+              <p className="text-sm text-white/40">Parte do ecossistema VIDA</p>
             </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <Activity className="w-4 h-4 text-[var(--color-text-secondary)]" />
-                <h3 className="text-sm font-semibold">Saúde Financeira</h3>
-              </div>
-              <p className={`text-xs font-bold ${healthColor}`}>
-                {healthLabel}
-              </p>
-              <p className="text-2xs text-[var(--color-text-muted)] mt-0.5">
-                Baseado no teu orçamento e padrão de gastos
-              </p>
+            <div className="flex items-center gap-6 text-sm text-white/50">
+              <Link href="/terms" className="hover:text-white transition-colors">Termos</Link>
+              <Link href="/privacy" className="hover:text-white transition-colors">Privacidade</Link>
             </div>
+            <p className="text-sm text-white/30">&copy; 2025 VIDA. Todos os direitos reservados.</p>
           </div>
-        </section>
-
-        {/* Dica do Dia */}
-        <section className="card p-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-100">
-          <div className="flex items-start gap-3">
-            <div className="w-9 h-9 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5">
-              <Lightbulb className="w-5 h-5 text-amber-600" />
-            </div>
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <p className="text-xs font-bold text-amber-800">Dica do Dia</p>
-                <span className="text-2xs bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded-md font-medium">
-                  {dailyTip.category}
-                </span>
-              </div>
-              <p className="text-sm text-amber-700 leading-relaxed">
-                {dailyTip.tip}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Income vs Expense Summary */}
-        <section className="card p-4">
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-sm">Resumo do Mês</h2>
-            <span className="text-xs text-[var(--color-text-muted)]">
-              {currentMonth}
-            </span>
-          </div>
-
-          {/* Visual bar */}
-          <div className="h-3 bg-gray-100 rounded-full overflow-hidden mb-4">
-            <div
-              className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500 rounded-full transition-all duration-500"
-              style={{ width: `${incomePercent}%` }}
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
-                <ArrowUpRight className="w-5 h-5 text-emerald-600" />
-              </div>
-              <div>
-                <p className="text-xs text-[var(--color-text-muted)]">
-                  Receitas
-                </p>
-                <p className="text-sm font-bold text-emerald-600">
-                  +{totalIncome.toLocaleString("pt-MZ")}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
-                <ArrowDownRight className="w-5 h-5 text-red-500" />
-              </div>
-              <div>
-                <p className="text-xs text-[var(--color-text-muted)]">
-                  Despesas
-                </p>
-                <p className="text-sm font-bold text-red-500">
-                  -{totalExpenses.toLocaleString("pt-MZ")}
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Xitique Summary */}
-        <section className="card p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-primary-500" />
-              <h2 className="font-semibold text-sm">Xitique</h2>
-            </div>
-            <a
-              href="/xitique"
-              className="flex items-center gap-1 text-xs text-primary-600 font-medium"
-            >
-              Ver tudo
-              <ChevronRight className="w-3 h-3" />
-            </a>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex-1 space-y-1.5">
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[var(--color-text-muted)]">Grupos activos</span>
-                <span className="font-semibold">{activeXitiqueGroups}</span>
-              </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-[var(--color-text-muted)]">Próximo pagamento</span>
-                <span className="font-semibold">{nextXitiquePayment}</span>
-              </div>
-            </div>
-            {myTurnXitique && (
-              <div className="flex-shrink-0 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-center">
-                <Star className="w-4 h-4 text-amber-500 mx-auto mb-0.5" />
-                <p className="text-2xs font-bold text-amber-700">Minha vez!</p>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* Debt Summary */}
-        <section className="card p-4">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <Heart className="w-4 h-4 text-red-400" />
-              <h2 className="font-semibold text-sm">Dívidas</h2>
-            </div>
-            <a
-              href="/dividas"
-              className="flex items-center gap-1 text-xs text-primary-600 font-medium"
-            >
-              Ver tudo
-              <ChevronRight className="w-3 h-3" />
-            </a>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="bg-red-50 rounded-xl p-3 text-center">
-              <p className="text-2xs text-red-600">Devo</p>
-              <p className="text-sm font-bold text-red-600">
-                {totalDebtOwed.toLocaleString("pt-MZ")}
-              </p>
-              <p className="text-2xs text-red-400">MZN</p>
-            </div>
-            <div className="bg-emerald-50 rounded-xl p-3 text-center">
-              <p className="text-2xs text-emerald-600">Devem-me</p>
-              <p className="text-sm font-bold text-emerald-600">
-                {totalDebtReceivable.toLocaleString("pt-MZ")}
-              </p>
-              <p className="text-2xs text-emerald-400">MZN</p>
-            </div>
-          </div>
-        </section>
-
-        {/* Budget Progress */}
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold">Orçamento</h2>
-            <a
-              href="/orcamento"
-              className="text-xs text-primary-600 font-medium"
-            >
-              Ver tudo
-            </a>
-          </div>
-          <div className="space-y-3">
-            {MOCK_BUDGETS.map((budget) => (
-              <BudgetProgress
-                key={budget.category}
-                category={budget.category}
-                budgeted={budget.budgeted}
-                spent={budget.spent}
-                icon={budget.icon}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Recent Transactions */}
-        <section>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold">Transacções Recentes</h2>
-            <a
-              href="/transacoes"
-              className="text-xs text-primary-600 font-medium"
-            >
-              Ver todas
-            </a>
-          </div>
-          <div className="card divide-y divide-[var(--color-border)]">
-            {MOCK_TRANSACTIONS.map((tx) => (
-              <TransactionItem
-                key={tx.id}
-                description={tx.description}
-                category={tx.category}
-                amount={tx.amount}
-                type={tx.type}
-                date={tx.date}
-                account={tx.account}
-                icon={tx.icon}
-              />
-            ))}
-          </div>
-        </section>
-
-        {/* Trend indicator */}
-        <section className="card p-4 bg-gradient-to-r from-primary-50 to-emerald-50 border-primary-100">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-primary-600" />
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-semibold text-primary-800">
-                Estás a poupar bem!
-              </p>
-              <p className="text-xs text-primary-600">
-                Poupaste 82% mais que o mês passado
-              </p>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <BottomNav />
+        </div>
+      </footer>
     </div>
   );
 }
