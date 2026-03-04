@@ -1,7 +1,7 @@
 import Script from "next/script";
 
 interface AnalyticsProps {
-  /** The domain registered in Plausible (e.g. "familia.vida.mz") */
+  /** The domain registered in Plausible (e.g. "familia.vida.app") */
   domain: string;
 }
 

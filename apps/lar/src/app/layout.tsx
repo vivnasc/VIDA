@@ -41,7 +41,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="font-sans antialiased bg-blue-50/30 text-gray-900 min-h-screen">
-        <Analytics domain="lar.vida.mz" />
+        <Analytics domain="lar.vida.app" />
         <ServiceWorkerRegister />
         {children}
       </body>
