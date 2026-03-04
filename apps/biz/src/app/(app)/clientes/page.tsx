@@ -15,6 +15,7 @@ import { useBusiness } from "@/hooks/use-business";
 import { useQuery } from "@/hooks/use-query";
 import { getCustomers } from "@/lib/supabase";
 import type { BusinessCustomer, CustomerCategory } from "@vida/database/types/business";
+import { AddCustomerModal } from "@/components/add-customer-modal";
 
 type FilterCategory = "all" | CustomerCategory;
 
@@ -29,6 +30,7 @@ export default function ClientesPage() {
   const { business } = useBusiness();
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterCategory>("all");
+  const [showAdd, setShowAdd] = useState(false);
 
   const { data: customers, loading } = useQuery<BusinessCustomer[]>(
     (supabase) => getCustomers(supabase, business!.id),
@@ -52,7 +54,7 @@ export default function ClientesPage() {
       <header className="bg-[var(--color-surface)] border-b border-[var(--color-border)] px-4 pt-12 pb-4 sticky top-0 z-30">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold">Clientes</h1>
-          <button className="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center">
+          <button onClick={() => setShowAdd(true)} className="w-10 h-10 rounded-full bg-primary-500 text-white flex items-center justify-center">
             <Plus className="w-5 h-5" />
           </button>
         </div>
@@ -172,6 +174,8 @@ export default function ClientesPage() {
           </div>
         )}
       </main>
+
+      {showAdd && <AddCustomerModal onClose={() => setShowAdd(false)} />}
     </div>
   );
 }

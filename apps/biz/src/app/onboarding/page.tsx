@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   ChevronRight,
   ChevronLeft,
@@ -11,7 +12,11 @@ import {
   Banknote,
   Gift,
   Zap,
+  Loader2,
 } from "lucide-react";
+import { createBrowserClient } from "@vida/auth/client";
+import { createBusiness, createProduct } from "@/lib/supabase";
+import type { BusinessTemplate } from "@vida/database/types/business";
 import { getTemplateList, type TemplateDefinition } from "@/lib/templates";
 import { checkAndStoreReferral } from "@/lib/referral";
 import { getFreemiumData, getTrialDaysRemaining } from "@/lib/freemium";
@@ -26,6 +31,7 @@ const STEPS: { key: Step; label: string }[] = [
 ];
 
 export default function OnboardingPage() {
+  const router = useRouter();
   const [step, setStep] = useState<Step>("template");
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateDefinition | null>(null);
   const [businessName, setBusinessName] = useState("");
@@ -34,6 +40,7 @@ export default function OnboardingPage() {
   const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
   const [referralCode, setReferralCode] = useState("");
   const [trialDays, setTrialDays] = useState(7);
+  const [creating, setCreating] = useState(false);
 
   const templates = getTemplateList();
 
@@ -421,12 +428,49 @@ export default function OnboardingPage() {
               </p>
             </div>
 
-            <a
-              href="/"
-              className="block w-full py-3.5 rounded-xl bg-primary-500 text-white font-semibold text-sm hover:bg-primary-600 transition-colors text-center"
+            <button
+              onClick={async () => {
+                if (creating || !selectedTemplate) return;
+                setCreating(true);
+                try {
+                  const supabase = createBrowserClient();
+                  const biz = await createBusiness(supabase, {
+                    name: businessName,
+                    template: selectedTemplate.id as BusinessTemplate,
+                    address: businessAddress || undefined,
+                    phone: businessPhone || undefined,
+                  });
+                  // Create products from selected services
+                  const services = selectedTemplate.services.filter((s) => selectedServices.has(s.name));
+                  await Promise.all(
+                    services.map((s) =>
+                      createProduct(supabase, {
+                        business_id: biz.id,
+                        name: s.name,
+                        cost_price: s.costEstimate ?? 0,
+                        sell_price: s.defaultPrice,
+                        is_service: true,
+                        duration_minutes: s.durationMinutes,
+                        quantity: 999,
+                      }),
+                    ),
+                  );
+                  localStorage.setItem("mabiz-business-name", businessName);
+                  router.push("/");
+                } catch (err) {
+                  console.error("Erro ao criar negócio:", err);
+                  setCreating(false);
+                }
+              }}
+              disabled={creating}
+              className="w-full py-3.5 rounded-xl bg-primary-500 text-white font-semibold text-sm hover:bg-primary-600 transition-colors text-center flex items-center justify-center gap-2 disabled:opacity-60"
             >
-              Começar a usar maBIZ
-            </a>
+              {creating ? (
+                <><Loader2 className="w-4 h-4 animate-spin" />A criar negócio...</>
+              ) : (
+                "Começar a usar maBIZ"
+              )}
+            </button>
           </div>
         )}
       </main>

@@ -3,59 +3,53 @@
 import { useState } from "react";
 import Link from "next/link";
 import {
-  BarChart3,
   TrendingUp,
   TrendingDown,
-  Calendar,
-  Download,
   Package,
-  Users,
   Clock,
   Star,
-  ChevronLeft,
-  ChevronRight,
-  Scissors,
   FileBarChart,
 } from "lucide-react";
+import { useBusiness } from "@/hooks/use-business";
+import { useQuery } from "@/hooks/use-query";
+import { getDashboardData, getProducts, getCustomers, type DashboardData } from "@/lib/supabase";
+import type { Product, BusinessCustomer } from "@vida/database/types/business";
 
 type Period = "semanal" | "mensal" | "trimestral" | "anual";
 
-const MOCK_TOP_PRODUCTS = [
-  { name: "Tranças", revenue: 42000, sales: 28, margin: 88 },
-  { name: "Alisamento", revenue: 35000, sales: 14, margin: 86 },
-  { name: "Unhas gel", revenue: 18000, sales: 30, margin: 87 },
-  { name: "Corte + escova", revenue: 15200, sales: 19, margin: 81 },
-  { name: "Makeup", revenue: 12000, sales: 10, margin: 83 },
-];
-
-const MOCK_PEAK_HOURS = [
-  { hour: "09h-11h", percentage: 20, label: "Manhã" },
-  { hour: "11h-13h", percentage: 15, label: "Meio-dia" },
-  { hour: "14h-16h", percentage: 25, label: "Tarde" },
-  { hour: "16h-18h", percentage: 30, label: "Fim tarde" },
-  { hour: "18h-20h", percentage: 10, label: "Noite" },
-];
-
-const MOCK_BEST_DAYS = [
-  { day: "Segunda", percentage: 10 },
-  { day: "Terça", percentage: 8 },
-  { day: "Quarta", percentage: 12 },
-  { day: "Quinta", percentage: 15 },
-  { day: "Sexta", percentage: 30 },
-  { day: "Sábado", percentage: 25 },
-];
-
 export default function RelatoriosPage() {
+  const { business } = useBusiness();
   const [period, setPeriod] = useState<Period>("mensal");
 
-  const monthSales = 145000;
-  const monthExpenses = 52760;
+  const { data: dashboard } = useQuery<DashboardData>(
+    (supabase) => getDashboardData(supabase, business!.id),
+    [business?.id],
+  );
+  const { data: products } = useQuery<Product[]>(
+    (supabase) => getProducts(supabase, business!.id),
+    [business?.id],
+  );
+  const { data: customers } = useQuery<BusinessCustomer[]>(
+    (supabase) => getCustomers(supabase, business!.id),
+    [business?.id],
+  );
+
+  const monthSales = dashboard?.month.sales ?? 0;
+  const monthExpenses = dashboard?.month.expenses ?? 0;
   const monthProfit = monthSales - monthExpenses;
-  const profitMargin = Math.round((monthProfit / monthSales) * 100);
-  const avgSaleValue = 1640;
-  const totalTransactions = 88;
-  const customerCount = 45;
-  const repeatRate = 68;
+  const profitMargin = monthSales > 0 ? Math.round((monthProfit / monthSales) * 100) : 0;
+  const totalTransactions = dashboard?.today.recentSales.length ?? 0;
+  const customerCount = customers?.length ?? 0;
+  const avgSaleValue = totalTransactions > 0 ? Math.round(dashboard!.today.sales / totalTransactions) : 0;
+
+  const topProducts = (products ?? [])
+    .map((p) => ({
+      name: p.name,
+      revenue: p.sell_price * (p.quantity > 0 ? 1 : 0),
+      margin: p.sell_price > 0 ? Math.round(((p.sell_price - p.cost_price) / p.sell_price) * 100) : 0,
+    }))
+    .sort((a, b) => b.margin - a.margin)
+    .slice(0, 5);
 
   return (
     <div className="min-h-screen pb-4">
@@ -118,7 +112,7 @@ export default function RelatoriosPage() {
               {monthProfit.toLocaleString("pt-MZ")} MZN
             </p>
             <p className="text-xs text-primary-500">
-              Margem: {profitMargin}% • Média/venda: {avgSaleValue.toLocaleString("pt-MZ")} MZN
+              Margem: {profitMargin}%{avgSaleValue > 0 ? ` • Média/venda: ${avgSaleValue.toLocaleString("pt-MZ")} MZN` : ""}
             </p>
           </div>
         </div>
@@ -134,8 +128,8 @@ export default function RelatoriosPage() {
             <p className="text-lg font-bold">{customerCount}</p>
           </div>
           <div className="card p-3 text-center">
-            <p className="text-2xs text-[var(--color-text-muted)]">Repetição</p>
-            <p className="text-lg font-bold text-emerald-600">{repeatRate}%</p>
+            <p className="text-2xs text-[var(--color-text-muted)]">Fiado</p>
+            <p className="text-lg font-bold text-violet-600">{(dashboard?.fiado.totalDebt ?? 0).toLocaleString("pt-MZ")}</p>
           </div>
         </div>
 
@@ -146,9 +140,9 @@ export default function RelatoriosPage() {
             Produtos/Serviços Mais Vendidos
           </h3>
           <div className="space-y-3">
-            {MOCK_TOP_PRODUCTS.map((product, index) => {
-              const maxRevenue = MOCK_TOP_PRODUCTS[0]!.revenue;
-              const barWidth = (product.revenue / maxRevenue) * 100;
+            {topProducts.length > 0 ? topProducts.map((product, index) => {
+              const maxMargin = topProducts[0]!.margin || 1;
+              const barWidth = (product.margin / maxMargin) * 100;
               const medals = ["🥇", "🥈", "🥉"];
 
               return (
@@ -158,7 +152,7 @@ export default function RelatoriosPage() {
                       {index < 3 ? medals[index] : `${index + 1}.`} {product.name}
                     </span>
                     <span className="font-semibold text-primary-600">
-                      {(product.revenue / 1000).toFixed(0)}k MZN
+                      Margem {product.margin}%
                     </span>
                   </div>
                   <div className="flex items-center gap-3">
@@ -168,73 +162,58 @@ export default function RelatoriosPage() {
                         style={{ width: `${barWidth}%` }}
                       />
                     </div>
-                    <span className="text-2xs text-[var(--color-text-muted)] w-20 text-right">
-                      {product.sales}x • {product.margin}%
-                    </span>
                   </div>
                 </div>
               );
-            })}
+            }) : (
+              <p className="text-sm text-[var(--color-text-muted)] text-center py-2">Sem dados de produtos</p>
+            )}
           </div>
         </section>
 
-        {/* Peak Hours */}
+        {/* Summary Cards */}
         <section className="card p-4">
           <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
             <Clock className="w-4 h-4 text-primary-500" />
-            Horários Pico
+            Resumo de Hoje
           </h3>
-          <div className="flex items-end gap-2 h-32">
-            {MOCK_PEAK_HOURS.map((slot) => (
-              <div key={slot.hour} className="flex-1 flex flex-col items-center gap-1">
-                <span className="text-2xs font-bold text-primary-600">
-                  {slot.percentage}%
-                </span>
-                <div className="w-full bg-gray-100 rounded-t-lg overflow-hidden relative" style={{ height: "100%" }}>
-                  <div
-                    className="absolute bottom-0 w-full bg-gradient-to-t from-primary-500 to-primary-300 rounded-t-lg transition-all"
-                    style={{ height: `${slot.percentage * 3}%` }}
-                  />
-                </div>
-                <span className="text-2xs text-[var(--color-text-muted)] text-center leading-tight">
-                  {slot.hour}
-                </span>
-              </div>
-            ))}
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="bg-emerald-50 rounded-xl p-3 text-center">
+              <p className="text-2xs text-emerald-600">Vendas Hoje</p>
+              <p className="font-bold text-emerald-700">{(dashboard?.today.sales ?? 0).toLocaleString("pt-MZ")} MZN</p>
+            </div>
+            <div className="bg-red-50 rounded-xl p-3 text-center">
+              <p className="text-2xs text-red-600">Despesas Hoje</p>
+              <p className="font-bold text-red-700">{(dashboard?.today.expenses ?? 0).toLocaleString("pt-MZ")} MZN</p>
+            </div>
+            <div className="bg-blue-50 rounded-xl p-3 text-center">
+              <p className="text-2xs text-blue-600">Cash</p>
+              <p className="font-bold text-blue-700">{(dashboard?.today.cash ?? 0).toLocaleString("pt-MZ")} MZN</p>
+            </div>
+            <div className="bg-purple-50 rounded-xl p-3 text-center">
+              <p className="text-2xs text-purple-600">M-Pesa</p>
+              <p className="font-bold text-purple-700">{(dashboard?.today.mpesa ?? 0).toLocaleString("pt-MZ")} MZN</p>
+            </div>
           </div>
         </section>
 
-        {/* Best Days */}
-        <section className="card p-4">
-          <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-primary-500" />
-            Melhores Dias
-          </h3>
-          <div className="space-y-2">
-            {MOCK_BEST_DAYS.map((day) => (
-              <div key={day.day} className="flex items-center gap-3">
-                <span className="text-xs w-16 text-[var(--color-text-muted)]">
-                  {day.day}
-                </span>
-                <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full rounded-full ${
-                      day.percentage >= 25
-                        ? "bg-emerald-500"
-                        : day.percentage >= 15
-                          ? "bg-primary-400"
-                          : "bg-gray-300"
-                    }`}
-                    style={{ width: `${day.percentage * 3}%` }}
-                  />
+        {/* Stock Alerts */}
+        {(dashboard?.stock.lowStockItems.length ?? 0) > 0 && (
+          <section className="card p-4 bg-amber-50 border-amber-200">
+            <h3 className="text-sm font-bold mb-2 flex items-center gap-2 text-amber-800">
+              <Package className="w-4 h-4" />
+              Alertas de Stock
+            </h3>
+            <div className="space-y-1.5">
+              {dashboard!.stock.lowStockItems.map((item) => (
+                <div key={item.id} className="flex items-center justify-between text-sm">
+                  <span className="text-amber-700">{item.name}</span>
+                  <span className="font-medium text-amber-800">{item.quantity} {item.unit ?? "un"} restante(s)</span>
                 </div>
-                <span className="text-xs font-medium w-8 text-right">
-                  {day.percentage}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Business Question Answers */}
         <section className="card p-4">
@@ -245,23 +224,25 @@ export default function RelatoriosPage() {
                 Quanto ganhei REALMENTE este mês?
               </p>
               <p className="font-bold text-emerald-700">
-                {monthProfit.toLocaleString("pt-MZ")} MZN (margem {profitMargin}%)
+                {monthProfit.toLocaleString("pt-MZ")} MZN {profitMargin > 0 ? `(margem ${profitMargin}%)` : ""}
               </p>
             </div>
-            <div className="bg-blue-50 rounded-xl p-3">
-              <p className="text-xs text-blue-600 font-medium mb-1">
-                Qual serviço dá mais lucro?
-              </p>
-              <p className="font-bold text-blue-700">
-                Tranças — 42.000 MZN/mês (margem 88%)
-              </p>
-            </div>
+            {topProducts.length > 0 && (
+              <div className="bg-blue-50 rounded-xl p-3">
+                <p className="text-xs text-blue-600 font-medium mb-1">
+                  Qual produto/serviço dá mais margem?
+                </p>
+                <p className="font-bold text-blue-700">
+                  {topProducts[0]!.name} — margem {topProducts[0]!.margin}%
+                </p>
+              </div>
+            )}
             <div className="bg-purple-50 rounded-xl p-3">
               <p className="text-xs text-purple-600 font-medium mb-1">
-                Quando vendo mais?
+                Total de clientes registados
               </p>
               <p className="font-bold text-purple-700">
-                Sextas (30%) e Sábados (25%), entre 16h-18h
+                {customerCount} clientes • {(dashboard?.fiado.count ?? 0)} com fiado em aberto
               </p>
             </div>
           </div>

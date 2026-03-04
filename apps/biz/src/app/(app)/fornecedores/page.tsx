@@ -16,10 +16,12 @@ import { useBusiness } from "@/hooks/use-business";
 import { useQuery } from "@/hooks/use-query";
 import { getSuppliers } from "@/lib/supabase";
 import type { Supplier } from "@vida/database/types/business";
+import { AddSupplierModal } from "@/components/add-supplier-modal";
 
 export default function FornecedoresPage() {
   const { business } = useBusiness();
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAdd, setShowAdd] = useState(false);
 
   const { data: suppliers, loading } = useQuery<Supplier[]>(
     (supabase) => getSuppliers(supabase, business!.id),
@@ -41,7 +43,7 @@ export default function FornecedoresPage() {
       <header className="bg-[var(--color-surface)] border-b border-[var(--color-border)] px-4 pt-12 pb-4 sticky top-0 z-30">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold">Fornecedores</h1>
-          <button className="w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center">
+          <button onClick={() => setShowAdd(true)} className="w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center">
             <Plus className="w-5 h-5" />
           </button>
         </div>
@@ -148,6 +150,8 @@ export default function FornecedoresPage() {
           </div>
         )}
       </main>
+
+      {showAdd && <AddSupplierModal onClose={() => setShowAdd(false)} />}
     </div>
   );
 }

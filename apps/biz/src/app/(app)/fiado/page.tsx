@@ -15,6 +15,8 @@ import { FiadoCard } from "@/components/fiado-card";
 import { useBusiness } from "@/hooks/use-business";
 import { useQuery } from "@/hooks/use-query";
 import { getActiveDebts, type DebtWithCustomer } from "@/lib/supabase";
+import { AddDebtModal } from "@/components/add-debt-modal";
+import { RecordPaymentModal } from "@/components/record-payment-modal";
 
 type FilterStatus = "all" | "ok" | "attention" | "critical";
 type DerivedStatus = "ok" | "attention" | "critical";
@@ -41,6 +43,12 @@ export default function FiadoPage() {
   const { business } = useBusiness();
   const [searchQuery, setSearchQuery] = useState("");
   const [filter, setFilter] = useState<FilterStatus>("all");
+  const [showAddDebt, setShowAddDebt] = useState(false);
+  const [payingDebt, setPayingDebt] = useState<{
+    id: string;
+    customer: string;
+    remaining: number;
+  } | null>(null);
 
   const { data: debts, loading } = useQuery<DebtWithCustomer[]>(
     (supabase) => getActiveDebts(supabase, business!.id),
@@ -77,7 +85,7 @@ export default function FiadoPage() {
       <header className="bg-[var(--color-surface)] border-b border-[var(--color-border)] px-4 pt-12 pb-4 sticky top-0 z-30">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-xl font-bold">Fiado / Crédito</h1>
-          <button className="w-10 h-10 rounded-full bg-violet-500 text-white flex items-center justify-center">
+          <button onClick={() => setShowAddDebt(true)} className="w-10 h-10 rounded-full bg-violet-500 text-white flex items-center justify-center">
             <Plus className="w-5 h-5" />
           </button>
         </div>
@@ -164,15 +172,21 @@ export default function FiadoPage() {
           {filtered.length > 0 ? (
             <div className="space-y-3">
               {filtered.map((entry) => (
-                <FiadoCard
-                  key={entry.id}
-                  customer={entry.customer}
-                  amount={entry.amount}
-                  limit={entry.amount}
-                  lastPayment={undefined}
-                  dueDate={entry.dueDate}
-                  status={entry.status}
-                />
+                <div key={entry.id} onClick={() => setPayingDebt({
+                  id: entry.id,
+                  customer: entry.customer,
+                  remaining: entry.amount - entry.paidAmount,
+                })} className="cursor-pointer">
+                  <FiadoCard
+                    customer={entry.customer}
+                    amount={entry.amount}
+                    limit={entry.amount}
+                    lastPayment={undefined}
+                    dueDate={entry.dueDate}
+                    status={entry.status}
+                  />
+                  <p className="text-2xs text-center text-violet-500 mt-1">Toca para registar pagamento</p>
+                </div>
               ))}
             </div>
           ) : (
@@ -184,6 +198,16 @@ export default function FiadoPage() {
           )}
         </section>
       </main>
+
+      {showAddDebt && <AddDebtModal onClose={() => setShowAddDebt(false)} />}
+      {payingDebt && (
+        <RecordPaymentModal
+          debtId={payingDebt.id}
+          customerName={payingDebt.customer}
+          remainingAmount={payingDebt.remaining}
+          onClose={() => setPayingDebt(null)}
+        />
+      )}
     </div>
   );
 }
