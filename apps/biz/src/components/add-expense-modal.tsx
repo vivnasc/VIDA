@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { X, Wallet, Tag, FileText, Calendar } from "lucide-react";
+import { X, Wallet, Tag, FileText, Calendar, Check, Loader2 } from "lucide-react";
+import { createBrowserClient } from "@vida/auth/client";
+import { useBusiness } from "@/hooks/use-business";
+import { createExpense } from "@/lib/supabase";
 
 const EXPENSE_CATEGORIES = [
   { key: "aluguel", label: "Aluguel", icon: "🏠" },
@@ -27,26 +30,35 @@ interface AddExpenseModalProps {
 }
 
 export function AddExpenseModal({ onClose, onSubmit }: AddExpenseModalProps) {
+  const { business } = useBusiness();
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
 
-  const handleSubmit = () => {
-    if (!category || !amount) return;
+  const handleSubmit = async () => {
+    if (!category || !amount || !business) return;
     setSubmitting(true);
 
-    setTimeout(() => {
-      onSubmit?.({
+    try {
+      const supabase = createBrowserClient();
+      await createExpense(supabase, {
+        business_id: business.id,
         category,
         amount: parseFloat(amount),
-        description,
+        description: description || undefined,
       });
-      setSubmitting(false);
+      onSubmit?.({ category, amount: parseFloat(amount), description });
       setDone(true);
-      setTimeout(() => onClose(), 800);
-    }, 500);
+      setTimeout(() => {
+        onClose();
+        window.location.reload();
+      }, 800);
+    } catch (err) {
+      console.error("Erro ao registar despesa:", err);
+      setSubmitting(false);
+    }
   };
 
   const selectedCat = EXPENSE_CATEGORIES.find((c) => c.key === category);

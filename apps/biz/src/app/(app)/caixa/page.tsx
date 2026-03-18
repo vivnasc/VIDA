@@ -21,8 +21,11 @@ import {
   getTodaySales,
   getTodayExpenses,
   getTodayCashRegister,
+  openCashRegister,
+  closeCashRegister,
   type SaleWithRelations,
 } from "@/lib/supabase";
+import { createBrowserClient } from "@vida/auth/client";
 import type { BusinessExpense, CashRegister } from "@vida/database/types/business";
 
 type FilterPayment = "all" | "cash" | "mpesa" | "transfer" | "card" | "fiado";
@@ -40,10 +43,15 @@ export default function CaixaPage() {
     (supabase) => getTodayExpenses(supabase, business!.id),
     [business?.id],
   );
-  const { data: cashRegister } = useQuery<CashRegister | null>(
+  const { data: cashRegister, reload: reloadRegister } = useQuery<CashRegister | null>(
     (supabase) => getTodayCashRegister(supabase, business!.id),
     [business?.id],
   );
+
+  const [openAmount, setOpenAmount] = useState("");
+  const [closingAmount, setClosingAmount] = useState("");
+  const [showOpenDialog, setShowOpenDialog] = useState(false);
+  const [registerLoading, setRegisterLoading] = useState(false);
 
   const loading = salesLoading;
 
@@ -239,20 +247,102 @@ export default function CaixaPage() {
         </section>
 
         <section className="card p-4 bg-gradient-to-r from-gray-50 to-slate-50 border-gray-200">
-          <h3 className="text-sm font-bold mb-3">Fechar Caixa</h3>
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span className="text-[var(--color-text-muted)]">Dinheiro inicial</span>
-              <span className="font-medium">{openingAmount.toLocaleString("pt-MZ")} MZN</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-[var(--color-text-muted)]">Esperado em caixa</span>
-              <span className="font-medium">{expectedClosing.toLocaleString("pt-MZ")} MZN</span>
-            </div>
-          </div>
-          <button className="w-full mt-4 py-2.5 rounded-xl bg-gray-800 text-white text-sm font-semibold hover:bg-gray-900 transition-colors">
-            Fechar Caixa do Dia
-          </button>
+          {!cashRegister || cashRegister.status === "closed" ? (
+            <>
+              <h3 className="text-sm font-bold mb-3">Abrir Caixa</h3>
+              {showOpenDialog ? (
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-2xs text-gray-500 mb-1 block">Dinheiro inicial (MZN)</label>
+                    <input
+                      type="number"
+                      inputMode="decimal"
+                      value={openAmount}
+                      onChange={(e) => setOpenAmount(e.target.value)}
+                      placeholder="0"
+                      className="w-full px-3 py-2.5 bg-white rounded-xl text-lg font-bold focus:outline-none focus:ring-2 focus:ring-primary-500"
+                      autoFocus
+                    />
+                  </div>
+                  <button
+                    onClick={async () => {
+                      if (!business || registerLoading) return;
+                      setRegisterLoading(true);
+                      try {
+                        const supabase = createBrowserClient();
+                        await openCashRegister(supabase, business.id, parseFloat(openAmount) || 0);
+                        reloadRegister();
+                        setShowOpenDialog(false);
+                        setOpenAmount("");
+                      } catch (err) {
+                        console.error("Erro ao abrir caixa:", err);
+                      }
+                      setRegisterLoading(false);
+                    }}
+                    disabled={registerLoading}
+                    className="w-full py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50"
+                  >
+                    {registerLoading ? "A abrir..." : "Confirmar Abertura"}
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setShowOpenDialog(true)}
+                  className="w-full py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors"
+                >
+                  Abrir Caixa do Dia
+                </button>
+              )}
+            </>
+          ) : (
+            <>
+              <h3 className="text-sm font-bold mb-3">Fechar Caixa</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-[var(--color-text-muted)]">Dinheiro inicial</span>
+                  <span className="font-medium">{openingAmount.toLocaleString("pt-MZ")} MZN</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-[var(--color-text-muted)]">Esperado em caixa</span>
+                  <span className="font-medium">{expectedClosing.toLocaleString("pt-MZ")} MZN</span>
+                </div>
+              </div>
+              <div className="mt-3">
+                <label className="text-2xs text-gray-500 mb-1 block">Dinheiro contado (MZN)</label>
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  value={closingAmount}
+                  onChange={(e) => setClosingAmount(e.target.value)}
+                  placeholder={String(expectedClosing)}
+                  className="w-full px-3 py-2 bg-white rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-gray-400"
+                />
+              </div>
+              <button
+                onClick={async () => {
+                  if (!cashRegister || registerLoading) return;
+                  setRegisterLoading(true);
+                  try {
+                    const supabase = createBrowserClient();
+                    await closeCashRegister(
+                      supabase,
+                      cashRegister.id,
+                      parseFloat(closingAmount) || expectedClosing,
+                    );
+                    reloadRegister();
+                    setClosingAmount("");
+                  } catch (err) {
+                    console.error("Erro ao fechar caixa:", err);
+                  }
+                  setRegisterLoading(false);
+                }}
+                disabled={registerLoading}
+                className="w-full mt-3 py-2.5 rounded-xl bg-gray-800 text-white text-sm font-semibold hover:bg-gray-900 transition-colors disabled:opacity-50"
+              >
+                {registerLoading ? "A fechar..." : "Fechar Caixa do Dia"}
+              </button>
+            </>
+          )}
         </section>
       </main>
 

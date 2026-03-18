@@ -113,7 +113,11 @@ export default function DashboardPage() {
             <p className="text-primary-100 text-sm">
               {business ? `Olá, ${business.name}` : "Olá, bem-vindo"}
             </p>
-            <h1 className="text-xl font-bold">maBIZ</h1>
+            <img
+              src="/logos/mabiz-full.png"
+              alt="maBIZ"
+              className="h-7 w-auto brightness-0 invert"
+            />
           </div>
           <div className="flex items-center gap-2">
             <PlanBadge />
