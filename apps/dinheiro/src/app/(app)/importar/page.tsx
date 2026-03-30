@@ -23,6 +23,7 @@ import type { ParsedSMS } from "@/lib/sms-parser";
 import type { ImportResult } from "@/lib/mobills-import";
 import { SUPPORTED_BANKS } from "@/lib/sms-parser";
 import { VIDA_CATEGORIES } from "@/lib/mobills-import";
+import { SUPPORTED_BANK_FORMATS, type BankFormat } from "@/lib/bank-statement-parser";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -62,7 +63,7 @@ export default function ImportarPage() {
           </Link>
           <div>
             <h1 className="text-xl font-bold text-gray-900">Importar Transações</h1>
-            <p className="text-sm text-gray-500">SMS automático ou ficheiro Mobills</p>
+            <p className="text-sm text-gray-500">SMS automático ou extrato bancário</p>
           </div>
         </div>
 
@@ -88,7 +89,7 @@ export default function ImportarPage() {
             }`}
           >
             <FileSpreadsheet className="w-4 h-4" />
-            Importar Mobills
+            Importar Ficheiro
           </button>
         </div>
       </header>
@@ -487,12 +488,14 @@ function PendingTransactionCard({
   );
 }
 
-// ─── Import Tab (Mobills CSV) ────────────────────────────────────────────────
+// ─── Import Tab (Bank Statements & Mobills) ─────────────────────────────────
 
 function ImportTab() {
   const [step, setStep] = useState<ImportStep>("upload");
+  const [selectedFormat, setSelectedFormat] = useState<BankFormat>("auto");
   const [importing, setImporting] = useState(false);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
+  const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -504,28 +507,59 @@ function ImportTab() {
     setError(null);
 
     try {
-      const csvContent = await file.text();
+      const filename = file.name.toLowerCase();
+      const isExcel = filename.endsWith(".xlsx") || filename.endsWith(".xls");
 
-      const response = await fetch("/api/import", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ csvContent }),
-      });
+      if (isExcel) {
+        // Use FormData for Excel files
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("format", selectedFormat);
 
-      const data = await response.json();
+        const response = await fetch("/api/import", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (data.success) {
-        setImportResult(data);
-        setStep("preview");
+        const data = await response.json();
+        if (data.success) {
+          setImportResult(data);
+          setDetectedFormat(data.detectedFormat || selectedFormat);
+          setStep("preview");
+        } else {
+          setError(data.error || "Erro ao processar ficheiro Excel");
+        }
       } else {
-        setError(data.error || "Erro ao processar ficheiro");
+        // CSV/text files
+        const csvContent = await file.text();
+
+        const response = await fetch("/api/import", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ csvContent, format: selectedFormat, filename: file.name }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          setImportResult(data);
+          setDetectedFormat(data.detectedFormat || selectedFormat);
+          setStep("preview");
+        } else {
+          setError(data.error || "Erro ao processar ficheiro");
+        }
       }
     } catch {
-      setError("Erro ao ler ficheiro. Certifica-te que é um CSV válido.");
+      setError("Erro ao ler ficheiro. Verifica se o formato está correcto.");
     } finally {
       setImporting(false);
+      // Reset file input
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
-  }, []);
+  }, [selectedFormat]);
+
+  const acceptedFileTypes = selectedFormat === "auto"
+    ? ".csv,.xlsx,.xls,.txt"
+    : SUPPORTED_BANK_FORMATS.find((b) => b.id === selectedFormat)?.fileTypes.join(",") || ".csv,.xlsx";
 
   return (
     <div className="space-y-6">
@@ -536,51 +570,65 @@ function ImportTab() {
             <div className="flex items-start gap-3">
               <Upload className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
               <div>
-                <h3 className="text-sm font-bold text-blue-900">Migrar do Mobills</h3>
+                <h3 className="text-sm font-bold text-blue-900">Importar Extrato Bancário</h3>
                 <p className="text-xs text-blue-700 mt-1 leading-relaxed">
-                  Exporta os teus dados do Mobills em formato CSV e carrega aqui.
-                  O VIDA organiza tudo automaticamente, consolida as categorias
-                  e mantém o teu histórico intacto.
+                  Carrega o extrato do teu banco (CPC, Moza Banco, Standard Bank)
+                  ou a exportação do Mobills. O VIDA deteta o formato, organiza
+                  as categorias e importa tudo automaticamente.
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Export Instructions */}
-          <div className="bg-white rounded-2xl border border-gray-100 p-4">
-            <h3 className="text-sm font-bold text-gray-900 mb-3">
-              Como exportar do Mobills
+          {/* Bank Format Selection */}
+          <div>
+            <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              Formato do ficheiro
             </h3>
-            <ol className="space-y-3">
-              {[
-                "Abre o Mobills e vai a Definições",
-                'Procura "Exportar dados" ou "Backup"',
-                "Seleciona formato CSV",
-                "Escolhe o período (todo o histórico)",
-                "Guarda o ficheiro e carrega aqui",
-              ].map((step, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 text-xs font-bold">
-                    {i + 1}
+            <div className="grid grid-cols-2 gap-2">
+              {SUPPORTED_BANK_FORMATS.map((bank) => (
+                <button
+                  key={bank.id}
+                  onClick={() => setSelectedFormat(bank.id)}
+                  className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all ${
+                    selectedFormat === bank.id
+                      ? "border-emerald-300 bg-emerald-50 ring-1 ring-emerald-200"
+                      : "border-gray-100 bg-white hover:border-gray-200"
+                  }`}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    {bank.id === "auto" ? (
+                      <Sparkles className={`w-4 h-4 ${selectedFormat === bank.id ? "text-emerald-600" : "text-gray-400"}`} />
+                    ) : (
+                      <FileSpreadsheet className={`w-4 h-4 ${selectedFormat === bank.id ? "text-emerald-600" : "text-gray-400"}`} />
+                    )}
+                    <span className={`text-sm font-semibold ${selectedFormat === bank.id ? "text-emerald-900" : "text-gray-700"}`}>
+                      {bank.name}
+                    </span>
                   </div>
-                  <span className="text-sm text-gray-600">{step}</span>
-                </li>
+                  <span className="text-[10px] text-gray-400">
+                    {bank.description}
+                  </span>
+                  <span className="text-[10px] text-gray-300 mt-0.5">
+                    {bank.fileTypes.join(", ")}
+                  </span>
+                </button>
               ))}
-            </ol>
+            </div>
           </div>
 
           {/* Upload Button */}
           <input
             ref={fileInputRef}
             type="file"
-            accept=".csv,.txt"
+            accept={acceptedFileTypes}
             onChange={handleFileUpload}
             className="hidden"
           />
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={importing}
-            className="w-full flex items-center justify-center gap-3 bg-emerald-500 text-white font-semibold py-4 rounded-2xl hover:bg-emerald-600 disabled:opacity-50 transition-all"
+            className="w-full flex items-center justify-center gap-3 bg-emerald-500 text-white font-semibold py-4 rounded-2xl hover:bg-emerald-600 disabled:opacity-50 transition-all shadow-lg shadow-emerald-500/20"
           >
             {importing ? (
               <>
@@ -590,7 +638,7 @@ function ImportTab() {
             ) : (
               <>
                 <Upload className="w-5 h-5" />
-                Carregar ficheiro CSV
+                Carregar ficheiro
               </>
             )}
           </button>
@@ -601,11 +649,56 @@ function ImportTab() {
               <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
+
+          {/* Help Section */}
+          <div className="bg-white rounded-2xl border border-gray-100 p-4">
+            <h3 className="text-sm font-bold text-gray-900 mb-3">
+              Como obter o extrato
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
+                  CPC
+                </div>
+                <span className="text-xs text-gray-600">
+                  Internet Banking CPC → Extractos → Exportar CSV
+                </span>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
+                  MZ
+                </div>
+                <span className="text-xs text-gray-600">
+                  App Moza Banco → Movimentos → Download CSV
+                </span>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
+                  SB
+                </div>
+                <span className="text-xs text-gray-600">
+                  Standard Bank Online → Extracto → Download Excel
+                </span>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
+                  MB
+                </div>
+                <span className="text-xs text-gray-600">
+                  Mobills → Definições → Exportar dados (CSV ou Excel)
+                </span>
+              </div>
+            </div>
+          </div>
         </>
       )}
 
       {step === "preview" && importResult && (
-        <ImportPreview result={importResult} onBack={() => setStep("upload")} />
+        <ImportPreview
+          result={importResult}
+          detectedFormat={detectedFormat}
+          onBack={() => { setStep("upload"); setImportResult(null); setDetectedFormat(null); }}
+        />
       )}
     </div>
   );
@@ -615,9 +708,11 @@ function ImportTab() {
 
 function ImportPreview({
   result,
+  detectedFormat,
   onBack,
 }: {
   result: ImportResult;
+  detectedFormat?: string | null;
   onBack: () => void;
 }) {
   const topCategories = Object.entries(result.summary.categoryCounts)
@@ -629,7 +724,14 @@ function ImportPreview({
       {/* Summary */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-sm font-bold text-gray-900">Resumo da importação</h3>
+          <div>
+            <h3 className="text-sm font-bold text-gray-900">Resumo da importação</h3>
+            {detectedFormat && detectedFormat !== "auto" && (
+              <span className="text-[10px] font-medium bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full uppercase">
+                {detectedFormat === "cpc" ? "CPC" : detectedFormat === "moza" ? "Moza Banco" : detectedFormat === "standard-bank" ? "Standard Bank" : "Mobills"}
+              </span>
+            )}
+          </div>
           <button
             onClick={onBack}
             className="text-xs text-gray-500 hover:text-gray-700 flex items-center gap-1"

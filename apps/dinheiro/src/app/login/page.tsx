@@ -2,8 +2,8 @@
 
 import { useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { AuthForm } from "@vida/ui";
-import { createBrowserClient } from "@vida/auth/client";
+import { AuthForm } from "@/components/shared/auth-form";
+import { createBrowserClient } from "@/lib/auth/client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -73,9 +73,9 @@ export default function LoginPage() {
 
   return (
     <AuthForm
-      appName="VIDA.DINHEIRO"
+      appName="BUDGY"
       appColor="#10B981"
-      appTagline="Tuas finanças, teus sonhos"
+      appTagline="As tuas finanças, simplificadas"
       onLogin={handleLogin}
       onRegister={handleRegister}
       onGoogleLogin={handleGoogleLogin}

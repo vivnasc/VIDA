@@ -1,4 +1,4 @@
-import { createServerClient } from "@vida/auth/server";
+import { createServerClient } from "@/lib/auth/server";
 import { type NextRequest, NextResponse } from "next/server";
 
 /**

@@ -1,4 +1,4 @@
-import { createServerClient } from "@vida/auth/server";
+import { createServerClient } from "@/lib/auth/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "VIDA.DINHEIRO - Tuas financas, teus sonhos",
+  title: "BUDGY - Tuas financas, teus sonhos",
   description:
     "Controla receitas e despesas, cria orcamentos inteligentes, define metas de poupanca e acompanha o teu xitique. Comeca gratis.",
 };
@@ -204,7 +204,7 @@ const steps = [
   {
     number: "02",
     title: "Define or\u00E7amentos e metas",
-    description: "Cria limites por categoria e define metas de poupan\u00E7a. O VIDA.DINHEIRO acompanha tudo por ti.",
+    description: "Cria limites por categoria e define metas de poupan\u00E7a. O BUDGY acompanha tudo por ti.",
   },
   {
     number: "03",
@@ -344,7 +344,7 @@ export default async function DinheiroLanding() {
             <div className="bg-white/[0.03] rounded-3xl border border-emerald-500/20 p-8">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center"><IconCheck className="w-5 h-5 text-emerald-400" /></div>
-                <h3 className="text-lg font-bold text-emerald-400">O que FUNCIONA com VIDA.DINHEIRO</h3>
+                <h3 className="text-lg font-bold text-emerald-400">O que FUNCIONA com BUDGY</h3>
               </div>
               <ul className="space-y-4">
                 {solutions.map((s) => (
@@ -408,7 +408,7 @@ export default async function DinheiroLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-white">Funcionalidades exclusivas</h2>
-            <p className="mt-4 text-lg text-white/50">O que s&oacute; encontras no VIDA.DINHEIRO.</p>
+            <p className="mt-4 text-lg text-white/50">O que s&oacute; encontras no BUDGY.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {uniqueFeatures.map((f) => {

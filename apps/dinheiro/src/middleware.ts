@@ -1,4 +1,4 @@
-import { createMiddleware } from "@vida/auth/middleware";
+import { createMiddleware } from "@/lib/auth/middleware";
 
 export default createMiddleware();
 

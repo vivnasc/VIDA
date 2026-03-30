@@ -1,11 +1,12 @@
 import type { Metadata, Viewport } from "next";
-import { ServiceWorkerRegister, Analytics } from "@vida/ui";
+import { ServiceWorkerRegister } from "@/components/shared/service-worker-register";
+import { Analytics } from "@/components/shared/analytics";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "VIDA.DINHEIRO - Tuas finanças, teus sonhos",
-    template: "%s | VIDA.DINHEIRO",
+    default: "BUDGY - As tuas finanças, simplificadas",
+    template: "%s | BUDGY",
   },
   description:
     "Gestão financeira pessoal inteligente. Controla receitas, despesas, orçamentos e metas financeiras.",
@@ -13,13 +14,13 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "VIDA.DINHEIRO",
+    title: "BUDGY",
   },
   openGraph: {
     type: "website",
-    title: "VIDA.DINHEIRO",
-    description: "Tuas finanças, teus sonhos",
-    siteName: "VIDA.DINHEIRO",
+    title: "BUDGY",
+    description: "As tuas finanças, simplificadas",
+    siteName: "BUDGY",
   },
 };
 
@@ -45,7 +46,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="font-sans">
-        <Analytics domain="dinheiro.vida.app" />
+        <Analytics domain="budgy.app" />
         <ServiceWorkerRegister />
         {children}
       </body>
