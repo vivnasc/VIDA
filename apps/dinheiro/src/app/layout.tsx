@@ -45,7 +45,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="font-sans">
-        <Analytics domain="dinheiro.vida.mz" />
+        <Analytics domain="dinheiro.vida.app" />
         <ServiceWorkerRegister />
         {children}
       </body>

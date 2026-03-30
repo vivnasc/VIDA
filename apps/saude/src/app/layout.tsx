@@ -41,7 +41,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </head>
       <body className="min-h-screen bg-[var(--color-background)] font-sans antialiased">
-        <Analytics domain="saude.vida.mz" />
+        <Analytics domain="saude.vida.app" />
         <ServiceWorkerRegister />
         {children}
       </body>

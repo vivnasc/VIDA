@@ -1,19 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { ServiceWorkerRegister, Analytics } from "@vida/ui";
+import { Analytics } from "@vida/ui";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "VIDA.FAMILIA",
-    template: "%s | VIDA.FAMILIA",
+    default: "VIDA - Tua vida, organizada.",
+    template: "%s | VIDA",
   },
-  description: "O coracao da tua familia, digital",
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "VIDA.FAMILIA",
-  },
+  description:
+    "O ecossistema digital que organiza a tua vida familiar. Financas, casa, saude e familia — tudo num so lugar.",
   formatDetection: {
     telephone: true,
     date: true,
@@ -22,7 +17,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FF6B35",
+  themeColor: "#0A0A0F",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -38,13 +33,10 @@ export default function RootLayout({
   return (
     <html lang="pt" suppressHydrationWarning>
       <head>
-        <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
-      <body className="min-h-screen bg-background font-sans antialiased dark:bg-background-dark">
-        <Analytics domain="familia.vida.app" />
-        <ServiceWorkerRegister />
+      <body className="min-h-screen bg-[#0A0A0F] text-white font-sans antialiased">
+        <Analytics domain="vida.app" />
         {children}
       </body>
     </html>
