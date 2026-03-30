@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { createServerClient } from "@vida/auth/server";
+import { createServerClient } from "@/lib/auth/server";
 import { parseMobillsCSV, getCategoryConsolidationPreview } from "@/lib/mobills-import";
 import {
   parseBankStatement,

@@ -1,6 +1,6 @@
 {
-  "name": "VIDA.DINHEIRO - Tuas finanças, teus sonhos",
-  "short_name": "VIDA.DINHEIRO",
+  "name": "BUDGY - As tuas finanças, simplificadas",
+  "short_name": "BUDGY",
   "description": "Gestão financeira pessoal inteligente. Controla receitas, despesas, orçamentos e metas.",
   "start_url": "/",
   "display": "standalone",

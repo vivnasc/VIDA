@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  transpilePackages: ["@vida/ui", "@vida/auth", "@vida/database", "@vida/utils"],
   reactStrictMode: true,
 
   async headers() {

@@ -205,7 +205,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-primary-100 text-sm">Olá, bem-vindo</p>
-            <h1 className="text-xl font-bold">VIDA.DINHEIRO</h1>
+            <h1 className="text-xl font-bold">BUDGY</h1>
           </div>
           <button className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
             <MoreHorizontal className="w-5 h-5" />
