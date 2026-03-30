@@ -14,6 +14,7 @@ import {
   BarChart3,
   GraduationCap,
   Settings,
+  MessageSquareText,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -50,6 +51,7 @@ const NAV_ITEMS = [
 ];
 
 const MORE_MENU_ITEMS = [
+  { label: "Importar", icon: MessageSquareText, href: "/importar", color: "bg-emerald-600" },
   { label: "Metas", icon: Target, href: "/metas", color: "bg-emerald-500" },
   { label: "Contas", icon: Wallet, href: "/contas", color: "bg-blue-500" },
   { label: "Xitique", icon: Users, href: "/xitique", color: "bg-amber-500" },
